@@ -1,0 +1,228 @@
+.auth-bg {
+  min-height: 100vh;
+  background: var(--bg-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.auth-back-btn {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.45);
+  border-radius: 20px;
+  padding: 0.4rem 1.2rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.auth-back-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--text-primary);
+}
+
+.auth-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: 2.5rem 2.8rem 2rem;
+  width: 100%;
+  max-width: 540px;
+  animation: cardIn 0.4s ease-out both;
+}
+
+.verify-card {
+  max-width: 540px;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth-title {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 1.4rem;
+  letter-spacing: 1px;
+}
+
+.auth-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+  margin-top: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.auth-input {
+  width: 100%;
+  background: var(--input-bg);
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-style: italic;
+  font-size: 1rem;
+  color: #2a4a5a;
+  outline: none;
+  transition: box-shadow 0.2s;
+  margin-bottom: 0.2rem;
+}
+
+.auth-input::placeholder {
+  color: var(--input-placeholder);
+}
+
+.auth-input:focus {
+  box-shadow: 0 0 0 3px rgba(43, 168, 204, 0.35);
+}
+
+.auth-error {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #ffb3b3;
+  margin-top: 0.6rem;
+  text-align: center;
+}
+
+.auth-success {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #a8f0c8;
+  margin-top: 0.6rem;
+  text-align: center;
+}
+
+.auth-links-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.8rem;
+}
+
+.auth-links-row.center {
+  justify-content: center;
+}
+
+.auth-link {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.auth-link:hover,
+.auth-link.clickable:hover {
+  color: var(--accent-hover);
+}
+
+.auth-link.clickable {
+  cursor: pointer;
+}
+
+.auth-btn-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.auth-btn-outline {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 20px;
+  padding: 0.5rem 2.2rem;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+
+.auth-btn-outline:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--text-primary);
+}
+
+.auth-btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-btn-dark {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--btn-dark);
+  border: none;
+  border-radius: 20px;
+  padding: 0.6rem 2.4rem;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+
+.auth-btn-dark:hover:not(:disabled) {
+  background: var(--btn-dark-hover);
+  transform: translateY(-1px);
+}
+
+.auth-btn-dark:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-switch {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 1.2rem;
+}
+
+/* Role toggle */
+.role-toggle {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.role-btn {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.08);
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.role-btn.active {
+  color: var(--text-primary);
+  background: var(--btn-dark);
+  border-color: var(--accent);
+}
+
+.role-btn:hover:not(.active) {
+  background: rgba(255,255,255,0.12);
+}

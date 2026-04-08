@@ -1,0 +1,264 @@
+.main-page {
+  min-height: 100vh;
+  background: var(--bg-deep);
+}
+
+/* Hero */
+.hero {
+  padding: 5rem 4rem 6rem;
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hero-graphic {
+  flex-shrink: 0;
+  animation: floatAnim 4s ease-in-out infinite;
+}
+
+@keyframes floatAnim {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.hero-title {
+  font-family: var(--font-mono);
+  font-size: 5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.hero-description {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  max-width: 520px;
+}
+
+.hero-cta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cta-primary {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: all 0.25s;
+  box-shadow: 0 4px 20px rgba(26, 122, 154, 0.4);
+}
+
+.cta-primary:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(43, 168, 204, 0.5);
+}
+
+.cta-secondary {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.cta-secondary:hover {
+  color: var(--accent-hover);
+}
+
+/* Features */
+.features {
+  padding: 5rem 4rem;
+  background: rgba(0,0,0,0.15);
+}
+
+.section-title {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 3rem;
+  letter-spacing: 1px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+}
+
+.feature-desc {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Roles */
+.roles {
+  padding: 5rem 4rem;
+}
+
+.roles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.role-card {
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: 2.5rem;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.role-card:hover {
+  transform: translateY(-4px);
+}
+
+.role-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--btn-dark);
+  background: var(--text-secondary);
+  border-radius: 12px;
+  padding: 0.25rem 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.role-card h3 {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.8rem;
+}
+
+.role-card p {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.8rem;
+}
+
+.role-cta {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--btn-dark);
+  border-radius: 20px;
+  padding: 0.6rem 1.8rem;
+  text-decoration: none;
+  transition: background 0.2s;
+  display: inline-block;
+}
+
+.role-cta:hover {
+  background: var(--btn-dark-hover);
+}
+
+/* Footer */
+.footer {
+  padding: 2.5rem;
+  text-align: center;
+  background: rgba(0,0,0,0.2);
+}
+
+.footer p {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.footer-sub {
+  font-size: 0.75rem !important;
+  opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+  .hero-content { flex-direction: column; text-align: center; gap: 2rem; }
+  .hero-title { font-size: 3.5rem; }
+  .hero-cta { justify-content: center; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .roles-grid { grid-template-columns: 1fr; }
+  .hero, .features, .roles { padding: 3rem 1.5rem; }
+}
+
+@media (max-width: 600px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .hero-title { font-size: 2.8rem; }
+}
