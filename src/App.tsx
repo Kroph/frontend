@@ -6,6 +6,7 @@ import SignUpPage from './pages/SignUpPage';
 import VerificationPage from './pages/VerificationPage';
 import CoursesPage from './pages/CoursesPage';
 import CourseDetailPage from './pages/CourseDetailPage';
+import CreateCoursePage from './pages/CreateCoursePage';
 import './App.css';
 
 const App: React.FC = () => {
@@ -18,6 +19,7 @@ const App: React.FC = () => {
         <Route path="/verify" element={<VerificationPage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
+        <Route path="/courses/create" element={<CreateCoursePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
