@@ -304,13 +304,6 @@
   font-style: normal;
 }
 
-.cc-thumb-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
 .cc-thumb-opt {
   aspect-ratio: 1;
   border-radius: 10px;
@@ -731,6 +724,5 @@
   .cc-wrap { padding: 1.5rem 1rem 4rem; }
   .cc-grid-2 { grid-template-columns: 1fr; }
   .cc-summary-grid { grid-template-columns: 1fr; }
-  .cc-thumb-grid { grid-template-columns: repeat(4, 1fr); }
   .cc-step-label { display: none; }
 }

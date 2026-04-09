@@ -4,8 +4,7 @@ import { CourseDraft } from '../../types/createCourse';
 const EMOJIS = ['🎓','💻','🔬','🎨','📊','🌐','🧠','📐','🎵','🏗','🌱','⚗'];
 
 const CATEGORIES = [
-  'Programming','Data Science','Web Development','Mobile Development',
-  'Design','Business','Mathematics','Languages','Science','Other',
+  'Web Development','Mobile Development','Design','Mathematics','Science','Other'
 ];
 
 interface Props {
@@ -18,7 +17,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
   const [tagInput, setTagInput] = useState('');
   const tagInputRef = useRef<HTMLInputElement>(null);
 
-  // ── Tag helpers ────────────────────────────────────────────────────────────
   const addTag = (raw: string) => {
     const val = raw.trim().replace(/,/g, '');
     if (!val || draft.tags.includes(val)) return;
@@ -39,7 +37,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
     }
   };
 
-  // ── Thumbnail image upload ─────────────────────────────────────────────────
   const handleThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -139,28 +136,12 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
 
         <div className="cc-card-body">
           <div className="cc-thumb-preview">
-            {draft.thumbnail.startsWith('data:') || draft.thumbnail.startsWith('http')
-              ? <img src={draft.thumbnail} alt="thumbnail" style={{ maxHeight: 70, maxWidth: '100%', borderRadius: 10 }} />
-              : draft.thumbnail
-            }
-          </div>
-
-          <div className="cc-thumb-grid">
-            {EMOJIS.map(em => (
-              <div
-                key={em}
-                className={`cc-thumb-opt ${draft.thumbnail === em ? 'cc-thumb-opt--selected' : ''}`}
-                onClick={() => updateDraft({ thumbnail: em })}
-              >
-                {em}
-              </div>
-            ))}
           </div>
 
           <div className="cc-upload" style={{ padding: '0.75rem 1rem' }}>
             <input type="file" accept="image/*" onChange={handleThumbUpload} />
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
-              📁 Upload custom image (JPG, PNG, WebP)
+              Upload custom image (JPG, PNG, WebP)
             </span>
           </div>
         </div>
@@ -217,9 +198,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
                   className={`cc-level-opt ${draft.level === lvl ? 'cc-level-opt--active' : ''}`}
                   onClick={() => updateDraft({ level: lvl })}
                 >
-                  <span className="cc-level-em">
-                    {lvl === 'BEGINNER' ? '🌱' : lvl === 'INTERMEDIATE' ? '🔥' : '⚡'}
-                  </span>
                   {lvl.charAt(0) + lvl.slice(1).toLowerCase()}
                 </div>
               ))}

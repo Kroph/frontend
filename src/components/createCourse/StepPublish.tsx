@@ -10,7 +10,6 @@ interface Props {
   onDone: () => void;
 }
 
-// ─── Build the API payload from draft state ────────────────────────────────
 const buildPayload = (draft: CourseDraft, visibility: 'draft' | 'published'): CreateCoursePayload => ({
   title:          draft.title,
   description:    draft.description,
@@ -133,7 +132,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
                 className={`cc-level-opt ${draft.visibility === mode ? 'cc-level-opt--active' : ''}`}
                 onClick={() => updateDraft({ visibility: mode })}
               >
-                <span className="cc-level-em">{mode === 'draft' ? '🔒' : '🌐'}</span>
                 {mode.charAt(0).toUpperCase() + mode.slice(1)}
               </div>
             ))}
@@ -143,26 +141,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
               ? 'Draft courses are only visible to you. You can publish anytime from your dashboard.'
               : 'This course will be publicly visible to all students immediately after creation.'}
           </div>
-        </div>
-      </div>
-
-      <div className="cc-card">
-        <div className="cc-card-head">
-          <div className="cc-card-head-left">
-            <div>
-              <div className="cc-card-label">API payload</div>
-              <div className="cc-card-desc">
-                Sent to <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>POST /courses</code>
-              </div>
-            </div>
-          </div>
-          <button className="cc-btn cc-btn--outline cc-btn--sm" onClick={copyJSON}>
-            Copy JSON
-          </button>
-        </div>
-
-        <div className="cc-card-body" style={{ padding: 0 }}>
-          <pre className="cc-json">{JSON.stringify(payload, null, 2)}</pre>
         </div>
       </div>
 

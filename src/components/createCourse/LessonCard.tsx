@@ -9,9 +9,8 @@ interface Props {
   toast: (msg: string, type?: 'ok' | 'err' | 'info') => void;
 }
 
-// ─── Chip bar shown when lesson is collapsed ───────────────────────────────
 const LessonChips: React.FC<{ lesson: LessonDraft }> = ({ lesson }) => {
-  const ct = { text: '📝 Text', file: '📄 File', video: '🎥 Video' };
+  const ct = { text: 'Text', file: 'File', video: 'Video' };
   return (
     <div className="lc-chips">
       <span className="lc-chip lc-chip--type">{ct[lesson.contentType]}</span>
@@ -25,7 +24,6 @@ const LessonChips: React.FC<{ lesson: LessonDraft }> = ({ lesson }) => {
   );
 };
 
-// ─── Upload zone ───────────────────────────────────────────────────────────
 interface UploadZoneProps {
   accept: string;
   fileName: string;
@@ -55,7 +53,6 @@ const UploadZone: React.FC<UploadZoneProps> = ({ accept, fileName, placeholder, 
   );
 };
 
-// ─── Quiz question card ────────────────────────────────────────────────────
 interface QCardProps {
   q: QuizQuestion;
   index: number;
@@ -102,14 +99,11 @@ const QCard: React.FC<QCardProps> = ({ q, index, onChange, onDelete }) => (
   </div>
 );
 
-// ─── Main LessonCard ───────────────────────────────────────────────────────
 const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast }) => {
-  const isOpen = lesson.quizOpen; // reuse quizOpen flag just for quiz panel; lesson open is tracked by parent
+  const isOpen = lesson.quizOpen;
 
-  // ── content type switch ──────────────────────────────────────────────────
   const setContentType = (type: ContentType) => onChange({ contentType: type });
 
-  // ── file handlers ────────────────────────────────────────────────────────
   const handleVideoFile = (file: File) => {
     onChange({ videoFile: file, videoFileName: file.name });
     toast(`${file.name} attached`);
@@ -119,7 +113,6 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
     toast(`${file.name} attached`);
   };
 
-  // ── quiz helpers ─────────────────────────────────────────────────────────
   const addQuestion = () => {
     onChange({
       quiz: [...lesson.quiz, { text: '', answers: ['', '', '', ''], correct: 0 }],
@@ -144,7 +137,6 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
       <div
         className="lc-head"
         onClick={() => {
-          // Toggle open by toggling a custom attribute via a sibling state
           const body = document.getElementById(`lc-body-${lesson.id}`);
           if (body) body.style.display = body.style.display === 'none' ? '' : 'none';
           const chev = document.getElementById(`lc-chev-${lesson.id}`);
@@ -226,7 +218,7 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
                 className={`lc-ctab ${lesson.contentType === type ? 'lc-ctab--active' : ''}`}
                 onClick={() => setContentType(type)}
               >
-                <span>{type === 'text' ? '📝' : type === 'file' ? '📄' : '🎥'}</span>
+                <span>{type === 'text' ? '' : type === 'file' ? '' : ''}</span>
                 <span className="lc-ctab-lbl">
                   {type === 'text' ? 'Text' : type === 'file' ? 'File / PDF' : 'Video'}
                 </span>
@@ -315,7 +307,7 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
           onClick={() => onChange({ quizOpen: !lesson.quizOpen })}
         >
           <div className="lc-quiz-toggle-left">
-            <span style={{ fontStyle: 'normal' }}>📝</span>
+            <span style={{ fontStyle: 'normal' }}></span>
             Lesson quiz
             <span className="lc-quiz-badge">
               {lesson.quiz.length > 0

@@ -28,14 +28,12 @@ const CreateCoursePage: React.FC = () => {
   const [toasts, setToasts] = useState<{ id: number; msg: string; type: 'ok' | 'err' | 'info' }[]>([]);
   let toastId = 0;
 
-  // ── Toast helper ───────────────────────────────────────────────────────────
   const toast = useCallback((msg: string, type: 'ok' | 'err' | 'info' = 'info') => {
     const id = ++toastId;
     setToasts(prev => [...prev, { id, msg, type }]);
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3500);
   }, []);
 
-  // ── Draft updaters ─────────────────────────────────────────────────────────
   const updateDraft = useCallback((patch: Partial<CourseDraft>) => {
     setDraft(prev => ({ ...prev, ...patch }));
   }, []);
@@ -78,7 +76,6 @@ const CreateCoursePage: React.FC = () => {
     toast('Lesson removed');
   }, [toast]);
 
-  // ── Step navigation ────────────────────────────────────────────────────────
   const validateStep0 = () => {
     if (!draft.title.trim())    { toast('Please add a course title', 'err'); return false; }
     if (!draft.description.trim()) { toast('Please add a description', 'err'); return false; }
@@ -108,9 +105,6 @@ const CreateCoursePage: React.FC = () => {
       <div className="cc-toasts">
         {toasts.map(t => (
           <div key={t.id} className={`cc-toast cc-toast--${t.type}`}>
-            <span className="cc-toast-icon">
-              {t.type === 'ok' ? '✅' : t.type === 'err' ? '❌' : 'ℹ️'}
-            </span>
             {t.msg}
           </div>
         ))}

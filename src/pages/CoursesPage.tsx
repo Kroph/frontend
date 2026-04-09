@@ -5,9 +5,8 @@ import { getCourses, Course } from '../api/courses';
 import './css/CoursesPage.css';
 
 const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
-const CATEGORIES = ['All', 'Technology', 'Design', 'Business', 'Science', 'Language'];
+const CATEGORIES = ['All', 'Web Development','Mobile Development','Design','Mathematics','Science'];
 
-// Placeholder mock data for when backend is not available
 const MOCK_COURSES: Course[] = [
   { id: '1', title: 'Introduction to React', description: 'Learn React from scratch', teacherId: 't1', teacherName: 'Alice Johnson', category: 'Technology', level: 'Beginner', published: true, createdAt: '', updatedAt: '', price: 49, rating: 4.7 },
   { id: '2', title: 'Advanced TypeScript', description: 'Deep dive into TypeScript', teacherId: 't2', teacherName: 'Bob Smith', category: 'Technology', level: 'Advanced', published: true, createdAt: '', updatedAt: '', price: 79, rating: 4.9 },
@@ -74,7 +73,6 @@ const CoursesPage: React.FC = () => {
               className="toolbar-btn search-btn"
               onClick={() => { setShowSearch(s => !s); if (showSearch) setSearch(''); }}
             >
-              <span className="search-icon">🔍</span>
               <span className="toolbar-label">Search</span>
             </button>
           </div>

@@ -4,7 +4,6 @@ import Navbar from '../components/Navbar';
 import { getCourseById, getLessonsByCourse, Course, Lesson } from '../api/courses';
 import './css/CourseDetailPage.css';
 
-// Mock data fallback
 const MOCK_COURSES: Record<string, Course> = {
   '1': { id: '1', title: 'Introduction to React', description: 'Learn React from scratch with hands-on projects. This course covers components, hooks, state management, and modern React patterns to help you build production-ready applications.', teacherId: 't1', teacherName: 'Alice Johnson', category: 'Technology', level: 'Beginner', published: true, createdAt: '2024-01-15', updatedAt: '2024-03-10', price: 49, rating: 4.7 },
   '2': { id: '2', title: 'Advanced TypeScript', description: 'Deep dive into TypeScript generics, decorators, utility types, and advanced patterns used in large-scale applications.', teacherId: 't2', teacherName: 'Bob Smith', category: 'Technology', level: 'Advanced', published: true, createdAt: '2024-02-01', updatedAt: '2024-03-20', price: 79, rating: 4.9 },
