@@ -1,4 +1,3 @@
-/* ─── Page shell ─────────────────────────────────────────────────────────── */
 .cc-page {
   min-height: 100vh;
   background: var(--bg-deep);
@@ -10,7 +9,6 @@
   padding: 2.5rem 2rem 5rem;
 }
 
-/* ─── Header row ─────────────────────────────────────────────────────────── */
 .cc-header {
   display: flex;
   align-items: center;
@@ -32,7 +30,6 @@
   letter-spacing: 0.5px;
 }
 
-/* ─── Step tabs ──────────────────────────────────────────────────────────── */
 .cc-steps {
   display: flex;
   gap: 0.6rem;
@@ -99,7 +96,6 @@
   color: #a8f0c8;
 }
 
-/* ─── Progress bar ───────────────────────────────────────────────────────── */
 .cc-progress {
   height: 3px;
   background: rgba(255, 255, 255, 0.1);
@@ -115,7 +111,6 @@
   transition: width 0.4s ease;
 }
 
-/* ─── Card ───────────────────────────────────────────────────────────────── */
 .cc-card {
   background: var(--bg-card);
   border-radius: 20px;
@@ -168,7 +163,6 @@
   padding: 1.5rem;
 }
 
-/* ─── Form fields ────────────────────────────────────────────────────────── */
 .cc-field {
   margin-bottom: 1.1rem;
 }
@@ -255,14 +249,12 @@
   color: #ffa0a0;
 }
 
-/* ─── Grid helpers ───────────────────────────────────────────────────────── */
 .cc-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 
-/* ─── Level / visibility picker ─────────────────────────────────────────── */
 .cc-level-picker {
   display: flex;
   gap: 0.75rem;
@@ -299,7 +291,6 @@
   font-style: normal;
 }
 
-/* ─── Thumbnail picker ───────────────────────────────────────────────────── */
 .cc-thumb-preview {
   background: var(--bg-card-dark);
   border-radius: 14px;
@@ -344,7 +335,6 @@
   background: var(--btn-dark);
 }
 
-/* ─── Upload zone ────────────────────────────────────────────────────────── */
 .cc-upload {
   border: 2px dashed rgba(255, 255, 255, 0.2);
   border-radius: 14px;
@@ -402,7 +392,6 @@
   font-style: italic;
 }
 
-/* ─── Tags ───────────────────────────────────────────────────────────────── */
 .cc-tags-wrap {
   display: flex;
   flex-wrap: wrap;
@@ -464,7 +453,6 @@
   color: var(--input-placeholder);
 }
 
-/* ─── Buttons ────────────────────────────────────────────────────────────── */
 .cc-btn {
   font-family: var(--font-mono);
   font-size: 0.9rem;
@@ -571,7 +559,6 @@
   color: var(--text-primary);
 }
 
-/* ─── Step action row ────────────────────────────────────────────────────── */
 .cc-actions {
   display: flex;
   align-items: center;
@@ -584,7 +571,6 @@
   gap: 0.75rem;
 }
 
-/* ─── Video or divider ───────────────────────────────────────────────────── */
 .cc-video-or {
   display: flex;
   align-items: center;
@@ -606,7 +592,6 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* ─── Empty state ────────────────────────────────────────────────────────── */
 .cc-empty {
   text-align: center;
   padding: 2rem 1rem;
@@ -616,7 +601,6 @@
   font-style: italic;
 }
 
-/* ─── Toasts ─────────────────────────────────────────────────────────────── */
 .cc-toasts {
   position: fixed;
   top: 88px;
@@ -657,7 +641,6 @@
   to   { opacity: 1; transform: none; }
 }
 
-/* ─── Publish summary ────────────────────────────────────────────────────── */
 .cc-summary-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -695,7 +678,6 @@
   padding-top: 4px;
 }
 
-/* ─── Review rows ────────────────────────────────────────────────────────── */
 .cc-review-row {
   display: flex;
   justify-content: space-between;
@@ -730,7 +712,6 @@
   font-style: italic;
 }
 
-/* ─── JSON preview ───────────────────────────────────────────────────────── */
 .cc-json {
   background: var(--btn-dark);
   color: rgba(168, 240, 200, 0.9);
@@ -746,7 +727,6 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* ─── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .cc-wrap { padding: 1.5rem 1rem 4rem; }
   .cc-grid-2 { grid-template-columns: 1fr; }

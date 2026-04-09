@@ -55,7 +55,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
 
   return (
     <>
-      {/* ── Course identity ── */}
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
@@ -128,7 +127,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
         </div>
       </div>
 
-      {/* ── Thumbnail ── */}
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
@@ -168,7 +166,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
         </div>
       </div>
 
-      {/* ── Settings ── */}
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
@@ -231,7 +228,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
         </div>
       </div>
 
-      {/* ── Actions ── */}
       <div className="cc-actions">
         <div />
         <button className="cc-btn cc-btn--accent" onClick={onNext}>

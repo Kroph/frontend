@@ -76,7 +76,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
 
   return (
     <>
-      {/* ── Summary stats ── */}
       <div className="cc-summary-grid">
         {[
           { label: 'Lessons',        val: draft.lessons.length },
@@ -93,7 +92,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
         ))}
       </div>
 
-      {/* ── Review card ── */}
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
@@ -117,7 +115,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
         </div>
       </div>
 
-      {/* ── Visibility ── */}
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
@@ -149,7 +146,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
         </div>
       </div>
 
-      {/* ── JSON preview ── */}
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
@@ -170,7 +166,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
         </div>
       </div>
 
-      {/* ── Actions ── */}
       <div className="cc-actions">
         <button className="cc-btn cc-btn--outline" onClick={onBack}>← Lessons</button>
         <div className="cc-actions-right">

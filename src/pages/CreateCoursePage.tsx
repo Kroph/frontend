@@ -5,7 +5,7 @@ import StepBasics from '../components/createCourse/StepBasics';
 import StepLessons from '../components/createCourse/StepLessons';
 import StepPublish from '../components/createCourse/StepPublish';
 import { CourseDraft, LessonDraft } from '../types/createCourse';
-import './CreateCoursePage.css';
+import './css/CreateCoursePage.css';
 
 const STEPS = ['Basics', 'Lessons & Quizzes', 'Publish'] as const;
 

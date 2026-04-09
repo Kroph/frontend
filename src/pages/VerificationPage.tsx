@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { verify } from '../api/auth';
-import './AuthPage.css';
+import './css/AuthPage.css';
 
 const VerificationPage: React.FC = () => {
   const navigate = useNavigate();

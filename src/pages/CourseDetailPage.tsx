@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourseById, getLessonsByCourse, Course, Lesson } from '../api/courses';
-import './CourseDetailPage.css';
+import './css/CourseDetailPage.css';
 
 // Mock data fallback
 const MOCK_COURSES: Record<string, Course> = {
@@ -102,7 +102,7 @@ const CourseDetailPage: React.FC = () => {
             </span>
           </div>
 
-          {/* Lessons / Where lesson takes place */}
+          {/* Lessons */}
           <div className="detail-lessons-box">
             {lessons.length > 0 ? (
               <ul className="detail-lessons-list">
@@ -122,7 +122,6 @@ const CourseDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right column — About Course */}
         <div className="detail-right">
           <div className="detail-about-card">
             <h2 className="detail-about-title">About Course</h2>

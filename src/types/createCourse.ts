@@ -1,45 +1,40 @@
-// ─── Content type for a lesson ───────────────────────────────────────────────
 export type ContentType = 'text' | 'file' | 'video';
 
-// ─── A single quiz question ───────────────────────────────────────────────────
 export interface QuizQuestion {
   text: string;
   answers: [string, string, string, string];
   correct: 0 | 1 | 2 | 3;
 }
 
-// ─── A lesson with its embedded quiz ─────────────────────────────────────────
 export interface LessonDraft {
-  id: number;                  // local-only, not sent to API
+  id: number;
   title: string;
   description: string;
-  duration: string;            // kept as string for input binding
+  duration: string;
   orderIndex: number;
   contentType: ContentType;
-  text: string;                // lecture text OR extra notes
+  text: string;
   videoUrl: string;
   videoFile: File | null;
-  videoFileName: string;       // display name after pick
+  videoFileName: string;
   pdfFile: File | null;
-  pdfFileName: string;         // display name after pick
+  pdfFileName: string;
   quiz: QuizQuestion[];
-  quizOpen: boolean;           // UI-only collapse state
+  quizOpen: boolean;
 }
 
-// ─── Top-level course draft ───────────────────────────────────────────────────
 export interface CourseDraft {
   title: string;
   description: string;
   category: string;
   level: string;
   duration: string;
-  thumbnail: string;           // emoji or data-URL
+  thumbnail: string;
   tags: string[];
   lessons: LessonDraft[];
   visibility: 'draft' | 'published';
 }
 
-// ─── What gets sent to POST /courses ─────────────────────────────────────────
 export interface CreateCoursePayload {
   title: string;
   description: string;

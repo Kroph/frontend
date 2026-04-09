@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourses, Course } from '../api/courses';
-import './CoursesPage.css';
+import './css/CoursesPage.css';
 
 const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 const CATEGORIES = ['All', 'Technology', 'Design', 'Business', 'Science', 'Language'];

@@ -141,7 +141,6 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
   return (
     <div className="lc-card" id={`lesson-${lesson.id}`}>
 
-      {/* ── Header (always visible) ── */}
       <div
         className="lc-head"
         onClick={() => {
@@ -167,7 +166,6 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
         <span className="lc-chev" id={`lc-chev-${lesson.id}`}>▾</span>
       </div>
 
-      {/* ── Body (collapsible) ── */}
       <div className="lc-body" id={`lc-body-${lesson.id}`} style={{ display: 'none' }}>
 
         {/* 1. Lesson info */}

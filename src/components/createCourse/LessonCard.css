@@ -1,4 +1,3 @@
-/* ─── Lesson card shell ──────────────────────────────────────────────────── */
 .lc-card {
   background: var(--bg-card-dark);
   border-radius: 16px;
@@ -13,7 +12,6 @@
   border-color: rgba(43, 168, 204, 0.4);
 }
 
-/* ─── Collapsed header ───────────────────────────────────────────────────── */
 .lc-head {
   display: flex;
   align-items: center;
@@ -56,7 +54,6 @@
   font-style: italic;
 }
 
-/* ─── Chips ──────────────────────────────────────────────────────────────── */
 .lc-chips {
   display: flex;
   gap: 0.35rem;
@@ -98,7 +95,6 @@
   border-color: rgba(255, 208, 128, 0.3);
 }
 
-/* ─── Delete + chevron ───────────────────────────────────────────────────── */
 .lc-del {
   background: none;
   border: none;
@@ -127,12 +123,10 @@
   transform: rotate(180deg);
 }
 
-/* ─── Body ───────────────────────────────────────────────────────────────── */
 .lc-body {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* ─── Inner zone ─────────────────────────────────────────────────────────── */
 .lc-zone {
   padding: 1.2rem 1.4rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -165,7 +159,6 @@
 .lc-dot--accent { background: var(--accent); }
 .lc-dot--gold   { background: #ffd080; }
 
-/* ─── Content type tabs ──────────────────────────────────────────────────── */
 .lc-ctabs {
   display: flex;
   gap: 0.5rem;
@@ -205,10 +198,9 @@
 }
 
 .lc-ctab-lbl {
-  /* hide on very small screens via media query */
+  /* hide by media query */
 }
 
-/* ─── Quiz toggle bar ────────────────────────────────────────────────────── */
 .lc-quiz-toggle {
   display: flex;
   align-items: center;
@@ -247,13 +239,11 @@
   transition: transform 0.2s;
 }
 
-/* ─── Quiz panel ─────────────────────────────────────────────────────────── */
 .lc-quiz-panel {
   padding: 1rem 1.4rem 1.2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* ─── Question card ──────────────────────────────────────────────────────── */
 .lc-q-card {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 12px;
@@ -297,7 +287,6 @@
   color: #ff9090;
 }
 
-/* ─── Answer rows ────────────────────────────────────────────────────────── */
 .lc-ans-list {
   display: flex;
   flex-direction: column;
@@ -369,7 +358,6 @@
   font-style: italic;
 }
 
-/* ─── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 500px) {
   .lc-ctab-lbl { display: none; }
   .lc-chips { display: none; }
