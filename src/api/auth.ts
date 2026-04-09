@@ -10,7 +10,6 @@ const api = axios.create({
 export interface RegisterRequest {
   email: string;
   password: string;
-  role?: string;
 }
 
 export interface LoginRequest {

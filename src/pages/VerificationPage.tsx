@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { verify } from '../api/auth';
-import './AuthPage.css';
+import './css/AuthPage.css';
 
 const VerificationPage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,8 +33,6 @@ const VerificationPage: React.FC = () => {
   const handleResend = async () => {
     setResent(false);
     try {
-      // Trigger resend by calling register again or a dedicated endpoint
-      // For now we show a success message
       setResent(true);
       setTimeout(() => setResent(false), 4000);
     } catch {

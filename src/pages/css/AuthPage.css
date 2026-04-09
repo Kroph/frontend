@@ -195,34 +195,3 @@
   text-align: center;
   margin-top: 1.2rem;
 }
-
-/* Role toggle */
-.role-toggle {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 0.4rem;
-  margin-bottom: 0.5rem;
-}
-
-.role-btn {
-  flex: 1;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  background: rgba(255,255,255,0.08);
-  border: 2px solid transparent;
-  border-radius: 12px;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.role-btn.active {
-  color: var(--text-primary);
-  background: var(--btn-dark);
-  border-color: var(--accent);
-}
-
-.role-btn:hover:not(.active) {
-  background: rgba(255,255,255,0.12);
-}

@@ -63,10 +63,6 @@
   color: var(--accent-hover);
 }
 
-.nav-link-active {
-  color: #e85a4f !important;
-}
-
 .navbar-right {
   display: flex;
   align-items: center;
