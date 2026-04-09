@@ -8,7 +8,6 @@ const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeat, setRepeat] = useState('');
-  const [role, setRole] = useState<'STUDENT' | 'TEACHER'>('STUDENT');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -28,7 +27,7 @@ const SignUpPage: React.FC = () => {
     setError('');
     setLoading(true);
     try {
-      await register({ email, password, role });
+      await register({ email, password});
       navigate('/verify', { state: { email } });
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed. Try again.');
@@ -79,24 +78,6 @@ const SignUpPage: React.FC = () => {
           onKeyDown={handleKeyDown}
           autoComplete="new-password"
         />
-
-        <label className="auth-label">Role</label>
-        <div className="role-toggle">
-          <button
-            className={`role-btn ${role === 'STUDENT' ? 'active' : ''}`}
-            onClick={() => setRole('STUDENT')}
-            type="button"
-          >
-            Student
-          </button>
-          <button
-            className={`role-btn ${role === 'TEACHER' ? 'active' : ''}`}
-            onClick={() => setRole('TEACHER')}
-            type="button"
-          >
-            Teacher
-          </button>
-        </div>
 
         {error && <p className="auth-error">{error}</p>}
 
