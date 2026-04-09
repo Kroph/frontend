@@ -97,7 +97,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
-            <span className="cc-card-icon">📋</span>
             <div>
               <div className="cc-card-label">Review</div>
               <div className="cc-card-desc">Check everything before publishing</div>
@@ -122,7 +121,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
-            <span className="cc-card-icon">◈</span>
             <div>
               <div className="cc-card-label">Visibility</div>
               <div className="cc-card-desc">Who can see this course</div>
@@ -155,7 +153,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
-            <span className="cc-card-icon" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>{ }</span>
             <div>
               <div className="cc-card-label">API payload</div>
               <div className="cc-card-desc">

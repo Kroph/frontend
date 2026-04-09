@@ -59,7 +59,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
-            <span className="cc-card-icon">✦</span>
             <div>
               <div className="cc-card-label">Course identity</div>
               <div className="cc-card-desc">The first thing students will see</div>
@@ -133,7 +132,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
-            <span className="cc-card-icon">🖼</span>
             <div>
               <div className="cc-card-label">Thumbnail</div>
               <div className="cc-card-desc">Pick an emoji or upload a custom image</div>
@@ -174,7 +172,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
       <div className="cc-card">
         <div className="cc-card-head">
           <div className="cc-card-head-left">
-            <span className="cc-card-icon">⚙</span>
             <div>
               <div className="cc-card-label">Settings</div>
               <div className="cc-card-desc">Category, level and duration</div>

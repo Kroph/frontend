@@ -20,7 +20,6 @@ const StepLessons: React.FC<Props> = ({
     <div className="cc-card">
       <div className="cc-card-head">
         <div className="cc-card-head-left">
-          <span className="cc-card-icon">▤</span>
           <div>
             <div className="cc-card-label">
               Lessons

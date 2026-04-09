@@ -120,8 +120,7 @@ const CreateCoursePage: React.FC = () => {
         {/* Header */}
         <div className="cc-header">
           <div className="cc-header-left">
-            <span className="cc-header-slash">// </span>
-            <span className="cc-header-title">create course</span>
+            <span className="cc-header-title">Create course</span>
           </div>
           <button className="cc-btn cc-btn--outline cc-btn--sm" onClick={handleReset}>
             ✕ Reset
