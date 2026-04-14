@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { verify } from '../api/auth';
+import { verify, resendCode } from '../api/auth';
 import './css/AuthPage.css';
 
 const VerificationPage: React.FC = () => {
@@ -32,11 +32,13 @@ const VerificationPage: React.FC = () => {
 
   const handleResend = async () => {
     setResent(false);
+    setError('');
     try {
+      await resendCode({ email });
       setResent(true);
       setTimeout(() => setResent(false), 4000);
     } catch {
-      setError('Could not resend code.');
+      setError('Could not resend code. Please try again.');
     }
   };
 

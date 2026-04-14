@@ -5,6 +5,7 @@ import './css/AuthPage.css';
 
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeat, setRepeat] = useState('');
@@ -12,7 +13,7 @@ const SignUpPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!email || !password || !repeat) {
+    if (!name || !email || !password || !repeat) {
       setError('Please fill in all fields.');
       return;
     }
@@ -27,7 +28,7 @@ const SignUpPage: React.FC = () => {
     setError('');
     setLoading(true);
     try {
-      await register({ email, password});
+      await register({ name, email, password });
       navigate('/verify', { state: { email } });
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed. Try again.');
@@ -45,6 +46,17 @@ const SignUpPage: React.FC = () => {
       <Link to="/" className="auth-back-btn">← Back</Link>
       <div className="auth-card">
         <h1 className="auth-title">Registration</h1>
+
+        <label className="auth-label">Name</label>
+        <input
+          className="auth-input"
+          type="text"
+          placeholder="Enter your name"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          onKeyDown={handleKeyDown}
+          autoComplete="name"
+        />
 
         <label className="auth-label">Email</label>
         <input

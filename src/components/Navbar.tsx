@@ -1,11 +1,18 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { isAuthenticated, logout } from '../api/auth';
 import './Navbar.css';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/verify';
-  const isCoursesActive = location.pathname.startsWith('/courses');
+  const loggedIn = isAuthenticated();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <nav className="navbar">
@@ -28,8 +35,14 @@ const Navbar: React.FC = () => {
         {!isAuth && (
           <>
             <span className="nav-lang">Eng</span>
-            <Link to="/login" className="btn-login">Login</Link>
-            <Link to="/signup" className="btn-signup">Sign Up</Link>
+            {loggedIn ? (
+              <button className="btn-login" onClick={handleLogout}>Logout</button>
+            ) : (
+              <>
+                <Link to="/login" className="btn-login">Login</Link>
+                <Link to="/signup" className="btn-signup">Sign Up</Link>
+              </>
+            )}
           </>
         )}
       </div>
