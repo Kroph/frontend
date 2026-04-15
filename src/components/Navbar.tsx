@@ -36,7 +36,10 @@ const Navbar: React.FC = () => {
           <>
             <span className="nav-lang">Eng</span>
             {loggedIn ? (
-              <button className="btn-login" onClick={handleLogout}>Logout</button>
+              <>
+                <Link to="/profile" className="nav-link" title="Profile">Profile</Link>
+                <button className="btn-login" onClick={handleLogout}>Logout</button>
+              </>
             ) : (
               <>
                 <Link to="/login" className="btn-login">Login</Link>

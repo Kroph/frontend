@@ -7,6 +7,7 @@ import VerificationPage from './pages/VerificationPage';
 import CoursesPage from './pages/CoursesPage';
 import CourseDetailPage from './pages/CourseDetailPage';
 import CreateCoursePage from './pages/CreateCoursePage';
+import ProfilePage from './pages/ProfilePage';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
@@ -25,6 +26,14 @@ const App: React.FC = () => {
           element={
             <PrivateRoute>
               <CreateCoursePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <ProfilePage />
             </PrivateRoute>
           }
         />

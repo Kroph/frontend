@@ -168,7 +168,6 @@
   color: var(--text-secondary);
 }
 
-/* Right column — About */
 .detail-right {
   display: flex;
   flex-direction: column;

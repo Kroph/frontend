@@ -6,7 +6,7 @@ import './css/AuthPage.css';
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as any)?.from?.pathname || '/';
+  const from = (location.state as any)?.from?.pathname || '/profile';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
