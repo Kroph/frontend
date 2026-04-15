@@ -26,6 +26,6 @@ public class RegisterRequest {
     private String password;
 
     @Schema(description = "The role of the user, e.g., STUDENT, TEACHER, or ADMIN")
-    private Role role;
+    private Role role = Role.STUDENT;
 }
 

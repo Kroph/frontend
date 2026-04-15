@@ -2,6 +2,7 @@ package com.diploma.Diplom.auth;
 
 import com.diploma.Diplom.exception.*;
 import com.diploma.Diplom.messaging.EmailProducer;
+import com.diploma.Diplom.model.Role;
 import com.diploma.Diplom.model.User;
 import com.diploma.Diplom.repository.UserRepository;
 import com.diploma.Diplom.security.JwtService;
@@ -36,7 +37,7 @@ public class AuthService {
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
+        user.setRole(request.getRole() != null ? request.getRole() : Role.STUDENT);
         user.setEnabled(false);
 
         userRepository.save(user);
