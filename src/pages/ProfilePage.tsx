@@ -18,7 +18,7 @@ const MOCK_PROFILE: UserProfile = {
   },
   courseCount: 5,
   enrolledCount: 12,
-  role: 'educator',
+  role: 'student',
 };
 
 const MOCK_REVIEWS: Review[] = [
@@ -85,6 +85,7 @@ const MOCK_COURSES: Course[] = [
   },
 ];
 
+// ── Sub-components ────────────────────────────────────────────────────────────
 
 const StarRating: React.FC<{ rating: number; size?: 'sm' | 'md' }> = ({
   rating,
@@ -124,6 +125,7 @@ const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
   );
 };
 
+// ── Edit Profile Modal ────────────────────────────────────────────────────────
 
 interface EditModalProps {
   profile: UserProfile;
@@ -132,6 +134,7 @@ interface EditModalProps {
 }
 
 const EditProfileModal: React.FC<EditModalProps> = ({ profile, onClose, onSave }) => {
+  const navigate = useNavigate();
   const [name, setName] = useState(profile.name || '');
   const [bio, setBio] = useState(profile.bio || '');
   const [twitter, setTwitter] = useState(profile.socialLinks?.twitter || '');
@@ -205,6 +208,25 @@ const EditProfileModal: React.FC<EditModalProps> = ({ profile, onClose, onSave }
           />
         </div>
 
+        {/* Teacher application — only show if not already qualified */}
+        {profile.role !== 'educator' && profile.role !== 'teacher' && (
+          <div className="modal-teacher-apply">
+            <div className="modal-teacher-apply-info">
+              <span className="modal-teacher-check">✓</span>
+              <div>
+                <p className="modal-teacher-title">Become a Qualified Teacher</p>
+                <p className="modal-teacher-sub">Submit your resume for AI screening & admin review</p>
+              </div>
+            </div>
+            <button
+              className="modal-teacher-btn"
+              onClick={() => { onClose(); navigate('/teacher-apply'); }}
+            >
+              Apply →
+            </button>
+          </div>
+        )}
+
         <div className="modal-actions">
           <button className="modal-btn-cancel" onClick={onClose}>
             Cancel
@@ -218,6 +240,7 @@ const EditProfileModal: React.FC<EditModalProps> = ({ profile, onClose, onSave }
   );
 };
 
+// ── Main Page ─────────────────────────────────────────────────────────────────
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -342,7 +365,7 @@ const ProfilePage: React.FC = () => {
           {(profile?.role === 'educator' || profile?.role === 'teacher') && (
             <div className="teacher-badge">
               <span className="teacher-badge-check">✓</span>
-              <span className="teacher-badge-label">Teacher</span>
+              <span className="teacher-badge-label">Qualified Teacher</span>
             </div>
           )}
 
