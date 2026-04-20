@@ -45,15 +45,15 @@ public class TeacherApplicationController {
     }
 
     @Operation(
-        summary = "Submit a teacher application (TEACHER role required)",
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Application submitted",
-                content = @Content(schema = @Schema(implementation = TeacherApplication.class))),
-            @ApiResponse(responseCode = "403", description = "Not a teacher role", content = @Content)
+    summary = "Submit a teacher application (authenticated users)",
+    responses = {
+        @ApiResponse(responseCode = "200", description = "Application submitted",
+            content = @Content(schema = @Schema(implementation = TeacherApplication.class))),
+        @ApiResponse(responseCode = "403", description = "Not authenticated", content = @Content)
         }
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('TEACHER')")
+    @PreAuthorize("hasAnyRole('STUDENT',TEACHER')")
     public TeacherApplication submitApplication(
             Principal principal,
             @RequestParam("fullName") String fullName,

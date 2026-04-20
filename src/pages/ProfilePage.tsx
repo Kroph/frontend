@@ -85,8 +85,6 @@ const MOCK_COURSES: Course[] = [
   },
 ];
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-
 const StarRating: React.FC<{ rating: number; size?: 'sm' | 'md' }> = ({
   rating,
   size = 'sm',
@@ -124,8 +122,6 @@ const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
     </div>
   );
 };
-
-// ── Edit Profile Modal ────────────────────────────────────────────────────────
 
 interface EditModalProps {
   profile: UserProfile;
@@ -239,8 +235,6 @@ const EditProfileModal: React.FC<EditModalProps> = ({ profile, onClose, onSave }
     </div>
   );
 };
-
-// ── Main Page ─────────────────────────────────────────────────────────────────
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();

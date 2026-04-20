@@ -14,15 +14,12 @@ const TeacherApplicationPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [dragOver, setDragOver] = useState(false);
 
-  // Form fields
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [specialization, setSpecialization] = useState('');
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-
-  // ── Validation ────────────────────────────────────────────────────────────
 
   const validate = () => {
     const errors: Record<string, string> = {};
@@ -38,7 +35,6 @@ const TeacherApplicationPage: React.FC = () => {
     return errors;
   };
 
-  // ── File handling ─────────────────────────────────────────────────────────
 
   const handleFileSelect = (file: File) => {
     setFieldErrors((e) => ({ ...e, resumeFile: '' }));
@@ -55,8 +51,6 @@ const TeacherApplicationPage: React.FC = () => {
     const file = e.dataTransfer.files?.[0];
     if (file) handleFileSelect(file);
   };
-
-  // ── Submit ────────────────────────────────────────────────────────────────
 
   const handleSubmit = async () => {
     const errors = validate();
@@ -85,8 +79,6 @@ const TeacherApplicationPage: React.FC = () => {
     }
   };
 
-  // ── UI helpers ────────────────────────────────────────────────────────────
-
   const Field: React.FC<{
     label: string;
     error?: string;
@@ -100,8 +92,6 @@ const TeacherApplicationPage: React.FC = () => {
       {error && <span className="tap-field-error">{error}</span>}
     </div>
   );
-
-  // ── Render states ─────────────────────────────────────────────────────────
 
   if (step === 'submitting') {
     return (
@@ -163,8 +153,6 @@ const TeacherApplicationPage: React.FC = () => {
       </div>
     );
   }
-
-  // ── Main form ─────────────────────────────────────────────────────────────
 
   return (
     <div className="tap-page">

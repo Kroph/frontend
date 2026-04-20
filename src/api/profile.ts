@@ -67,8 +67,7 @@ export interface TeacherApplicationFormData {
 
 export const getProfile = () => api.get<UserProfile>('/users/me');
 export const getMyReviews = () => api.get<Review[]>('/reviews/me');
-export const updateProfile = (data: Partial<UserProfile>) =>
-  api.put<UserProfile>('/users/me', data);
+export const updateProfile = (data: Partial<UserProfile>) => api.put<UserProfile>('/users/me', data);
 
 export const submitTeacherApplication = (data: TeacherApplicationFormData) => {
   const form = new FormData();
