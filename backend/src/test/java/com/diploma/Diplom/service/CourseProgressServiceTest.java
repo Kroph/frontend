@@ -32,9 +32,8 @@ class CourseProgressServiceTest {
     @Mock LessonRepository lessonRepository;
     @Mock QuizRepository quizRepository;
     @Mock CertificateRepository certificateRepository;
-
-    // 🔥 FIX: теперь это producer, а не service
     @Mock CertificateProducer certificateProducer;
+    @Mock com.diploma.Diplom.messaging.ActivityProducer activityProducer;
 
     @InjectMocks
     CourseProgressService courseProgressService;
@@ -61,7 +60,6 @@ class CourseProgressServiceTest {
         existingProgress.setCompleted(false);
     }
 
-    // ─────────────────────── markLessonCompleted ─────────────────────────
 
     @Test
     void markLessonCompleted_noQuiz_success() {
@@ -121,9 +119,7 @@ class CourseProgressServiceTest {
 
         courseProgressService.markLessonCompleted("user-1", "course-1", "lesson-1");
 
-        // 🔥 FIX: теперь проверяем RabbitMQ producer
-        verify(certificateProducer)
-                .requestCertificate("user-1", "course-1");
+        verify(certificateProducer).requestCertificate("user-1", "course-1");
     }
 
     @Test
@@ -140,11 +136,8 @@ class CourseProgressServiceTest {
 
         courseProgressService.markLessonCompleted("user-1", "course-1", "lesson-1");
 
-        verify(certificateProducer, never())
-                .requestCertificate(any(), any());
+        verify(certificateProducer, never()).requestCertificate(any(), any());
     }
-
-    // ─────────────────────── markQuizPassed ──────────────────────────────
 
     @Test
     void markQuizPassed_success() {
@@ -161,12 +154,9 @@ class CourseProgressServiceTest {
         assertThat(result.getPassedQuizIds()).contains("quiz-1");
     }
 
-    // ─────────────────────── isLessonUnlocked ────────────────────────────
-
     @Test
     void isLessonUnlocked_firstLesson_alwaysTrue() {
         lesson.setOrderIndex(0);
-
         when(lessonRepository.findById("lesson-1")).thenReturn(Optional.of(lesson));
 
         boolean result =

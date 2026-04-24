@@ -221,7 +221,7 @@
 .star-rating { color: #f0c040; font-style: normal; }
 .rating-num { color: var(--text-secondary); font-style: italic; }
 
-.course-price-badge {
+.course-btn-enroll {
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--text-primary);

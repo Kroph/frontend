@@ -8,14 +8,14 @@ const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 const CATEGORIES = ['All', 'Web Development','Mobile Development','Design','Mathematics','Science'];
 
 const MOCK_COURSES: Course[] = [
-  { id: '1', title: 'Introduction to React', description: 'Learn React from scratch', teacherId: 't1', teacherName: 'Alice Johnson', category: 'Technology', level: 'Beginner', published: true, createdAt: '', updatedAt: '', price: 49, rating: 4.7 },
-  { id: '2', title: 'Advanced TypeScript', description: 'Deep dive into TypeScript', teacherId: 't2', teacherName: 'Bob Smith', category: 'Technology', level: 'Advanced', published: true, createdAt: '', updatedAt: '', price: 79, rating: 4.9 },
-  { id: '3', title: 'UI/UX Design Principles', description: 'Master design thinking', teacherId: 't3', teacherName: 'Carol White', category: 'Design', level: 'Intermediate', published: true, createdAt: '', updatedAt: '', price: 59, rating: 4.5 },
-  { id: '4', title: 'Spring Boot Mastery', description: 'Build production-grade APIs', teacherId: 't4', teacherName: 'David Lee', category: 'Technology', level: 'Intermediate', published: true, createdAt: '', updatedAt: '', price: 89, rating: 4.8 },
-  { id: '5', title: 'Business Strategy', description: 'Grow your business', teacherId: 't5', teacherName: 'Emma Davis', category: 'Business', level: 'Beginner', published: true, createdAt: '', updatedAt: '', price: 39, rating: 4.3 },
-  { id: '6', title: 'Data Science with Python', description: 'ML and data analysis', teacherId: 't6', teacherName: 'Frank Chen', category: 'Science', level: 'Intermediate', published: true, createdAt: '', updatedAt: '', price: 99, rating: 4.6 },
-  { id: '7', title: 'Graphic Design Fundamentals', description: 'Visual communication basics', teacherId: 't7', teacherName: 'Grace Kim', category: 'Design', level: 'Beginner', published: true, createdAt: '', updatedAt: '', price: 45, rating: 4.4 },
-  { id: '8', title: 'MongoDB & NoSQL', description: 'Database design patterns', teacherId: 't8', teacherName: 'Henry Park', category: 'Technology', level: 'Advanced', published: true, createdAt: '', updatedAt: '', price: 69, rating: 4.7 },
+  { id: '1', title: 'Introduction to React', description: 'Learn React from scratch', teacherId: 't1', teacherName: 'Alice Johnson', category: 'Technology', level: 'Beginner', published: true, createdAt: '', updatedAt: '', rating: 4.7 },
+  { id: '2', title: 'Advanced TypeScript', description: 'Deep dive into TypeScript', teacherId: 't2', teacherName: 'Bob Smith', category: 'Technology', level: 'Advanced', published: true, createdAt: '', updatedAt: '', rating: 4.9 },
+  { id: '3', title: 'UI/UX Design Principles', description: 'Master design thinking', teacherId: 't3', teacherName: 'Carol White', category: 'Design', level: 'Intermediate', published: true, createdAt: '', updatedAt: '', rating: 4.5 },
+  { id: '4', title: 'Spring Boot Mastery', description: 'Build production-grade APIs', teacherId: 't4', teacherName: 'David Lee', category: 'Technology', level: 'Intermediate', published: true, createdAt: '', updatedAt: '', rating: 4.8 },
+  { id: '5', title: 'Business Strategy', description: 'Grow your business', teacherId: 't5', teacherName: 'Emma Davis', category: 'Business', level: 'Beginner', published: true, createdAt: '', updatedAt: '', rating: 4.3 },
+  { id: '6', title: 'Data Science with Python', description: 'ML and data analysis', teacherId: 't6', teacherName: 'Frank Chen', category: 'Science', level: 'Intermediate', published: true, createdAt: '', updatedAt: '', rating: 4.6 },
+  { id: '7', title: 'Graphic Design Fundamentals', description: 'Visual communication basics', teacherId: 't7', teacherName: 'Grace Kim', category: 'Design', level: 'Beginner', published: true, createdAt: '', updatedAt: '', rating: 4.4 },
+  { id: '8', title: 'MongoDB & NoSQL', description: 'Database design patterns', teacherId: 't8', teacherName: 'Henry Park', category: 'Technology', level: 'Advanced', published: true, createdAt: '', updatedAt: '', rating: 4.7 },
 ];
 
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
@@ -141,8 +141,8 @@ const CoursesPage: React.FC = () => {
                   <span className="course-rate">
                     {course.rating ? <StarRating rating={course.rating} /> : 'No rating'}
                   </span>
-                  <span className="course-price-badge">
-                    {course.price ? `$${course.price}` : 'Free'}
+                  <span className="course-btn-enroll">
+                    Enroll
                   </span>
                 </div>
               </Link>

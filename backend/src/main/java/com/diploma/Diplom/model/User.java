@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -22,9 +23,10 @@ public class User {
     @Schema(description = "Email address of the user, used for login and notifications")
     private String email;
 
-    @Schema(description = "Hashed password — never returned in API responses")
+    @Schema(description = "Hashed password — never returned in API responses", accessMode = Schema.AccessMode.WRITE_ONLY)
+    @JsonIgnore
     private String password;
-    
+
     @Schema(description = "Role of the user: STUDENT or TEACHER")
     private Role role;
 
@@ -39,4 +41,10 @@ public class User {
 
     @Schema(description = "Whether the teacher has been approved by an admin after passing the qualification quiz")
     private boolean teacherApproved;
+
+    @Schema(description = "Profile Image Url")
+    private String profileImageUrl;
+
+    @Schema(description = "Age of the user")
+    private Integer age;
 }

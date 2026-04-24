@@ -26,7 +26,6 @@ const Navbar: React.FC = () => {
         {!isAuth && (
           <div className="navbar-links">
             <Link to="/courses" className={`nav-link`}>Courses</Link>
-            <Link to="/" className="nav-link">My Courses</Link>
             <Link to="/courses/create" className="nav-link">Make Course</Link>
           </div>
         )}

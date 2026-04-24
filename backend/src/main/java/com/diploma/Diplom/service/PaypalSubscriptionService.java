@@ -1,8 +1,13 @@
 package com.diploma.Diplom.service;
 
+import com.diploma.Diplom.dto.PayPalLink;
+import com.diploma.Diplom.dto.PayPalSubscriptionResponse;
+import com.diploma.Diplom.exception.BadRequestException;
+import com.diploma.Diplom.exception.PaymentException;
 import com.diploma.Diplom.model.Subscription;
 import com.diploma.Diplom.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -32,6 +37,9 @@ public class PaypalSubscriptionService {
     @Value("${paypal.plan-id}")
     private String planId;
 
+    @Value("${app.base-url}")
+    private String appBaseUrl;
+
     public PaypalSubscriptionService(RestTemplate restTemplate,
                                      SubscriptionService subscriptionService,
                                      SecurityUtils securityUtils) {
@@ -41,11 +49,10 @@ public class PaypalSubscriptionService {
     }
 
     public String getPlanId() {
-    return planId;
-}
+        return planId;
+    }
 
     public String getAccessToken() {
-
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(clientId, clientSecret);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -53,20 +60,22 @@ public class PaypalSubscriptionService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "client_credentials");
 
-        HttpEntity<?> request = new HttpEntity<>(body, headers);
-
-        ResponseEntity<Map> response = restTemplate.postForEntity(
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                 baseUrl + "/v1/oauth2/token",
-                request,
-                Map.class
+                HttpMethod.POST,
+                new HttpEntity<>(body, headers),
+                new ParameterizedTypeReference<>() {}
         );
 
-        return (String) response.getBody().get("access_token");
+        Map<String, Object> responseBody = response.getBody();
+        if (responseBody == null || responseBody.get("access_token") == null) {
+            throw new PaymentException("Failed to get PayPal access token");
+        }
+        return (String) responseBody.get("access_token");
     }
 
     public String createSubscriptionAndGetApprovalLink() {
-
-        String token = getAccessToken(); 
+        String token = getAccessToken();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -77,32 +86,31 @@ public class PaypalSubscriptionService {
 
         Map<String, Object> context = new HashMap<>();
         context.put("brand_name", "Diploma App");
-        context.put("return_url", "http://localhost:8080/subscriptions/paypal/confirm");
-        context.put("cancel_url", "http://localhost:8080/subscriptions/paypal/cancel");
-
+        // Use configurable base URL, not hardcoded localhost
+        context.put("return_url", appBaseUrl + "/subscriptions/paypal/confirm");
+        context.put("cancel_url", appBaseUrl + "/subscriptions/paypal/cancel");
         body.put("application_context", context);
 
-        HttpEntity<Map<String, Object>> request =
-                new HttpEntity<>(body, headers);
-
-        ResponseEntity<Map> response = restTemplate.postForEntity(
+        ResponseEntity<PayPalSubscriptionResponse> response = restTemplate.exchange(
                 baseUrl + "/v1/billing/subscriptions",
-                request,
-                Map.class
+                HttpMethod.POST,
+                new HttpEntity<>(body, headers),
+                PayPalSubscriptionResponse.class
         );
 
-        Map<String, Object> responseBody = response.getBody();
+        PayPalSubscriptionResponse responseBody = response.getBody();
+        if (responseBody == null) {
+            throw new PaymentException("Empty response from PayPal when creating subscription");
+        }
 
-        String subscriptionId = (String) responseBody.get("id");
-
-        List<Map<String, String>> links =
-                (List<Map<String, String>>) responseBody.get("links");
+        String subscriptionId = responseBody.getId();
+        List<PayPalLink> links = responseBody.getLinks();
 
         String approvalUrl = links.stream()
-                .filter(l -> "approve".equals(l.get("rel")))
-                .map(l -> l.get("href"))
+                .filter(l -> "approve".equals(l.getRel()))
+                .map(PayPalLink::getHref)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Approval link not found"));
+                .orElseThrow(() -> new PaymentException("Approval link not found in PayPal response"));
 
         subscriptionService.createPendingSubscription(
                 securityUtils.getCurrentUserId(),
@@ -115,25 +123,26 @@ public class PaypalSubscriptionService {
     }
 
     public Subscription confirmSubscription(String subscriptionId) {
-
         String token = getAccessToken();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
 
-        HttpEntity<Void> request = new HttpEntity<>(headers);
-
-        ResponseEntity<Map> response = restTemplate.exchange(
+        ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                 baseUrl + "/v1/billing/subscriptions/" + subscriptionId,
                 HttpMethod.GET,
-                request,
-                Map.class
+                new HttpEntity<>(headers),
+                new ParameterizedTypeReference<>() {}
         );
 
-        String status = (String) response.getBody().get("status");
+        Map<String, Object> responseBody = response.getBody();
+        if (responseBody == null) {
+            throw new PaymentException("Empty response from PayPal when verifying subscription");
+        }
 
+        String status = (String) responseBody.get("status");
         if (!"ACTIVE".equals(status)) {
-            throw new RuntimeException("Subscription not active: " + status);
+            throw new BadRequestException("Subscription not active in PayPal: " + status);
         }
 
         return subscriptionService.activateSubscription(subscriptionId);

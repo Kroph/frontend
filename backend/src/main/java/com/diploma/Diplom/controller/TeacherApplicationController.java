@@ -45,15 +45,15 @@ public class TeacherApplicationController {
     }
 
     @Operation(
-    summary = "Submit a teacher application (authenticated users)",
-    responses = {
-        @ApiResponse(responseCode = "200", description = "Application submitted",
-            content = @Content(schema = @Schema(implementation = TeacherApplication.class))),
-        @ApiResponse(responseCode = "403", description = "Not authenticated", content = @Content)
+        summary = "Submit a teacher application (authenticated users)",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Application submitted",
+                content = @Content(schema = @Schema(implementation = TeacherApplication.class))),
+            @ApiResponse(responseCode = "403", description = "Access denied", content = @Content)
         }
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAnyRole('STUDENT',TEACHER')")
+    @PreAuthorize("isAuthenticated()")
     public TeacherApplication submitApplication(
             Principal principal,
             @RequestParam("fullName") String fullName,
@@ -64,11 +64,11 @@ public class TeacherApplicationController {
             @Parameter(description = "Resume PDF file")
             @RequestParam("resumeFile") MultipartFile resumeFile
     ) {
-        User user = userRepository.findByEmail(principal.getName())
+        User user = userRepository.findById(principal.getName())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         TeacherApplicationRequest request = new TeacherApplicationRequest();
-        request.setUserId(user.getId()); 
+        request.setUserId(user.getId());
         request.setFullName(fullName);
         request.setEmail(email);
         request.setSpecialization(specialization);

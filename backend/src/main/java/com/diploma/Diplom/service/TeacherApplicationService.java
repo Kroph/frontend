@@ -41,12 +41,16 @@ public class TeacherApplicationService {
     }
 
     public TeacherApplication submitApplication(TeacherApplicationRequest request, MultipartFile resumeFile) {
-        String currentUserEmail = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getName();
+        String userId = SecurityContextHolder.getContext()
+            .getAuthentication()
+            .getName();
 
-        User user = userRepository.findByEmail(currentUserEmail)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (user.getRole() != Role.TEACHER) {
+            throw new ForbiddenException("Only TEACHER users can submit teacher applications");
+        }
 
         if (teacherApplicationRepository.findByUserId(user.getId()).isPresent()) {
             throw new BadRequestException("Teacher application already exists for this user");
@@ -153,8 +157,12 @@ public class TeacherApplicationService {
     }
 
     public TeacherApplication getMyApplication(String userId) {
-        User user = userRepository.findByEmail(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (user.getRole() != Role.TEACHER) {
+            throw new ForbiddenException("Only teachers can view teacher application status");
+        }
 
         return teacherApplicationRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found"));
