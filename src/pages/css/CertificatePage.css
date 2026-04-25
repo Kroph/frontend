@@ -1,0 +1,238 @@
+.cert-page {
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+.cert-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 3rem;
+}
+
+.cert-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.cert-header h1 {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.cert-sub {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.cert-form {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+.cert-input {
+  flex: 1;
+  background: var(--input-bg);
+  color: var(--input-color);
+  border: none;
+  border-radius: 12px;
+  padding: 0.7rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  outline: none;
+}
+.cert-input::placeholder { color: var(--input-placeholder); }
+.cert-btn {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.65rem 1.6rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cert-btn:hover:not(:disabled) { background: var(--accent-hover); }
+.cert-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.cert-error {
+  text-align: center;
+  font-family: var(--font-mono);
+  background: rgba(195, 64, 64, 0.15);
+  color: #ff7060;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.cert-empty {
+  font-family: var(--font-mono);
+  font-style: italic;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem 0;
+}
+.cert-empty-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.cert-browse-btn {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--text-primary);
+  padding: 0.6rem 1.6rem;
+  border-radius: 20px;
+  text-decoration: none;
+}
+.cert-browse-btn:hover { background: var(--accent-hover); }
+
+.cert-card {
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-card-dark));
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  margin-top: 1rem;
+}
+.cert-valid-banner {
+  background: var(--accent);
+  color: white;
+  padding: 0.7rem 1.2rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+.cert-check {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  background: white;
+  color: var(--accent);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 22px;
+  margin-right: 0.5rem;
+  font-weight: 900;
+}
+
+.cert-body {
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+.cert-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+}
+.cert-name {
+  font-family: var(--font-mono);
+  font-style: italic;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 1rem;
+}
+.cert-course {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+.cert-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+}
+.cert-mono {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  word-break: break-all;
+  color: var(--text-secondary);
+}
+
+.cert-pdf-btn {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--btn-dark);
+  color: var(--text-primary);
+  padding: 0.6rem 1.6rem;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.cert-pdf-btn:hover { background: var(--accent); }
+
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+.cert-mini {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 1.4rem;
+  border-left: 4px solid var(--accent);
+}
+.cert-mini h3 {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.cert-mini-meta {
+  font-family: var(--font-mono);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.3rem;
+}
+.cert-mini-date {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0.9rem;
+}
+.cert-mini-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.cert-mini-btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--btn-dark);
+  color: var(--text-primary);
+  padding: 0.4rem 0.9rem;
+  border-radius: 14px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cert-mini-btn:hover { background: var(--accent); }
+
+@media (max-width: 600px) {
+  .cert-container { padding: 1.5rem 1.2rem; }
+  .cert-name { font-size: 1.5rem; }
+  .cert-meta { grid-template-columns: 1fr; }
+}

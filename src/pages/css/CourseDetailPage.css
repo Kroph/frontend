@@ -11,7 +11,6 @@
   font-size: 1rem;
 }
 
-/* Top bar */
 .detail-topbar {
   display: flex;
   align-items: center;
@@ -43,7 +42,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Two-column layout */
 .detail-content {
   display: grid;
   grid-template-columns: 1fr 0.72fr;
@@ -53,7 +51,6 @@
   margin: 0 auto;
 }
 
-/* Left column */
 .detail-left {
   display: flex;
   flex-direction: column;
@@ -93,7 +90,6 @@
   color: rgba(9, 58, 82, 0.5);
 }
 
-/* Educator / Rate row */
 .detail-meta-row {
   background: var(--bg-card);
   border-top: 1px solid rgba(255,255,255,0.06);
@@ -120,7 +116,6 @@
 .detail-stars { color: #f0c040; font-style: normal; }
 .detail-rating-num { color: var(--text-secondary); font-style: italic; }
 
-/* Lessons box */
 .detail-lessons-box {
   background: var(--bg-card);
   border-radius: 0 0 12px 12px;

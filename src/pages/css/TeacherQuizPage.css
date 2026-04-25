@@ -1,0 +1,162 @@
+.tquiz-page {
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+.tquiz-loading {
+  text-align: center;
+  margin: 4rem 0;
+  font-family: var(--font-mono);
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.tquiz-container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.tquiz-back {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.4);
+  color: var(--text-primary);
+  border-radius: 20px;
+  padding: 0.4rem 1.2rem;
+  cursor: pointer;
+  margin-bottom: 1.2rem;
+  transition: all 0.2s;
+}
+.tquiz-back:hover { background: rgba(255,255,255,0.08); }
+
+.tquiz-header { margin-bottom: 1.5rem; }
+.tquiz-header h1 {
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.tquiz-sub {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.tquiz-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+.tquiz-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.3rem;
+}
+.tquiz-q {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  margin-bottom: 0.9rem;
+  line-height: 1.5;
+}
+.tquiz-num { color: var(--accent); font-weight: 700; margin-right: 0.4rem; }
+
+.tquiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tquiz-option {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  border: 2px solid transparent;
+  transition: all 0.15s;
+}
+.tquiz-option:hover { background: rgba(255,255,255,0.08); }
+.tquiz-option.selected {
+  border-color: var(--accent);
+  background: rgba(43, 168, 204, 0.15);
+}
+.tquiz-option input { accent-color: var(--accent); }
+
+.tquiz-submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1rem 1.4rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.tquiz-progress {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+.tquiz-btn {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.65rem 1.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.tquiz-btn:hover:not(:disabled) { background: var(--accent-hover); }
+.tquiz-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.tquiz-result {
+  max-width: 500px;
+  margin: 3rem auto;
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.tquiz-result-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+}
+.tquiz-result-icon.pass { background: #2bcc7c; }
+.tquiz-result-icon.fail { background: #c34040; }
+.tquiz-result h1 {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+}
+.tquiz-result-score {
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.tquiz-result-meta {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}

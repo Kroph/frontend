@@ -1,0 +1,239 @@
+.edit-course-page {
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+.ec-loading {
+  text-align: center;
+  margin: 4rem 0;
+  font-family: var(--font-mono);
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.ec-container {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 2rem 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.ec-back {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.4);
+  color: var(--text-primary);
+  border-radius: 20px;
+  padding: 0.4rem 1.2rem;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all 0.2s;
+}
+.ec-back:hover { background: rgba(255,255,255,0.08); }
+
+.ec-header h1 {
+  font-family: var(--font-mono);
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.ec-sub {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.ec-error {
+  background: rgba(195, 64, 64, 0.15);
+  color: #ff7060;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.ec-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.ec-card h2 {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.ec-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+}
+.ec-field span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ec-input {
+  background: var(--input-bg);
+  color: var(--input-color);
+  border: none;
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  outline: none;
+}
+.ec-file {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.ec-field-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.ec-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+}
+.ec-toggle input { accent-color: var(--accent); }
+
+.ec-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.ec-save-btn {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.65rem 1.6rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.ec-save-btn:hover:not(:disabled) { background: var(--accent-hover); }
+.ec-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ec-secondary-btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 16px;
+  padding: 0.45rem 1.1rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+}
+.ec-secondary-btn:hover { border-color: var(--text-primary); background: rgba(255,255,255,0.05); }
+
+.ec-danger-btn {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: transparent;
+  color: #ff7060;
+  border: 1px solid rgba(255, 112, 96, 0.4);
+  border-radius: 14px;
+  padding: 0.45rem 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+.ec-danger-btn:hover { background: #c34040; color: white; border-color: #c34040; }
+
+.ec-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ec-add-btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--text-primary);
+  padding: 0.4rem 0.95rem;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.ec-add-btn:hover { background: var(--accent-hover); }
+
+.ec-empty {
+  font-family: var(--font-mono);
+  font-style: italic;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 1rem;
+}
+
+.ec-lesson-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.ec-lesson-row {
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 0.8rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ec-lesson-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.ec-lesson-num { color: var(--accent); margin-right: 0.4rem; }
+.ec-lesson-meta {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+.ec-lesson-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ec-danger-zone {
+  border: 1px solid rgba(255, 112, 96, 0.3);
+}
+.ec-warning {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .ec-container { padding: 1.5rem 1rem; }
+  .ec-field-row { grid-template-columns: 1fr; }
+}

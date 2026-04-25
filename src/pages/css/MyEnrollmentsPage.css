@@ -1,0 +1,186 @@
+.enrollments-page {
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+.enr-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 3rem;
+}
+
+.enr-header {
+  margin-bottom: 1.5rem;
+}
+.enr-header h1 {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.enr-sub {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.enr-filters {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+  flex-wrap: wrap;
+}
+.enr-filter {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 18px;
+  padding: 0.4rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.enr-filter:hover { border-color: var(--text-primary); color: var(--text-primary); }
+.enr-filter.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.enr-empty {
+  font-family: var(--font-mono);
+  font-style: italic;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.enr-empty-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.enr-browse-btn {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--text-primary);
+  padding: 0.6rem 1.6rem;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.enr-browse-btn:hover { background: var(--accent-hover); }
+
+.enr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+
+.enr-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.enr-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.enr-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #d0cece;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.enr-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.enr-thumb-ph {
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  color: rgba(9, 58, 82, 0.5);
+}
+
+.enr-completed-badge {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: #2bcc7c;
+  color: #073a25;
+  font-weight: 700;
+  padding: 0.25rem 0.7rem;
+  border-radius: 12px;
+}
+
+.enr-info {
+  padding: 1rem 1.2rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.enr-card-title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+.enr-card-teacher {
+  font-family: var(--font-mono);
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.enr-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+.enr-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.enr-progress-bar > div {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+.enr-progress-pct {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  min-width: 38px;
+  text-align: right;
+}
+.enr-cert-link {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-top: 0.3rem;
+}
+.enr-cert-link:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .enr-container { padding: 1.5rem 1.2rem; }
+  .enr-grid { grid-template-columns: 1fr; }
+}

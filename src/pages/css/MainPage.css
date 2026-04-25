@@ -3,7 +3,6 @@
   background: var(--bg-deep);
 }
 
-/* Hero */
 .hero {
   padding: 5rem 4rem 6rem;
   min-height: calc(100vh - 72px);
@@ -102,7 +101,6 @@
   color: var(--accent-hover);
 }
 
-/* Features */
 .features {
   padding: 5rem 4rem;
   background: rgba(0,0,0,0.15);

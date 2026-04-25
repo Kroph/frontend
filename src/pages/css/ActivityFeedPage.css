@@ -1,0 +1,81 @@
+.activity-page {
+  min-height: 100vh;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+}
+
+.af-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+}
+
+.af-header { margin-bottom: 1.5rem; }
+.af-header h1 {
+  font-family: var(--font-mono);
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.af-sub {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.af-empty {
+  font-family: var(--font-mono);
+  font-style: italic;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.af-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.af-item {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 0.9rem 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  transition: transform 0.2s;
+}
+.af-item:hover { transform: translateX(2px); }
+
+.af-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.af-icon.af-good { background: rgba(43, 204, 124, 0.2); color: #2bcc7c; }
+.af-icon.af-bad { background: rgba(195, 64, 64, 0.2); color: #ff7060; }
+.af-icon.af-gold { background: rgba(240, 192, 64, 0.2); color: #f0c040; }
+.af-icon.af-neutral { background: rgba(43, 168, 204, 0.2); color: var(--accent); }
+
+.af-body { flex: 1; }
+.af-msg {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  margin-bottom: 0.2rem;
+}
+.af-time {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
