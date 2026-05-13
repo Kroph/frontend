@@ -39,7 +39,6 @@ const CertificateVerifyPage: React.FC = () => {
       if (err?.response?.status === 404) {
         setError('No certificate found for that code.');
       } else {
-        // Fallback to mock if backend unreachable
         setCert({ ...MOCK_CERT, verificationCode: c.trim() });
       }
     } finally {
@@ -49,7 +48,6 @@ const CertificateVerifyPage: React.FC = () => {
 
   useEffect(() => {
     if (codeParam) runLookup(codeParam);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [codeParam]);
 
   const handleSubmit = (e: React.FormEvent) => {

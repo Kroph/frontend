@@ -170,11 +170,6 @@
   margin-bottom: 0.4rem;
 }
 
-.footer-sub {
-  font-size: 0.75rem !important;
-  opacity: 0.6;
-}
-
 @media (max-width: 900px) {
   .hero-content { flex-direction: column; text-align: center; gap: 2rem; }
   .hero-title { font-size: 3.5rem; }

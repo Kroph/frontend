@@ -250,14 +250,12 @@ const LessonPage: React.FC = () => {
     try {
       const res = await addLessonComment(lessonId, newComment.trim(), replyTo);
       if (replyTo) {
-        // Replies live under the parent — we just clear the input.
       } else {
         setComments((prev) => [res.data, ...prev]);
       }
       setNewComment('');
       setReplyTo(null);
     } catch {
-      // optimistic local fallback
       const fake: LessonComment = {
         id: `local-${Date.now()}`,
         lessonId,
@@ -294,7 +292,6 @@ const LessonPage: React.FC = () => {
     try {
       await deleteLessonComment(lessonId, commentId);
     } catch {
-      // fall through to local removal
     }
     setComments((prev) => prev.filter((c) => c.id !== commentId));
   };
@@ -309,7 +306,6 @@ const LessonPage: React.FC = () => {
     try {
       const res = await completeLesson(courseId, lessonId);
       setProgress(res.data);
-      // Auto-navigate to next lesson if available
       const idx = siblings.findIndex((l) => l.id === lessonId);
       if (idx >= 0 && idx < siblings.length - 1) {
         const next = siblings[idx + 1];
@@ -323,8 +319,6 @@ const LessonPage: React.FC = () => {
   };
 
   const hasPassedQuiz = (): boolean => {
-    // Heuristic: progress.completedLessonIds will only include lessons whose
-    // gate was satisfied. The real check happens on the server.
     if (!quiz) return true;
     return progress?.completedLessonIds.includes(lessonId || '') ?? false;
   };

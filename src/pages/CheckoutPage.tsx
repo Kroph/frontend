@@ -54,8 +54,6 @@ const CheckoutPage: React.FC = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  // PayPal redirects back with ?token=ORDER_ID&PayerID=... for orders
-  // and ?subscription_id=... for subscriptions.
   useEffect(() => {
     const orderToken = params.get('token');
     const subscriptionId = params.get('subscription_id');

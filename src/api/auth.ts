@@ -1,30 +1,4 @@
-import axios from 'axios';
-
-const API_BASE = 'http://localhost:8080';
-
-const api = axios.create({
-  baseURL: API_BASE,
-  headers: { 'Content-Type': 'application/json' },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+import api from './index';
 
 export interface RegisterRequest {
   name: string;
@@ -42,26 +16,35 @@ export interface VerifyRequest {
   code: string;
 }
 
-export interface ResendRequest {
+export const register = (data: RegisterRequest) =>
+  api.post<{ message: string }>('/auth/register', data);
+
+export interface LoginResponse {
+  token: string;
+  role: string;
+  teacherApproved: boolean;
   email: string;
+  name: string;
 }
 
-export const register = (data: RegisterRequest) =>
-  api.post('/auth/register', data);
-
 export const login = (data: LoginRequest) =>
-  api.post('/auth/login', data);
+  api.post<LoginResponse>('/auth/login', data);
 
 export const verify = (data: VerifyRequest) =>
-  api.post('/auth/verify', data);
+  api.post<string>('/auth/verify', data);
 
-export const resendCode = (data: ResendRequest) =>
-  api.post('/auth/resend', data);
+export const resendCode = (data: Pick<VerifyRequest, 'email'>) =>
+  api.post<{ message: string }>('/auth/resend-code', data);
+
+export const logout = () => api.post<{ message: string }>('/auth/logout');
 
 export const isAuthenticated = (): boolean => !!localStorage.getItem('token');
 
-export const logout = (): void => {
+export const getUserRole = (): string | null => localStorage.getItem('role');
+
+export const clearToken = (): void => {
   localStorage.removeItem('token');
+  localStorage.removeItem('role');
 };
 
 export default api;

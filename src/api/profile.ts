@@ -1,17 +1,4 @@
-import axios from 'axios';
-
-const API_BASE = 'http://localhost:8080';
-
-const api = axios.create({
-  baseURL: API_BASE,
-  headers: { 'Content-Type': 'application/json' },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+import api from './index';
 
 export interface UserProfile {
   id: string;
@@ -19,25 +6,28 @@ export interface UserProfile {
   email: string;
   bio?: string;
   avatarUrl?: string;
+  role?: string;
+  courseCount?: number;
+  enrolledCount?: number;
   socialLinks?: {
     twitter?: string;
     linkedin?: string;
     github?: string;
-    website?: string;
   };
-  courseCount?: number;
-  enrolledCount?: number;
-  role?: string;
 }
 
 export interface Review {
   id: string;
-  reviewerName: string;
-  reviewerAvatar?: string;
+  reviewerName?: string;
   rating: number;
-  comment: string;
+  comment?: string;
   courseTitle?: string;
   createdAt: string;
+}
+
+export interface UpdateProfileRequest {
+  name?: string;
+  bio?: string;
 }
 
 export interface TeacherApplication {
@@ -65,9 +55,18 @@ export interface TeacherApplicationFormData {
   resumeFile: File;
 }
 
-export const getProfile = () => api.get<UserProfile>('/users/me');
-export const getMyReviews = () => api.get<Review[]>('/reviews/me');
-export const updateProfile = (data: Partial<UserProfile>) => api.put<UserProfile>('/users/me', data);
+export const getProfile = () => api.get<UserProfile>('/profile/me');
+
+export const updateProfile = (data: UpdateProfileRequest) =>
+  api.put<void>('/profile/me', data);
+
+export const uploadAvatar = (file: File) => {
+  const form = new FormData();
+  form.append('file', file);
+  return api.post<UserProfile>('/profile/me/avatar', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
 
 export const submitTeacherApplication = (data: TeacherApplicationFormData) => {
   const form = new FormData();
@@ -83,5 +82,7 @@ export const submitTeacherApplication = (data: TeacherApplicationFormData) => {
 
 export const getMyApplication = () =>
   api.get<TeacherApplication>('/teacher-applications/me');
+
+export const getMyReviews = () => api.get<Review[]>('/courses/ratings/my');
 
 export default api;

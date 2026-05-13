@@ -38,7 +38,7 @@ const CoursesPage: React.FC = () => {
 
   useEffect(() => {
     getCourses()
-      .then(res => setCourses(res.data))
+      .then(res => setCourses(res.data.content))
       .catch(() => setCourses(MOCK_COURSES))
       .finally(() => setLoading(false));
   }, []);

@@ -96,7 +96,6 @@ const QuizPage: React.FC = () => {
     try {
       await startQuiz(quizId);
     } catch {
-      // session start can fail offline — we still let them try
     }
     setAnswers({});
     setSecondsLeft(quiz.timeLimitSeconds || null);
@@ -118,8 +117,6 @@ const QuizPage: React.FC = () => {
       setResult(res.data);
       setAttempts((prev) => [res.data, ...prev]);
     } catch (err: any) {
-      // Local fallback grading isn't possible — server hides correct answers.
-      // Show a generic failure result instead.
       const fake: QuizAttempt = {
         id: `local-${Date.now()}`,
         userId: 'me',
@@ -232,7 +229,6 @@ const QuizPage: React.FC = () => {
     );
   }
 
-  // taking phase
   const allAnswered = quiz.questions.every((_, i) => answers[i] !== undefined);
 
   return (

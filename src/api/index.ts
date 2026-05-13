@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_BASE = 'http://localhost:8080';
+export const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL ?? 'http://localhost:8080';
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -26,6 +26,7 @@ api.interceptors.response.use(
   }
 );
 
+export default api;
 export interface Lesson {
   id: string;
   courseId: string;
@@ -69,12 +70,14 @@ export const addLessonComment = (
   content: string,
   parentId?: string | null
 ) =>
-  api.post<LessonComment>(`/lessons/${lessonId}/comments`, { content, parentId: parentId ?? null });
+  api.post<LessonComment>(`/lessons/${lessonId}/comments`, {
+    content,
+    parentId: parentId ?? null,
+  });
 export const markCommentAsAnswer = (lessonId: string, commentId: string) =>
   api.patch<LessonComment>(`/lessons/${lessonId}/comments/${commentId}/mark-answer`);
 export const deleteLessonComment = (lessonId: string, commentId: string) =>
   api.delete<string>(`/lessons/${lessonId}/comments/${commentId}`);
-
 export interface CourseProgress {
   id: string;
   userId: string;
@@ -98,7 +101,6 @@ export const isLessonUnlocked = (courseId: string, lessonId: string) =>
 export interface QuizQuestion {
   question: string;
   options: string[];
-  // correctAnswerIndex is intentionally absent on GET (server hides it)
 }
 export interface Quiz {
   id: string;
@@ -283,15 +285,13 @@ export const getAllApplications = () =>
 export const getPendingApplications = () =>
   api.get<TeacherApplicationDetail[]>('/teacher-applications/pending');
 export const approveApplication = (applicationId: string, comment?: string) =>
-  api.post<TeacherApplicationDetail>(
-    `/teacher-applications/${applicationId}/approve`,
-    { reviewComment: comment }
-  );
+  api.post<TeacherApplicationDetail>(`/teacher-applications/${applicationId}/approve`, {
+    reviewComment: comment,
+  });
 export const rejectApplication = (applicationId: string, comment?: string) =>
-  api.post<TeacherApplicationDetail>(
-    `/teacher-applications/${applicationId}/reject`,
-    { reviewComment: comment }
-  );
+  api.post<TeacherApplicationDetail>(`/teacher-applications/${applicationId}/reject`, {
+    reviewComment: comment,
+  });
 
 export interface TeacherQuizQuestion {
   id?: string;
@@ -325,9 +325,15 @@ export const getMyActivity = () => api.get<ActivityFeed[]>('/activity');
 
 export const deleteCourse = (courseId: string) =>
   api.delete<string>(`/courses/${courseId}`);
-export const getMyCourses = () =>
-  api.get<BookmarkCourse[]>('/courses/my');
-export const getPublicCourses = () =>
-  api.get<BookmarkCourse[]>('/courses/public');
+export const getMyCourses = () => api.get<BookmarkCourse[]>('/courses/my');
 
-export default api;
+export const getPublicCourses = (params?: {
+  category?: string;
+  level?: string;
+  page?: number;
+  size?: number;
+}) =>
+  api.get<{ content: BookmarkCourse[]; totalElements: number; totalPages: number }>(
+    '/courses/public',
+    { params }
+  );

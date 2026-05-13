@@ -270,7 +270,7 @@ const ProfilePage: React.FC = () => {
           profileRes.status === 'fulfilled' ? profileRes.value.data : MOCK_PROFILE
         );
         setCourses(
-          coursesRes.status === 'fulfilled' ? coursesRes.value.data : MOCK_COURSES
+          coursesRes.status === 'fulfilled' ? coursesRes.value.data.content : MOCK_COURSES
         );
         setReviews(
           reviewsRes.status === 'fulfilled' ? reviewsRes.value.data : MOCK_REVIEWS
@@ -292,7 +292,6 @@ const ProfilePage: React.FC = () => {
       const res = await updateProfile(updated);
       setProfile(res.data);
     } catch {
-      // Optimistic update when API is unavailable
       setProfile((prev) => (prev ? { ...prev, ...updated } : prev));
     }
   };

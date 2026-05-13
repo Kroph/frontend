@@ -106,7 +106,6 @@ const EditCoursePage: React.FC = () => {
     try {
       await deleteLesson(lessonId);
     } catch {
-      // ignore
     }
     setLessons((prev) => prev.filter((l) => l.id !== lessonId));
   };

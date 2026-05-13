@@ -1,17 +1,4 @@
-import axios from 'axios';
-
-const API_BASE = 'http://localhost:8080';
-
-const api = axios.create({
-  baseURL: API_BASE,
-  headers: { 'Content-Type': 'application/json' },
-});
-
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+import api from './index';
 
 export interface Course {
   id: string;
@@ -27,6 +14,7 @@ export interface Course {
   updatedAt: string;
   price?: number;
   rating?: number;
+  free?: boolean;
 }
 
 export interface Lesson {
@@ -43,7 +31,17 @@ export interface Lesson {
   published: boolean;
 }
 
-export const getCourses = () => api.get<Course[]>('/courses');
+export const getCourses = (params?: {
+  category?: string;
+  level?: string;
+  page?: number;
+  size?: number;
+}) =>
+  api.get<{ content: Course[]; totalElements: number; totalPages: number }>(
+    '/courses/public',
+    { params }
+  );
+
 export const getCourseById = (id: string) => api.get<Course>(`/courses/${id}`);
 export const getLessonsByCourse = (courseId: string) =>
   api.get<Lesson[]>(`/lessons/course/${courseId}`);

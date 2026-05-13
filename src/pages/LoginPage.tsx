@@ -20,6 +20,7 @@ const LoginPage: React.FC = () => {
     try {
       const res = await login({ email, password });
       localStorage.setItem('token', res.data.token || '');
+      localStorage.setItem('role', res.data.role?.toString() || '');
       navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid email or password.');

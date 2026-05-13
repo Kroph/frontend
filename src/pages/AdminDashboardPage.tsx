@@ -124,7 +124,6 @@ const AdminDashboardPage: React.FC = () => {
     try {
       await approveApplication(appId, comment);
     } catch {
-      // continue regardless
     }
     setApps((prev) => prev.filter((a) => a.id !== appId));
     setReviewModal(null);
@@ -134,7 +133,6 @@ const AdminDashboardPage: React.FC = () => {
     try {
       await rejectApplication(appId, comment);
     } catch {
-      // continue regardless
     }
     setApps((prev) => prev.filter((a) => a.id !== appId));
     setReviewModal(null);

@@ -43,7 +43,7 @@ const App: React.FC = () => {
         <Route
           path="/courses/create"
           element={
-            <PrivateRoute>
+            <PrivateRoute allowedRoles={['TEACHER', 'ADMIN']}>
               <CreateCoursePage />
             </PrivateRoute>
           }
@@ -51,7 +51,7 @@ const App: React.FC = () => {
         <Route
           path="/courses/:id/edit"
           element={
-            <PrivateRoute>
+            <PrivateRoute allowedRoles={['TEACHER', 'ADMIN']}>
               <EditCoursePage />
             </PrivateRoute>
           }

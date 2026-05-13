@@ -27,7 +27,6 @@ const MainPage: React.FC = () => {
       {/* Footer */}
       <footer className="footer">
         <p> CouTeach — Educational Content Distribution Platform</p>
-        <p className="footer-sub">Built with Spring Boot · MongoDB · React</p>
       </footer>
     </div>
   );

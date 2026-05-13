@@ -25,6 +25,10 @@ const SignUpPage: React.FC = () => {
       setError('Password must be at least 6 characters.');
       return;
     }
+    if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
+      setError('Password must contain at least one letter and one digit.');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
@@ -47,7 +51,7 @@ const SignUpPage: React.FC = () => {
       <div className="auth-card">
         <h1 className="auth-title">Registration</h1>
 
-        <label className="auth-label">Name</label>
+        <label className="auth-label">Full Name</label>
         <input
           className="auth-input"
           type="text"
