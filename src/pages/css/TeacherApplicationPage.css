@@ -88,7 +88,7 @@
 }
 
 .tap-container {
-  max-width: 780px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 2rem 1.5rem 3rem;
   display: flex;
@@ -230,18 +230,18 @@
 
 .tap-dropzone:hover {
   border-color: var(--accent);
-  background: rgba(43, 168, 204, 0.05);
+  background: rgba(var(--accent-rgb), 0.05);
 }
 
 .tap-dropzone-over {
   border-color: var(--accent-hover) !important;
-  background: rgba(43, 168, 204, 0.1) !important;
+  background: rgba(var(--accent-rgb), 0.1) !important;
 }
 
 .tap-dropzone-filled {
   border-style: solid;
-  border-color: rgba(43, 168, 204, 0.4);
-  background: rgba(43, 168, 204, 0.06);
+  border-color: rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.06);
 }
 
 .tap-dropzone-error {
@@ -264,7 +264,7 @@
 }
 
 .tap-dropzone-label strong {
-  color: var(--accent-hover);
+  color: var(--text-primary);
 }
 
 .tap-dropzone-sub {
@@ -279,11 +279,6 @@
   align-items: center;
   gap: 0.85rem;
   width: 100%;
-}
-
-.tap-file-icon {
-  font-size: 1.8rem;
-  flex-shrink: 0;
 }
 
 .tap-file-name {
@@ -328,8 +323,8 @@
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
-  background: rgba(43, 168, 204, 0.08);
-  border: 1px solid rgba(43, 168, 204, 0.2);
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
   border-radius: 12px;
   padding: 0.85rem 1rem;
 }

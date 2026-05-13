@@ -30,15 +30,15 @@
 }
 
 .brand-cou {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--text-primary);
   letter-spacing: 1px;
 }
 
 .brand-teach {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 0.85rem;
   color: var(--text-secondary);
   letter-spacing: 1px;
@@ -203,6 +203,5 @@
 }
 
 .nav-dropdown-logout {
-  color: #e05c5c;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }

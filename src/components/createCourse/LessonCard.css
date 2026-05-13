@@ -9,7 +9,7 @@
 }
 
 .lc-card:focus-within {
-  border-color: rgba(43, 168, 204, 0.4);
+  border-color: rgba(var(--accent-rgb), 0.4);
 }
 
 .lc-head {
@@ -72,9 +72,9 @@
 }
 
 .lc-chip--type {
-  background: rgba(43, 168, 204, 0.15);
+  background: rgba(var(--accent-rgb), 0.15);
   color: var(--accent);
-  border-color: rgba(43, 168, 204, 0.4);
+  border-color: rgba(var(--accent-rgb), 0.4);
 }
 
 .lc-chip--dim {
@@ -194,7 +194,7 @@
 .lc-ctab--active {
   background: var(--btn-dark);
   color: var(--text-primary);
-  border: 1px solid rgba(43, 168, 204, 0.4);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
 }
 
 .lc-ctab-lbl {

@@ -87,7 +87,7 @@
   font-family: var(--font-mono);
   font-style: italic;
   font-size: 1rem;
-  color: rgba(9, 58, 82, 0.5);
+  color: rgba(var(--bg-deep-rgb), 0.5);
 }
 
 .detail-meta-row {
@@ -229,7 +229,7 @@
 .detail-enroll-btn:hover {
   background: var(--accent);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(43, 168, 204, 0.4);
+  box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.4);
 }
 
 @media (max-width: 860px) {

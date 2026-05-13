@@ -12,9 +12,9 @@
 
 .ph-header { margin-bottom: 1.5rem; }
 .ph-header h1 {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 0.3rem;
 }
 .ph-sub {

@@ -12,9 +12,9 @@
 
 .adm-header { margin-bottom: 1.5rem; }
 .adm-header h1 {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 0.3rem;
 }
 .adm-sub {
@@ -144,7 +144,7 @@
   font-weight: 700;
   letter-spacing: 0.5px;
 }
-.adm-role.role-student { background: rgba(43, 168, 204, 0.2); color: var(--accent); }
+.adm-role.role-student { background: rgba(var(--accent-rgb), 0.2); color: var(--accent); }
 .adm-role.role-teacher { background: rgba(43, 204, 124, 0.2); color: #2bcc7c; }
 .adm-role.role-admin { background: rgba(240, 192, 64, 0.2); color: #f0c040; }
 
@@ -306,7 +306,7 @@
   color: var(--text-primary);
 }
 .adm-modal-score {
-  background: rgba(43, 168, 204, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid var(--accent);
   border-radius: 10px;
   padding: 0.8rem 1rem;

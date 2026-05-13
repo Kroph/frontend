@@ -33,9 +33,9 @@
 }
 
 .hero-title {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 5rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--text-primary);
   letter-spacing: -1px;
   line-height: 1;
@@ -80,13 +80,13 @@
   text-decoration: none;
   letter-spacing: 0.5px;
   transition: all 0.25s;
-  box-shadow: 0 4px 20px rgba(26, 122, 154, 0.4);
+  box-shadow: 0 4px 20px rgba(var(--bg-card-rgb), 0.4);
 }
 
 .cta-primary:hover {
   background: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(43, 168, 204, 0.5);
+  box-shadow: 0 6px 28px rgba(var(--accent-rgb), 0.5);
 }
 
 .cta-secondary {
@@ -107,9 +107,9 @@
 }
 
 .section-title {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--text-primary);
   text-align: center;
   margin-bottom: 3rem;

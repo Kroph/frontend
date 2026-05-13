@@ -14,9 +14,9 @@
   margin-bottom: 1.5rem;
 }
 .enr-header h1 {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 0.3rem;
 }
 .enr-sub {
@@ -113,7 +113,7 @@
 .enr-thumb-ph {
   font-family: var(--font-mono);
   font-size: 3rem;
-  color: rgba(9, 58, 82, 0.5);
+  color: rgba(var(--bg-deep-rgb), 0.5);
 }
 
 .enr-completed-badge {

@@ -210,7 +210,7 @@
 .cc-input:focus,
 .cc-textarea:focus,
 .cc-select:focus {
-  box-shadow: 0 0 0 3px rgba(43, 168, 204, 0.35);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
 }
 
 .cc-textarea {
@@ -231,7 +231,7 @@
 }
 
 .cc-select option {
-  background: #1a3a4a;
+  background: #003559;
   color: var(--text-primary);
   font-style: normal;
 }
@@ -342,7 +342,7 @@
 
 .cc-upload:hover {
   border-color: var(--accent);
-  background: rgba(43, 168, 204, 0.06);
+  background: rgba(var(--accent-rgb), 0.06);
 }
 
 .cc-upload--done {
@@ -399,7 +399,7 @@
 }
 
 .cc-tags-wrap:focus-within {
-  box-shadow: 0 0 0 3px rgba(43, 168, 204, 0.35);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.35);
 }
 
 .cc-tag-pill {
@@ -485,13 +485,13 @@
 .cc-btn--accent {
   color: var(--text-primary);
   background: var(--bg-card);
-  box-shadow: 0 4px 20px rgba(26, 122, 154, 0.4);
+  box-shadow: 0 4px 20px rgba(var(--bg-card-rgb), 0.4);
 }
 
 .cc-btn--accent:hover {
   background: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(43, 168, 204, 0.5);
+  box-shadow: 0 6px 28px rgba(var(--accent-rgb), 0.5);
 }
 
 .cc-btn--accent:disabled,
@@ -528,7 +528,7 @@
 .cc-btn-add-dashed:hover {
   border-color: var(--accent);
   color: var(--text-primary);
-  background: rgba(43, 168, 204, 0.06);
+  background: rgba(var(--accent-rgb), 0.06);
 }
 
 .cc-btn-add-inline {

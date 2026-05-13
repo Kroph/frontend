@@ -40,9 +40,9 @@
 }
 
 .quiz-title {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.7rem;
-  font-weight: 700;
+  font-weight: 400;
 }
 .quiz-title-small {
   font-family: var(--font-mono);
@@ -79,7 +79,7 @@
 }
 
 .quiz-best {
-  background: rgba(43, 168, 204, 0.1);
+  background: rgba(var(--accent-rgb), 0.1);
   border: 1px solid var(--accent);
   border-radius: 12px;
   padding: 0.8rem 1rem;
@@ -108,7 +108,7 @@
 .quiz-start-btn:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(43, 168, 204, 0.4);
+  box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.4);
 }
 
 .quiz-taking {
@@ -188,7 +188,7 @@
 .quiz-option:hover { background: rgba(255,255,255,0.09); }
 .quiz-option.selected {
   border-color: var(--accent);
-  background: rgba(43, 168, 204, 0.15);
+  background: rgba(var(--accent-rgb), 0.15);
 }
 .quiz-option input { accent-color: var(--accent); }
 

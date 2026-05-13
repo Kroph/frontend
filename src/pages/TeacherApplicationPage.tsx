@@ -176,7 +176,7 @@ const TeacherApplicationPage: React.FC = () => {
           {/* Form */}
           <div className="tap-form">
             <div className="tap-form-row">
-              <Field label="Full Name" error={fieldErrors.fullName} hint="2–20 characters">
+              <Field label="Full Name" error={fieldErrors.fullName}>
                 <input
                   className={`tap-input ${fieldErrors.fullName ? 'tap-input-error' : ''}`}
                   type="text"
@@ -199,7 +199,7 @@ const TeacherApplicationPage: React.FC = () => {
             </div>
 
             <div className="tap-form-row">
-              <Field label="Specialization" error={fieldErrors.specialization} hint="e.g. Web Development, Data Science">
+              <Field label="Specialization" error={fieldErrors.specialization}>
                 <input
                   className={`tap-input ${fieldErrors.specialization ? 'tap-input-error' : ''}`}
                   type="text"
@@ -240,7 +240,6 @@ const TeacherApplicationPage: React.FC = () => {
                 />
                 {resumeFile ? (
                   <div className="tap-file-info">
-                    <span className="tap-file-icon">📄</span>
                     <div>
                       <p className="tap-file-name">{resumeFile.name}</p>
                       <p className="tap-file-size">{(resumeFile.size / 1024).toFixed(1)} KB</p>

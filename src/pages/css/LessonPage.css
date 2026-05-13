@@ -125,9 +125,9 @@
 }
 
 .lesson-title {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 400;
   color: var(--text-primary);
 }
 
@@ -329,7 +329,7 @@
 }
 .lesson-comment.is-answer {
   border: 2px solid var(--accent);
-  background: rgba(43, 168, 204, 0.08);
+  background: rgba(var(--accent-rgb), 0.08);
 }
 .lc-avatar {
   width: 38px;

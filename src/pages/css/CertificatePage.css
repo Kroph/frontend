@@ -15,9 +15,9 @@
   text-align: center;
 }
 .cert-header h1 {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.8rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 0.5rem;
 }
 .cert-sub {

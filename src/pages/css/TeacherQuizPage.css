@@ -34,9 +34,9 @@
 
 .tquiz-header { margin-bottom: 1.5rem; }
 .tquiz-header h1 {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 1.6rem;
-  font-weight: 700;
+  font-weight: 400;
   margin-bottom: 0.5rem;
 }
 .tquiz-sub {
@@ -86,7 +86,7 @@
 .tquiz-option:hover { background: rgba(255,255,255,0.08); }
 .tquiz-option.selected {
   border-color: var(--accent);
-  background: rgba(43, 168, 204, 0.15);
+  background: rgba(var(--accent-rgb), 0.15);
 }
 .tquiz-option input { accent-color: var(--accent); }
 
