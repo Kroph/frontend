@@ -6,6 +6,20 @@ import './css/TeacherApplicationPage.css';
 
 type Step = 'form' | 'submitting' | 'success' | 'error';
 
+const Field: React.FC<{
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+  hint?: string;
+}> = ({ label, error, children, hint }) => (
+  <div className="tap-field">
+    <label className="tap-label">{label}</label>
+    {hint && <span className="tap-hint">{hint}</span>}
+    {children}
+    {error && <span className="tap-field-error">{error}</span>}
+  </div>
+);
+
 const TeacherApplicationPage: React.FC = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -78,20 +92,6 @@ const TeacherApplicationPage: React.FC = () => {
       setStep('error');
     }
   };
-
-  const Field: React.FC<{
-    label: string;
-    error?: string;
-    children: React.ReactNode;
-    hint?: string;
-  }> = ({ label, error, children, hint }) => (
-    <div className="tap-field">
-      <label className="tap-label">{label}</label>
-      {hint && <span className="tap-hint">{hint}</span>}
-      {children}
-      {error && <span className="tap-field-error">{error}</span>}
-    </div>
-  );
 
   if (step === 'submitting') {
     return (

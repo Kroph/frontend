@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourses, Course } from '../api/courses';
 import { getProfile, getMyReviews, updateProfile, UserProfile, Review } from '../api/profile';
-import { isAuthenticated } from '../api/auth';
+import { isAuthenticated, getUserRole } from '../api/auth';
 import './css/ProfilePage.css';
 
 const MOCK_PROFILE: UserProfile = {
@@ -96,7 +96,7 @@ const StarRating: React.FC<{ rating: number; size?: 'sm' | 'md' }> = ({
 );
 
 const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
-  const initials = review.reviewerName
+  const initials = (review.reviewerName ?? '')
     .split(' ')
     .map((w) => w[0])
     .join('')
@@ -107,11 +107,7 @@ const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
     <div className="review-card">
       <div className="review-header">
         <div className="review-avatar">
-          {review.reviewerAvatar ? (
-            <img src={review.reviewerAvatar} alt={review.reviewerName} />
-          ) : (
-            initials
-          )}
+          {initials}
         </div>
         <div className="review-meta">
           <span className="review-reviewer-name">{review.reviewerName}</span>
@@ -205,7 +201,7 @@ const EditProfileModal: React.FC<EditModalProps> = ({ profile, onClose, onSave }
         </div>
 
         {/* Teacher application — only show if not already qualified */}
-        {profile.role !== 'educator' && profile.role !== 'teacher' && (
+        {!(['teacher', 'educator', 'TEACHER', 'EDUCATOR'].includes(getUserRole() ?? '')) && (
           <div className="modal-teacher-apply">
             <div className="modal-teacher-apply-info">
               <span className="modal-teacher-check">✓</span>
@@ -289,8 +285,8 @@ const ProfilePage: React.FC = () => {
 
   const handleSaveProfile = async (updated: Partial<UserProfile>) => {
     try {
-      const res = await updateProfile(updated);
-      setProfile(res.data);
+      await updateProfile(updated);
+      setProfile((prev) => (prev ? { ...prev, ...updated } : prev));
     } catch {
       setProfile((prev) => (prev ? { ...prev, ...updated } : prev));
     }
@@ -355,7 +351,7 @@ const ProfilePage: React.FC = () => {
           <p className="profile-name">{profile?.name || 'Name'}</p>
 
           {/* Qualified Teacher Badge */}
-          {(profile?.role === 'educator' || profile?.role === 'teacher') && (
+          {(['teacher', 'educator', 'TEACHER', 'EDUCATOR'].includes(getUserRole() ?? '')) && (
             <div className="teacher-badge">
               <span className="teacher-badge-check">✓</span>
               <span className="teacher-badge-label">Qualified Teacher</span>

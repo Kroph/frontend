@@ -57,6 +57,10 @@
   text-decoration: none;
   letter-spacing: 0.5px;
   transition: color 0.2s;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .nav-link:hover {

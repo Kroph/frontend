@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { isAuthenticated, logout, clearToken } from '../api/auth';
+import { isAuthenticated, logout, clearToken, getUserRole } from '../api/auth';
 import { getProfile, UserProfile } from '../api/profile';
 import './Navbar.css';
 
@@ -51,7 +51,13 @@ const Navbar: React.FC = () => {
         {!isAuth && (
           <div className="navbar-links">
             <Link to="/courses" className={`nav-link`}>Courses</Link>
-            <Link to="/courses/create" className="nav-link">Make Course</Link>
+            <button
+              className="nav-link"
+              onClick={() => {
+                const role = getUserRole();
+                navigate(role === 'TEACHER' || role === 'ADMIN' ? '/courses/create' : '/teacher-apply');
+              }}
+            >Make Course</button>
           </div>
         )}
       </div>
