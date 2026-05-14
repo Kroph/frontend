@@ -16,6 +16,7 @@ const buildPayload = (draft: CourseDraft, visibility: 'draft' | 'published'): Cr
   category:       draft.category,
   level:          draft.level,
   published:      visibility === 'published',
+  free:           draft.free,
   thumbnail:      draft.thumbnail.length < 12 ? draft.thumbnail : '[image]',
   estimatedHours: draft.duration ? parseInt(draft.duration, 10) : null,
   tags:           draft.tags,
@@ -50,7 +51,7 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
     try {
       await createCourse(payload);
       setSubmitted(true);
-      toast('🎉 Course created successfully!', 'ok');
+      toast('Course created successfully!', 'ok');
       if (draft.lessons.length) toast(`${draft.lessons.length} lesson(s) sent to API`);
       setTimeout(onDone, 1500);
     } catch (err: any) {
@@ -60,10 +61,6 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
     }
   };
 
-  const copyJSON = () => {
-    navigator.clipboard.writeText(JSON.stringify(payload, null, 2))
-      .then(() => toast('JSON copied ✓'));
-  };
 
   const reviewRows: [string, string, boolean][] = [
     ['Title',       draft.title       || '—', !draft.title],
@@ -118,6 +115,36 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
         <div className="cc-card-head">
           <div className="cc-card-head-left">
             <div>
+              <div className="cc-card-label">Access</div>
+              <div className="cc-card-desc">How students can enroll</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="cc-card-body">
+          <div className="cc-level-picker" style={{ maxWidth: 320 }}>
+            {([true, false] as const).map(isFree => (
+              <div
+                key={String(isFree)}
+                className={`cc-level-opt ${draft.free === isFree ? 'cc-level-opt--active' : ''}`}
+                onClick={() => updateDraft({ free: isFree })}
+              >
+                {isFree ? 'Free' : 'Subscription only'}
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: '0.75rem', fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+            {draft.free
+              ? 'Anyone can enroll at no cost.'
+              : 'Only users with an active subscription can access this course.'}
+          </div>
+        </div>
+      </div>
+
+      <div className="cc-card">
+        <div className="cc-card-head">
+          <div className="cc-card-head-left">
+            <div>
               <div className="cc-card-label">Visibility</div>
               <div className="cc-card-desc">Who can see this course</div>
             </div>
@@ -152,7 +179,7 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
             onClick={handlePublish}
             disabled={loading || submitted}
           >
-            {loading ? '⏳ Creating…' : submitted ? '✓ Created!' : '🚀 Create course'}
+            {loading ? 'Creating…' : submitted ? 'Created!' : 'Create course'}
           </button>
         </div>
       </div>

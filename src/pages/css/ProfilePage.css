@@ -198,6 +198,24 @@
   background: rgba(255, 255, 255, 0.18);
 }
 
+.profile-create-course-btn {
+  margin-top: 0.6rem;
+  width: 100%;
+  background: var(--accent, #6c63ff);
+  border: none;
+  border-radius: 12px;
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.profile-create-course-btn:hover {
+  opacity: 0.85;
+}
+
 .profile-main {
   flex: 1;
   display: flex;

@@ -239,7 +239,7 @@ const QuizPage: React.FC = () => {
           <h2 className="quiz-title-small">{quiz.title}</h2>
           {secondsLeft !== null && (
             <div className={`quiz-timer ${secondsLeft <= 30 ? 'low' : ''}`}>
-              ⏱ {formatTime(Math.max(0, secondsLeft))}
+              {formatTime(Math.max(0, secondsLeft))}
             </div>
           )}
         </div>

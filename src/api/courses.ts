@@ -14,6 +14,7 @@ export interface Course {
   updatedAt: string;
   price?: number;
   rating?: number;
+  avgRating?: number;
   free?: boolean;
 }
 

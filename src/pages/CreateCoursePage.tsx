@@ -15,10 +15,11 @@ const defaultDraft = (): CourseDraft => ({
   category: '',
   level: '',
   duration: '',
-  thumbnail: '🎓',
+  thumbnail: '',
   tags: [],
   lessons: [],
-  visibility: 'draft',
+  visibility: 'published',
+  free: true,
 });
 
 const CreateCoursePage: React.FC = () => {

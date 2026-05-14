@@ -46,7 +46,7 @@ const UploadZone: React.FC<UploadZoneProps> = ({ accept, fileName, placeholder, 
         style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
         onChange={e => { const f = e.target.files?.[0]; if (f) onFile(f); }}
       />
-      <span className="cc-upload-icon">{fileName ? '✅' : icon}</span>
+      <span className="cc-upload-icon">{fileName ? '✓' : icon}</span>
       <div className="cc-upload-label">{fileName || placeholder}</div>
       <div className="cc-upload-sub">{fileName ? 'Click to replace' : hint}</div>
     </div>
@@ -250,7 +250,7 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
                 fileName={lesson.pdfFileName}
                 placeholder="Upload lecture file"
                 hint="PDF, Word, PowerPoint — max 100 MB"
-                icon="📄"
+                icon="PDF"
                 onFile={handlePdfFile}
               />
               <div className="cc-field" style={{ marginTop: '0.9rem', marginBottom: 0 }}>
@@ -274,7 +274,7 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
                 fileName={lesson.videoFileName}
                 placeholder="Upload video file"
                 hint="MP4, MOV, AVI, WebM — max 2 GB"
-                icon="🎥"
+                icon="MP4"
                 onFile={handleVideoFile}
               />
               <div className="cc-video-or">

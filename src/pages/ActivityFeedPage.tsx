@@ -39,13 +39,13 @@ const MOCK: ActivityFeed[] = [
 const iconForType = (t: string): string => {
   switch (t) {
     case 'LESSON_COMPLETED': return '✓';
-    case 'QUIZ_PASSED': return '🎯';
+    case 'QUIZ_PASSED': return '✓';
     case 'QUIZ_FAILED': return '✗';
     case 'ENROLLMENT': return '+';
-    case 'CERTIFICATE_EARNED': return '🏆';
+    case 'CERTIFICATE_EARNED': return '★';
     case 'COURSE_COMPLETED': return '★';
-    case 'PAYMENT': return '💳';
-    case 'COMMENT': return '💬';
+    case 'PAYMENT': return '$';
+    case 'COMMENT': return '#';
     default: return '•';
   }
 };

@@ -6,6 +6,7 @@ export interface CreateCourseFields {
   description: string;
   category: string;
   level?: string;
+  published?: boolean;
   free?: boolean;
   price?: number;
   thumbnailFile?: File | null;
@@ -17,8 +18,9 @@ export const createCourse = (data: CreateCourseFields) => {
   form.append('description', data.description);
   form.append('category', data.category);
   if (data.level) form.append('level', data.level);
-  if (data.free !== undefined) form.append('free', String(data.free));
-  if (data.price !== undefined) form.append('price', String(data.price));
+  if (data.published !== undefined) form.append('published', String(data.published));
+  form.append('free', String(data.free ?? true));
+  if (!data.free) form.append('price', '0');
   if (data.thumbnailFile) form.append('thumbnailFile', data.thumbnailFile);
 
   return api.post<Course>('/courses', form, {
@@ -49,6 +51,7 @@ export const updateCourse = (courseId: string, data: Partial<CreateCourseFields>
   if (data.description) form.append('description', data.description);
   if (data.category) form.append('category', data.category);
   if (data.level) form.append('level', data.level);
+  if (data.published !== undefined) form.append('published', String(data.published));
   if (data.free !== undefined) form.append('free', String(data.free));
   if (data.price !== undefined) form.append('price', String(data.price));
   if (data.thumbnailFile) form.append('thumbnailFile', data.thumbnailFile);

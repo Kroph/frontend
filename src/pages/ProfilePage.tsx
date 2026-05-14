@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { getCourses, Course } from '../api/courses';
+import { Course } from '../api/courses';
+import { getMyCourses } from '../api';
 import { getProfile, getMyReviews, updateProfile, UserProfile, Review } from '../api/profile';
 import { isAuthenticated, getUserRole } from '../api/auth';
 import './css/ProfilePage.css';
@@ -258,7 +259,7 @@ const ProfilePage: React.FC = () => {
       try {
         const [profileRes, coursesRes, reviewsRes] = await Promise.allSettled([
           getProfile(),
-          getCourses(),
+          getMyCourses(),
           getMyReviews(),
         ]);
 
@@ -266,7 +267,7 @@ const ProfilePage: React.FC = () => {
           profileRes.status === 'fulfilled' ? profileRes.value.data : MOCK_PROFILE
         );
         setCourses(
-          coursesRes.status === 'fulfilled' ? coursesRes.value.data.content : MOCK_COURSES
+          coursesRes.status === 'fulfilled' ? (coursesRes.value.data as unknown as Course[]) : []
         );
         setReviews(
           reviewsRes.status === 'fulfilled' ? reviewsRes.value.data : MOCK_REVIEWS
@@ -313,7 +314,7 @@ const ProfilePage: React.FC = () => {
     twitter: '𝕏',
     linkedin: 'in',
     github: 'gh',
-    website: '🌐',
+    website: 'web',
   };
 
   if (loading) {
@@ -398,6 +399,13 @@ const ProfilePage: React.FC = () => {
           <button className="profile-edit-btn" onClick={() => setShowEditModal(true)}>
             Edit Profile
           </button>
+
+          {/* Create course button — teachers and admins only */}
+          {(['TEACHER', 'ADMIN'].includes(getUserRole() ?? '')) && (
+            <button className="profile-create-course-btn" onClick={() => navigate('/courses/create')}>
+              + Create Course
+            </button>
+          )}
         </aside>
 
         <main className="profile-main">
@@ -434,15 +442,20 @@ const ProfilePage: React.FC = () => {
               <div className="profile-courses-grid">
                 {filteredCourses.map((course) => (
                   <Link
-                    to={`/courses/${course.id}`}
+                    to={`/courses/${course.id}/edit`}
                     key={course.id}
                     className="profile-course-card"
                   >
-                    <p className="pcc-topic">{course.title}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <p className="pcc-topic" style={{ margin: 0 }}>{course.title}</p>
+                      {!course.published && (
+                        <span style={{ fontSize: '0.7rem', background: '#f59e0b', color: '#fff', borderRadius: '4px', padding: '1px 6px', marginLeft: '6px', whiteSpace: 'nowrap' }}>Draft</span>
+                      )}
+                    </div>
                     <div className="pcc-thumbnail">
                       {course.thumbnail ? (
                         <img
-                          src={`http://localhost:8080/files?path=${course.thumbnail}`}
+                          src={course.thumbnail.startsWith('http') ? course.thumbnail : `http://localhost:8080/files?path=${course.thumbnail}`}
                           alt={course.title}
                         />
                       ) : (

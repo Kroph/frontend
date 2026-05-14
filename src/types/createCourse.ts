@@ -33,6 +33,7 @@ export interface CourseDraft {
   tags: string[];
   lessons: LessonDraft[];
   visibility: 'draft' | 'published';
+  free: boolean;
 }
 
 export interface CreateCoursePayload {
@@ -41,6 +42,7 @@ export interface CreateCoursePayload {
   category: string;
   level: string;
   published: boolean;
+  free: boolean;
   thumbnail: string;
   estimatedHours: number | null;
   tags: string[];

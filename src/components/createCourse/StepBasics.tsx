@@ -1,8 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { CourseDraft } from '../../types/createCourse';
 
-const EMOJIS = ['🎓','💻','🔬','🎨','📊','🌐','🧠','📐','🎵','🏗','🌱','⚗'];
-
 const CATEGORIES = [
   'Web Development','Mobile Development','Design','Mathematics','Science','Other'
 ];
@@ -129,13 +127,24 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
           <div className="cc-card-head-left">
             <div>
               <div className="cc-card-label">Thumbnail</div>
-              <div className="cc-card-desc">Pick an emoji or upload a custom image</div>
+              <div className="cc-card-desc">Upload a custom image</div>
             </div>
           </div>
         </div>
 
         <div className="cc-card-body">
           <div className="cc-thumb-preview">
+            {draft.thumbnail?.startsWith('data:') ? (
+              <img
+                src={draft.thumbnail}
+                alt="Thumbnail preview"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 14 }}
+              />
+            ) : (
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                No image selected
+              </span>
+            )}
           </div>
 
           <div className="cc-upload" style={{ padding: '0.75rem 1rem' }}>

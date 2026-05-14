@@ -438,7 +438,7 @@ const LessonPage: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              📄 Download lecture PDF
+              Download lecture PDF
             </a>
           )}
 
@@ -473,7 +473,7 @@ const LessonPage: React.FC = () => {
               {isCompleted ? '✓ Completed' : completing ? 'Saving...' : 'Mark as complete'}
             </button>
             {lesson.quizRequired && !hasPassedQuiz() && (
-              <span className="lesson-gate-note">⚠ Quiz must be passed first</span>
+              <span className="lesson-gate-note">! Quiz must be passed first</span>
             )}
           </div>
 

@@ -11,6 +11,8 @@
   justify-content: flex-end;
   gap: 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  margin: 10px;
 }
 
 .toolbar-right {
@@ -65,26 +67,33 @@
 .search-icon { font-size: 1.3rem; font-style: normal; }
 .toolbar-label { font-size: 1rem; }
 
-.filter-panel {
-  background: var(--bg-card-dark);
-  padding: 1rem 2rem;
+.courses-body {
   display: flex;
-  gap: 2.5rem;
-  flex-wrap: wrap;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  animation: slideDown 0.2s ease-out;
+  align-items: flex-start;
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
+.filter-panel {
+  width: 200px;
+  min-width: 200px;
+  background: var(--bg-card-dark);
+  padding: 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  border-left: 1px solid rgba(255,255,255,0.06);
+  min-height: calc(100vh - 120px);
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 .filter-group {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .filter-group-label {
@@ -98,8 +107,8 @@
 
 .filter-chips {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .filter-chip {
@@ -121,10 +130,16 @@
   border-color: var(--accent);
 }
 
+.chip-star {
+  color: #f0c040;
+  font-style: normal;
+  margin-right: 2px;
+}
+
 .courses-container {
+  flex: 1;
   padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  min-width: 0;
 }
 
 .courses-loading,
