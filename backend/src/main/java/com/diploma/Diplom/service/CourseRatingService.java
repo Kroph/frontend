@@ -2,6 +2,9 @@ package com.diploma.Diplom.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,9 +15,11 @@ import com.diploma.Diplom.exception.ResourceNotFoundException;
 import com.diploma.Diplom.model.Course;
 import com.diploma.Diplom.model.CourseProgress;
 import com.diploma.Diplom.model.CourseRating;
+import com.diploma.Diplom.model.User;
 import com.diploma.Diplom.repository.CourseRatingRepository;
 import com.diploma.Diplom.repository.CourseRepository;
 import com.diploma.Diplom.repository.CourseProgressRepository;
+import com.diploma.Diplom.repository.UserRepository;
 
 @Service
 public class CourseRatingService {
@@ -22,13 +27,16 @@ public class CourseRatingService {
     private final CourseRatingRepository ratingRepository;
     private final CourseRepository courseRepository;
     private final CourseProgressRepository progressRepository;
+    private final UserRepository userRepository;
 
     public CourseRatingService(CourseRatingRepository ratingRepository,
                                CourseRepository courseRepository,
-                               CourseProgressRepository progressRepository) {
+                               CourseProgressRepository progressRepository,
+                               UserRepository userRepository) {
         this.ratingRepository = ratingRepository;
         this.courseRepository = courseRepository;
         this.progressRepository = progressRepository;
+        this.userRepository = userRepository;
     }
 
     
@@ -38,7 +46,7 @@ public class CourseRatingService {
         }
 
         CourseProgress progress = progressRepository
-                .findByUserIdAndCourseId(userId, courseId)
+                .findFirstByUserIdAndCourseId(userId, courseId)
                 .orElseThrow(() -> new ForbiddenException(
                         "You must be enrolled and have started this course to rate it"));
 
@@ -46,6 +54,9 @@ public class CourseRatingService {
             throw new ForbiddenException(
                     "Complete at least one lesson before leaving a rating");
         }
+
+        User author = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         CourseRating rating = ratingRepository
                 .findByUserIdAndCourseId(userId, courseId)
@@ -57,6 +68,9 @@ public class CourseRatingService {
                     return r;
                 });
 
+        rating.setUserName(author.getName());
+        rating.setUserAvatarUrl(author.getProfileImageUrl());
+
         rating.setRating(request.getRating());
         rating.setReview(request.getReview());
         rating.setUpdatedAt(LocalDateTime.now());
@@ -67,7 +81,23 @@ public class CourseRatingService {
     }
 
     public List<CourseRating> getRatings(String courseId) {
-        return ratingRepository.findByCourseId(courseId);
+        List<CourseRating> ratings = ratingRepository.findByCourseId(courseId);
+        if (ratings.isEmpty()) return ratings;
+
+        Set<String> userIds = ratings.stream()
+                .map(CourseRating::getUserId)
+                .collect(Collectors.toSet());
+        Map<String, User> users = userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(User::getId, u -> u));
+
+        ratings.forEach(r -> {
+            User u = users.get(r.getUserId());
+            if (u != null) {
+                r.setUserName(u.getName());
+                r.setUserAvatarUrl(u.getProfileImageUrl());
+            }
+        });
+        return ratings;
     }
 
     public void deleteRating(String userId, String courseId) {

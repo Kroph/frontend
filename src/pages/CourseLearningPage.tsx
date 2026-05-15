@@ -2,9 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourseById, getLessonsByCourse, Course, Lesson } from '../api/courses';
-import { getCourseProgress, checkAccess, CourseProgress } from '../api';
+import { getCourseProgress, checkAccess, CourseProgress, getCourseRatings, rateCourse, deleteMyRating, CourseRating } from '../api';
 import { isAuthenticated } from '../api/auth';
 import './css/CourseLearningPage.css';
+
+const StarSelector: React.FC<{ value: number; onChange: (v: number) => void }> = ({ value, onChange }) => {
+  const [hover, setHover] = useState(0);
+  return (
+    <span className="clp-star-selector">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <button
+          key={n}
+          type="button"
+          className={`clp-star ${n <= (hover || value) ? 'clp-star-on' : ''}`}
+          onMouseEnter={() => setHover(n)}
+          onMouseLeave={() => setHover(0)}
+          onClick={() => onChange(n)}
+        >
+          {n <= (hover || value) ? '★' : '☆'}
+        </button>
+      ))}
+    </span>
+  );
+};
 
 const CourseLearningPage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -15,6 +35,13 @@ const CourseLearningPage: React.FC = () => {
   const [progress, setProgress] = useState<CourseProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [noAccess, setNoAccess] = useState(false);
+
+  const [ratings, setRatings] = useState<CourseRating[]>([]);
+  const [myRating, setMyRating] = useState<CourseRating | null>(null);
+  const [formStars, setFormStars] = useState(0);
+  const [formReview, setFormReview] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [ratingMsg, setRatingMsg] = useState('');
 
   useEffect(() => {
     if (!isAuthenticated()) navigate('/login', { replace: true });
@@ -36,6 +63,57 @@ const CourseLearningPage: React.FC = () => {
       setLoading(false);
     });
   }, [courseId]);
+
+  useEffect(() => {
+    if (!courseId) return;
+    getCourseRatings(courseId)
+      .then((res) => setRatings(res.data || []))
+      .catch(() => {});
+  }, [courseId]);
+
+  const loadRatings = () => {
+    if (!courseId) return;
+    getCourseRatings(courseId)
+      .then((res) => setRatings(res.data || []))
+      .catch(() => {});
+  };
+
+  const handleSubmitRating = async () => {
+    if (!courseId || formStars === 0) {
+      setRatingMsg('Please select a star rating.');
+      return;
+    }
+    setSubmitting(true);
+    setRatingMsg('');
+    try {
+      const res = await rateCourse(courseId, formStars, formReview.trim() || undefined);
+      setMyRating(res.data);
+      setRatingMsg('Rating submitted!');
+      loadRatings();
+    } catch (err: any) {
+      setRatingMsg(err?.response?.data?.message || 'Failed to submit rating.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteRating = async () => {
+    if (!courseId) return;
+    setSubmitting(true);
+    setRatingMsg('');
+    try {
+      await deleteMyRating(courseId);
+      setMyRating(null);
+      setFormStars(0);
+      setFormReview('');
+      setRatingMsg('Rating removed.');
+      loadRatings();
+    } catch (err: any) {
+      setRatingMsg(err?.response?.data?.message || 'No rating to remove.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const completedIds = new Set(progress?.completedLessonIds ?? []);
   const nextLesson = lessons.find((l) => !completedIds.has(l.id));
@@ -213,6 +291,81 @@ const CourseLearningPage: React.FC = () => {
                 );
               })}
             </div>
+          </div>
+
+          <div className="clp-rating-section">
+            <h3 className="clp-rating-title">
+              Leave a rating
+              {ratings.length > 0 && (
+                <span className="clp-rating-count">{ratings.length} review{ratings.length !== 1 ? 's' : ''}</span>
+              )}
+            </h3>
+
+            <div className="clp-rating-form">
+              <p className="clp-rating-label">{myRating ? 'Update your rating' : 'Rate this course'}</p>
+              <StarSelector value={formStars} onChange={setFormStars} />
+              <textarea
+                className="clp-rating-review"
+                placeholder="Leave a written review (optional)…"
+                rows={3}
+                value={formReview}
+                onChange={(e) => setFormReview(e.target.value)}
+              />
+              <div className="clp-rating-actions">
+                <button
+                  className="clp-rating-submit"
+                  onClick={handleSubmitRating}
+                  disabled={submitting}
+                >
+                  {submitting ? 'Saving…' : myRating ? 'Update' : 'Submit'}
+                </button>
+                {myRating && (
+                  <button
+                    className="clp-rating-delete"
+                    onClick={handleDeleteRating}
+                    disabled={submitting}
+                  >
+                    Remove my rating
+                  </button>
+                )}
+              </div>
+              {ratingMsg && (
+                <p className={`clp-rating-msg ${ratingMsg.includes('Failed') || ratingMsg.includes('select') || ratingMsg.includes('lesson') ? 'clp-rating-msg-err' : 'clp-rating-msg-ok'}`}>
+                  {ratingMsg}
+                </p>
+              )}
+            </div>
+
+            {ratings.length > 0 && (
+              <div className="clp-rating-list">
+                {ratings.map((r) => (
+                  <div key={r.id} className="clp-rating-item">
+                    <div className="clp-rating-item-header">
+                      <div className="clp-rating-item-author">
+                        {r.userAvatarUrl
+                          ? <img className="clp-rating-avatar" src={r.userAvatarUrl} alt="" />
+                          : <span className="clp-rating-avatar clp-rating-avatar-initials">
+                              {(r.userName || '?').split(' ').map((p) => p[0]).join('').toUpperCase().slice(0, 2)}
+                            </span>
+                        }
+                        <span className="clp-rating-item-name">{r.userName || 'Student'}</span>
+                      </div>
+                      <div className="clp-rating-item-meta">
+                        <span className="clp-rating-item-stars">
+                          {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
+                        </span>
+                        <span className="clp-rating-item-date">
+                          {new Date(r.createdAt).toLocaleDateString(undefined, {
+                            year: 'numeric', month: 'short', day: 'numeric',
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                    {r.review && <p className="clp-rating-item-review">{r.review}</p>}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </main>
       </div>

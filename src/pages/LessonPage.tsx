@@ -19,7 +19,7 @@ import {
   Quiz,
   API_BASE,
 } from '../api';
-import { isAuthenticated } from '../api/auth';
+import { isAuthenticated, getUserId } from '../api/auth';
 import './css/LessonPage.css';
 
 const formatTimeAgo = (iso: string): string => {
@@ -71,22 +71,24 @@ const CommentItem: React.FC<CommentItemProps> = ({
     setShowReplies((s) => !s);
   };
 
-  const initials = (comment.userName || '?')
+  const initials = (comment.authorName || '?')
     .split(' ')
-    .map((p) => p[0])
+    .map((p: string) => p[0])
     .join('')
     .toUpperCase()
     .slice(0, 2);
 
   return (
-    <div className={`lesson-comment ${comment.isTeacherAnswer ? 'is-answer' : ''}`}>
+    <div className={`lesson-comment ${comment.markedAsAnswer ? 'is-answer' : ''}`}>
       <div className="lc-avatar">
-        {comment.userAvatar ? <img src={comment.userAvatar} alt="" /> : initials}
+        {comment.authorAvatarUrl
+          ? <img src={comment.authorAvatarUrl} alt="" />
+          : initials}
       </div>
       <div className="lc-body">
         <div className="lc-header">
-          <span className="lc-name">{comment.userName || 'User'}</span>
-          {comment.isTeacherAnswer && <span className="lc-answer-badge">Teacher answer</span>}
+          <span className="lc-name">{comment.authorName || 'User'}</span>
+          {comment.markedAsAnswer && <span className="lc-answer-badge">Teacher answer</span>}
           <span className="lc-time">{formatTimeAgo(comment.createdAt)}</span>
         </div>
         <p className="lc-content">{comment.content}</p>
@@ -97,12 +99,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <button className="lc-action-btn" onClick={handleToggleReplies}>
             {showReplies ? 'Hide replies' : 'View replies'}
           </button>
-          {isTeacher && !comment.isTeacherAnswer && (
+          {isTeacher && !comment.markedAsAnswer && (
             <button className="lc-action-btn" onClick={() => onMark(comment.id)}>
               Mark as answer
             </button>
           )}
-          {currentUserId && comment.userId === currentUserId && (
+          {currentUserId && comment.authorId === currentUserId && (
             <button
               className="lc-action-btn lc-danger"
               onClick={() => onDelete(comment.id)}
@@ -121,7 +123,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             ) : (
               replies.map((r) => (
                 <div key={r.id} className="lc-reply">
-                  <span className="lc-reply-name">{r.userName || 'User'}</span>
+                  <span className="lc-reply-name">{r.authorName || 'User'}</span>
                   <span className="lc-reply-time">{formatTimeAgo(r.createdAt)}</span>
                   <p className="lc-content">{r.content}</p>
                 </div>
@@ -152,20 +154,14 @@ const LessonPage: React.FC = () => {
 
   const isTeacher = (() => {
     try {
-      const raw = localStorage.getItem('userRole');
+      const raw = localStorage.getItem('role');
       return raw?.toUpperCase() === 'TEACHER';
     } catch {
       return false;
     }
   })();
 
-  const currentUserId = (() => {
-    try {
-      return localStorage.getItem('userId');
-    } catch {
-      return null;
-    }
-  })();
+  const currentUserId = getUserId();
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -213,11 +209,11 @@ const LessonPage: React.FC = () => {
     try {
       const res = await markCommentAsAnswer(lessonId, commentId);
       setComments((prev) =>
-        prev.map((c) => (c.id === commentId ? res.data : { ...c, isTeacherAnswer: false }))
+        prev.map((c) => (c.id === commentId ? res.data : { ...c, markedAsAnswer: false }))
       );
     } catch {
       setComments((prev) =>
-        prev.map((c) => ({ ...c, isTeacherAnswer: c.id === commentId }))
+        prev.map((c) => ({ ...c, markedAsAnswer: c.id === commentId }))
       );
     }
   };

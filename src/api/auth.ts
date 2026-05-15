@@ -42,6 +42,17 @@ export const isAuthenticated = (): boolean => !!localStorage.getItem('token');
 
 export const getUserRole = (): string | null => localStorage.getItem('role');
 
+export const getUserId = (): string | null => {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    return payload.sub ?? null;
+  } catch {
+    return null;
+  }
+};
+
 export const clearToken = (): void => {
   localStorage.removeItem('token');
   localStorage.removeItem('role');

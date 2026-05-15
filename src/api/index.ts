@@ -52,13 +52,15 @@ export const deleteLesson = (lessonId: string) =>
 export interface LessonComment {
   id: string;
   lessonId: string;
-  userId: string;
-  userName?: string;
-  userAvatar?: string;
+  courseId?: string;
+  authorId: string;
+  authorName?: string;
+  authorAvatarUrl?: string;
   content: string;
   parentId?: string | null;
-  isTeacherAnswer?: boolean;
+  markedAsAnswer?: boolean;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export const getLessonComments = (lessonId: string) =>
@@ -172,6 +174,7 @@ export interface CourseRating {
   id: string;
   userId: string;
   userName?: string;
+  userAvatarUrl?: string;
   courseId: string;
   rating: number;
   review?: string;

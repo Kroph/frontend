@@ -13,7 +13,7 @@ const ACCESS_OPTIONS = ['All', 'Free', 'Subscription'];
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
   return (
     <span className="star-rating">
-      {''.repeat(Math.floor(rating))}{'в†'.repeat(5 - Math.floor(rating))}
+      {'★'.repeat(Math.floor(rating))}{'☆'.repeat(5 - Math.floor(rating))}
       <span className="rating-num"> {rating.toFixed(1)}</span>
     </span>
   );

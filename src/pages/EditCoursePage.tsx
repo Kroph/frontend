@@ -128,7 +128,7 @@ const EditCoursePage: React.FC = () => {
       <Navbar />
       <div className="ec-container">
         <button className="back-btn" onClick={() => navigate(`/courses/${course.id}`)}>
-          в†ђ Back to course
+          ← Back
         </button>
 
         <header className="ec-header">
@@ -251,7 +251,7 @@ const EditCoursePage: React.FC = () => {
                       </p>
                       <p className="ec-lesson-meta">
                         {l.duration ? `${l.duration} min` : 'No duration set'}
-                        {' Р’В· '}
+                        {" · "}
                         {l.published ? 'Published' : 'Draft'}
                       </p>
                     </div>
@@ -290,3 +290,4 @@ const EditCoursePage: React.FC = () => {
 };
 
 export default EditCoursePage;
+

@@ -27,6 +27,12 @@ public class LessonComment {
     @Schema(description = "ID of the user who wrote the comment")
     private String authorId;
 
+    @Schema(description = "Display name of the author, copied from user at write time")
+    private String authorName;
+
+    @Schema(description = "Profile image URL of the author, copied from user at write time")
+    private String authorAvatarUrl;
+
     @Schema(description = "The text content of the comment or reply")
     private String content;
 

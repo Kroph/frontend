@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourseById, getLessonsByCourse, Course, Lesson } from '../api/courses';
+import { getCourseRatings, CourseRating } from '../api';
 import { isAuthenticated } from '../api/auth';
 import './css/CourseDetailPage.css';
 
@@ -17,6 +18,7 @@ const CourseDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [ratings, setRatings] = useState<CourseRating[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,9 +26,11 @@ const CourseDetailPage: React.FC = () => {
     Promise.all([
       getCourseById(id).catch(() => ({ data: null })),
       getLessonsByCourse(id).catch(() => ({ data: [] as Lesson[] })),
-    ]).then(([cRes, lRes]) => {
+      getCourseRatings(id).catch(() => ({ data: [] as CourseRating[] })),
+    ]).then(([cRes, lRes, rRes]) => {
       setCourse(cRes.data);
       setLessons(lRes.data || []);
+      setRatings(rRes.data || []);
     }).finally(() => setLoading(false));
   }, [id]);
 
@@ -57,6 +61,7 @@ const CourseDetailPage: React.FC = () => {
   }
 
   const isFree = course.free === true;
+  const displayRating = course.avgRating ?? course.rating;
 
   return (
     <div className="detail-page">
@@ -70,7 +75,6 @@ const CourseDetailPage: React.FC = () => {
 
       <div className="detail-content">
 
-        {/* Left column: thumbnail, author, rating, tags, lessons */}
         <div className="detail-left">
           <div className="detail-media">
             {course.thumbnail
@@ -82,7 +86,7 @@ const CourseDetailPage: React.FC = () => {
           <div className="detail-meta-row">
             <span className="detail-educator">{course.teacherName || 'Educator Name'}</span>
             <span className="detail-rate">
-              {course.rating ? <StarRating rating={course.rating} /> : 'No rating'}
+              {displayRating ? <StarRating rating={displayRating} /> : 'No rating'}
             </span>
           </div>
 
@@ -111,7 +115,6 @@ const CourseDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right column: title, access badge, description, enroll */}
         <div className="detail-right">
           <div className="detail-about-card">
             <div className="detail-title-row">
@@ -127,6 +130,51 @@ const CourseDetailPage: React.FC = () => {
           </div>
         </div>
 
+      </div>
+
+      {/* Read-only ratings list */}
+      <div className="detail-ratings">
+        <div className="dr-inner">
+          <h2 className="dr-heading">
+            Ratings
+            {ratings.length > 0 && (
+              <span className="dr-count">{ratings.length} review{ratings.length !== 1 ? 's' : ''}</span>
+            )}
+          </h2>
+
+          {ratings.length === 0 ? (
+            <p className="dr-empty">No reviews yet.</p>
+          ) : (
+            <div className="dr-list">
+              {ratings.map((r) => (
+                <div key={r.id} className="dr-item">
+                  <div className="dr-item-header">
+                    <div className="dr-item-author">
+                      {r.userAvatarUrl
+                        ? <img className="dr-avatar" src={r.userAvatarUrl} alt="" />
+                        : <span className="dr-avatar dr-avatar-initials">
+                            {(r.userName || '?').split(' ').map((p) => p[0]).join('').toUpperCase().slice(0, 2)}
+                          </span>
+                      }
+                      <span className="dr-item-name">{r.userName || 'Student'}</span>
+                    </div>
+                    <div className="dr-item-meta">
+                      <span className="dr-item-stars">
+                        {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
+                      </span>
+                      <span className="dr-item-date">
+                        {new Date(r.createdAt).toLocaleDateString(undefined, {
+                          year: 'numeric', month: 'short', day: 'numeric',
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                  {r.review && <p className="dr-item-review">{r.review}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

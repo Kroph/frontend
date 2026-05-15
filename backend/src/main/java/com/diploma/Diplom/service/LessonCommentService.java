@@ -40,6 +40,9 @@ public class LessonCommentService {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
 
+        User author = userRepository.findById(authorId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         if (request.getParentId() != null) {
             LessonComment parent = commentRepository.findById(request.getParentId())
                     .orElseThrow(() -> new ResourceNotFoundException("Parent comment not found"));
@@ -55,6 +58,8 @@ public class LessonCommentService {
         comment.setLessonId(lessonId);
         comment.setCourseId(lesson.getCourseId());
         comment.setAuthorId(authorId);
+        comment.setAuthorName(author.getName());
+        comment.setAuthorAvatarUrl(author.getProfileImageUrl());
         comment.setContent(request.getContent().trim());
         comment.setParentId(request.getParentId());
         comment.setCreatedAt(LocalDateTime.now());
@@ -73,7 +78,7 @@ public class LessonCommentService {
         return commentRepository.findByParentIdOrderByCreatedAtAsc(parentId);
     }
     public LessonComment markAsAnswer(String userId, String commentId) {
-        User teacher = userRepository.findByEmail(userId)
+        User teacher = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         LessonComment comment = commentRepository.findById(commentId)

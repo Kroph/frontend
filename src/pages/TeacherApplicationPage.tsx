@@ -100,7 +100,7 @@ const TeacherApplicationPage: React.FC = () => {
         <div className="tap-center-wrap">
           <div className="tap-status-card">
             <div className="tap-spinner" />
-            <p className="tap-status-title">Submitting your applicationРІР‚В¦</p>
+            <p className="tap-status-title">Submitting your application…</p>
             <p className="tap-status-sub">Your resume is being uploaded and analysed by AI. This may take a few seconds.</p>
           </div>
         </div>
@@ -137,7 +137,7 @@ const TeacherApplicationPage: React.FC = () => {
         <Navbar />
         <div className="tap-center-wrap">
           <div className="tap-status-card">
-            <div className="tap-error-icon">РІСљвЂў</div>
+            <div className="tap-error-icon">✕</div>
             <p className="tap-status-title">Submission Failed</p>
             <p className="tap-status-sub">{errorMsg}</p>
             <div className="tap-success-actions">
@@ -160,7 +160,7 @@ const TeacherApplicationPage: React.FC = () => {
 
       <div className="tap-container">
         {/* Back link */}
-        <Link to="/profile" className="back-btn">в†ђ Back to Profile</Link>
+        <Link to="/profile" className="back-btn">← Back to Profile</Link>
 
         <div className="tap-card">
           {/* Header */}
@@ -223,7 +223,7 @@ const TeacherApplicationPage: React.FC = () => {
             </div>
 
             {/* Resume upload */}
-            <Field label="Resume / CV" error={fieldErrors.resumeFile} hint="PDF only РІР‚вЂќ will be analysed by AI">
+            <Field label="Resume / CV" error={fieldErrors.resumeFile} hint="PDF only — will be analysed by AI">
               <div
                 className={`tap-dropzone ${dragOver ? 'tap-dropzone-over' : ''} ${resumeFile ? 'tap-dropzone-filled' : ''} ${fieldErrors.resumeFile ? 'tap-dropzone-error' : ''}`}
                 onClick={() => fileInputRef.current?.click()}
@@ -248,7 +248,7 @@ const TeacherApplicationPage: React.FC = () => {
                       className="tap-file-remove"
                       onClick={(e) => { e.stopPropagation(); setResumeFile(null); }}
                     >
-                      РІСљвЂў
+                      ✕
                     </button>
                   </div>
                 ) : (
@@ -266,7 +266,7 @@ const TeacherApplicationPage: React.FC = () => {
             <div className="tap-ai-note">
               <p className="tap-ai-text">
                 Your resume will be automatically scanned by our AI screening system, which
-                analyses your experience, strengths, and fit for the platform РІР‚вЂќ before an
+                analyses your experience, strengths, and fit for the platform — before an
                 admin makes the final call.
               </p>
             </div>

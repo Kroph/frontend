@@ -12,11 +12,11 @@ import {
   AdminUser,
   TeacherApplicationDetail,
 } from '../api';
-import { isAuthenticated } from '../api/auth';
+import { isAuthenticated, getUserRole } from '../api/auth';
 import './css/AdminDashboardPage.css';
 
 const isAiFallback = (app: TeacherApplicationDetail) =>
-  app.aiSummary?.includes('AI сервис недоступен') ?? false;
+  app.aiSummary?.includes('AI service unavailable') ?? false;
 
 const formatDate = (raw: string | number[]) => {
   if (Array.isArray(raw)) {
@@ -49,6 +49,18 @@ const AdminDashboardPage: React.FC = () => {
   useEffect(() => {
     if (!isAuthenticated()) navigate('/login', { replace: true });
   }, [navigate]);
+
+  if (isAuthenticated() && getUserRole() !== 'ADMIN') {
+    return (
+      <div className="admin-page">
+        <div className="adm-container">
+          <p className="adm-empty" style={{ color: 'var(--danger, #e53e3e)' }}>
+            Access denied. You do not have permission to view this page.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const load = async () => {
@@ -154,11 +166,6 @@ const AdminDashboardPage: React.FC = () => {
                 <p className="adm-stat-label">Courses</p>
                 <p className="adm-stat-value">{stats.totalCourses.toLocaleString()}</p>
                 <p className="adm-stat-foot">Published</p>
-              </div>
-              <div className="adm-stat-card">
-                <p className="adm-stat-label">Enrollments</p>
-                <p className="adm-stat-value">{stats.totalEnrollments.toLocaleString()}</p>
-                <p className="adm-stat-foot">All-time</p>
               </div>
             </div>
           ) : (

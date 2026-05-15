@@ -19,6 +19,12 @@ public class CourseRating {
     @Schema(description = "ID of the student who submitted the rating")
     private String userId;
 
+    @Schema(description = "Display name of the student, copied from user at write time")
+    private String userName;
+
+    @Schema(description = "Profile image URL of the student, copied from user at write time")
+    private String userAvatarUrl;
+
     @Schema(description = "ID of the course being rated")
     private String courseId;
 

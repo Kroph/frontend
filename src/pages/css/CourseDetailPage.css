@@ -243,7 +243,206 @@
   box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.4);
 }
 
+/* ── Ratings section ── */
+.detail-ratings {
+  padding: 0 2.5rem 3rem;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.dr-inner {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.6rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.dr-heading {
+  font-family: var(--font-mono);
+  font-style: italic;
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.dr-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: normal;
+}
+
+.dr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding-bottom: 1.2rem;
+}
+
+.dr-form-label {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.dr-star-selector { display: flex; gap: 0.25rem; }
+
+.dr-star {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+  padding: 0 0.1rem;
+  line-height: 1;
+  transition: color 0.1s;
+}
+
+.dr-star.dr-star-on { color: #f0c040; }
+
+.dr-review {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.dr-review:focus { border-color: var(--accent); }
+
+.dr-form-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+.dr-submit-btn {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: var(--btn-dark);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dr-submit-btn:hover:not(:disabled) { background: var(--accent); }
+.dr-submit-btn:disabled { opacity: 0.5; cursor: default; }
+
+.dr-delete-btn {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: none;
+  color: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.dr-delete-btn:hover:not(:disabled) { color: #e53e3e; }
+
+.dr-msg {
+  font-family: var(--font-mono);
+  font-size: 0.83rem;
+  margin: 0;
+}
+
+.dr-msg-ok  { color: #5ddf82; }
+.dr-msg-err { color: #e57373; }
+
+.dr-empty {
+  font-family: var(--font-mono);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.dr-list { display: flex; flex-direction: column; gap: 0.8rem; }
+
+.dr-item {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding-bottom: 0.8rem;
+}
+
+.dr-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.dr-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.dr-item-author {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.dr-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.dr-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent, #7c3aed);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.dr-item-name {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dr-item-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.dr-item-stars { color: #f0c040; font-size: 0.95rem; }
+
+.dr-item-date {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.dr-item-review {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
 @media (max-width: 860px) {
   .detail-content { grid-template-columns: 1fr; padding: 0 1.2rem 2rem; }
   .detail-topbar { padding: 1rem 1.2rem; }
+  .detail-ratings { padding: 0 1.2rem 2rem; }
 }

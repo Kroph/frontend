@@ -8,10 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.diploma.Diplom.dto.CommentRequest;
-import com.diploma.Diplom.exception.ResourceNotFoundException;
 import com.diploma.Diplom.model.LessonComment;
-import com.diploma.Diplom.model.User;
-import com.diploma.Diplom.repository.UserRepository;
 import com.diploma.Diplom.service.LessonCommentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,12 +27,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class LessonCommentController {
 
     private final LessonCommentService commentService;
-    private final UserRepository userRepository;
 
-    public LessonCommentController(LessonCommentService commentService,
-                                    UserRepository userRepository) {
+    public LessonCommentController(LessonCommentService commentService) {
         this.commentService = commentService;
-        this.userRepository = userRepository;
     }
 
     @Operation(
@@ -70,8 +64,7 @@ public class LessonCommentController {
             @RequestBody CommentRequest request,
             Principal principal
     ) {
-        String userId = getCurrentUser(principal).getId();
-        return ResponseEntity.ok(commentService.addComment(userId, lessonId, request));
+        return ResponseEntity.ok(commentService.addComment(principal.getName(), lessonId, request));
     }
 
     @Operation(
@@ -144,13 +137,7 @@ public class LessonCommentController {
             @Parameter(description = "Comment ID") @PathVariable String commentId,
             Principal principal
     ) {
-        String userId = getCurrentUser(principal).getId();
-        commentService.deleteComment(userId, commentId);
+        commentService.deleteComment(principal.getName(), commentId);
         return ResponseEntity.ok("Comment deleted");
-    }
-
-    private User getCurrentUser(Principal principal) {
-        return userRepository.findByEmail(principal.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 }
