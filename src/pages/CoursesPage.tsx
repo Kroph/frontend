@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourses, Course } from '../api/courses';
-import { isAuthenticated } from '../api/auth';
 import './css/CoursesPage.css';
 
 const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
@@ -32,10 +31,6 @@ const CoursesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     getCourses({
       category: categoryFilter !== 'All' ? categoryFilter : undefined,
@@ -52,7 +47,7 @@ const CoursesPage: React.FC = () => {
     const rating = c.avgRating ?? c.rating ?? 0;
     const minRating = ratingFilter === '4.5+' ? 4.5 : ratingFilter === '4.0+' ? 4.0 : ratingFilter === '3.5+' ? 3.5 : 0;
     const matchRating = rating >= minRating;
-    const isFree = c.free === true || c.price === 0;
+    const isFree = c.free === true;
     const matchAccess = accessFilter === 'All' || (accessFilter === 'Free' ? isFree : !isFree);
     return matchSearch && matchRating && matchAccess;
   });
@@ -82,23 +77,66 @@ const CoursesPage: React.FC = () => {
               <span className="toolbar-label">Search</span>
             </button>
           </div>
-          <button
-            className={`toolbar-btn ${showFilters ? 'active' : ''}`}
-            onClick={() => setShowFilters(s => !s)}
-          >
-            <span className="toolbar-label">Filters</span>
-          </button>
+          <div className="filter-btn-wrap">
+            <button
+              className={`toolbar-btn ${showFilters ? 'active' : ''}`}
+              onClick={() => setShowFilters(s => !s)}
+            >
+              <span className="toolbar-label">Filters</span>
+            </button>
+            {showFilters && (
+              <div className="filter-panel">
+                <div className="filter-group">
+                  <span className="filter-group-label">Level</span>
+                  <div className="filter-chips">
+                    {LEVELS.map(l => (
+                      <button key={l} className={`filter-chip ${levelFilter === l ? 'active' : ''}`} onClick={() => setLevelFilter(l)}>
+                        {l}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="filter-group">
+                  <span className="filter-group-label">Category</span>
+                  <div className="filter-chips">
+                    {CATEGORIES.map(c => (
+                      <button key={c} className={`filter-chip ${categoryFilter === c ? 'active' : ''}`} onClick={() => setCategoryFilter(c)}>
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="filter-group">
+                  <span className="filter-group-label">Rating</span>
+                  <div className="filter-chips">
+                    {RATING_OPTIONS.map(r => (
+                      <button key={r} className={`filter-chip ${ratingFilter === r ? 'active' : ''}`} onClick={() => setRatingFilter(r)}>
+                        {r === 'All' ? 'All' : <><span className="chip-star">★</span>{r}</>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="filter-group">
+                  <span className="filter-group-label">Access</span>
+                  <div className="filter-chips">
+                    {ACCESS_OPTIONS.map(a => (
+                      <button key={a} className={`filter-chip ${accessFilter === a ? 'active' : ''}`} onClick={() => setAccessFilter(a)}>
+                        {a}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Body: grid + sidebar */}
+      {/* Courses grid */}
       <div className="courses-body">
-        {/* Courses grid */}
         <div className="courses-container">
         {loading ? (
           <div className="courses-loading">Loading courses...</div>
-        ) : !isAuthenticated() ? (
-          <div className="courses-empty">Please <a href="/login">log in</a> to browse courses.</div>
         ) : filtered.length === 0 ? (
           <div className="courses-empty">No published courses found.</div>
         ) : (
@@ -109,10 +147,16 @@ const CoursesPage: React.FC = () => {
                 <div className="course-thumbnail">
                   {course.thumbnail
                     ? <img src={course.thumbnail.startsWith('http') ? course.thumbnail : `http://localhost:8080/files?path=${course.thumbnail}`} alt={course.title} />
-                    : <span className="thumb-placeholder">Introduction Picture or Video</span>
+                    : <span className="thumb-placeholder">No thumbnail</span>
                   }
                 </div>
-                <p className="course-educator">{course.teacherName || 'Educator'}</p>
+                {course.category && (
+                  <span className="course-category">{course.category}</span>
+                )}
+                <p className="course-educator">by {course.teacherName || 'Unknown'}</p>
+                {course.lessonCount !== undefined && (
+                  <p className="course-lessons">{course.lessonCount} {course.lessonCount === 1 ? 'lesson' : 'lessons'}</p>
+                )}
                 <div className="course-footer">
                   <span className="course-rate">
                     {(course.avgRating || course.rating)
@@ -120,7 +164,7 @@ const CoursesPage: React.FC = () => {
                       : 'No rating'}
                   </span>
                   <span className="course-btn-enroll">
-                    Enroll
+                    {course.free ? 'Free' : 'Subscription'}
                   </span>
                 </div>
               </Link>
@@ -128,51 +172,6 @@ const CoursesPage: React.FC = () => {
           </div>
         )}
         </div>
-
-        {showFilters && (
-          <div className="filter-panel">
-            <div className="filter-group">
-              <span className="filter-group-label">Level</span>
-              <div className="filter-chips">
-                {LEVELS.map(l => (
-                  <button key={l} className={`filter-chip ${levelFilter === l ? 'active' : ''}`} onClick={() => setLevelFilter(l)}>
-                    {l}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="filter-group">
-              <span className="filter-group-label">Category</span>
-              <div className="filter-chips">
-                {CATEGORIES.map(c => (
-                  <button key={c} className={`filter-chip ${categoryFilter === c ? 'active' : ''}`} onClick={() => setCategoryFilter(c)}>
-                    {c}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="filter-group">
-              <span className="filter-group-label">Rating</span>
-              <div className="filter-chips">
-                {RATING_OPTIONS.map(r => (
-                  <button key={r} className={`filter-chip ${ratingFilter === r ? 'active' : ''}`} onClick={() => setRatingFilter(r)}>
-                    {r === 'All' ? 'All' : <><span className="chip-star">★</span>{r}</>}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="filter-group">
-              <span className="filter-group-label">Access</span>
-              <div className="filter-chips">
-                {ACCESS_OPTIONS.map(a => (
-                  <button key={a} className={`filter-chip ${accessFilter === a ? 'active' : ''}`} onClick={() => setAccessFilter(a)}>
-                    {a}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

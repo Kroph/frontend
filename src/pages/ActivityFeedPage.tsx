@@ -5,37 +5,6 @@ import { getMyActivity, ActivityFeed } from '../api';
 import { isAuthenticated } from '../api/auth';
 import './css/ActivityFeedPage.css';
 
-const MOCK: ActivityFeed[] = [
-  {
-    id: '1',
-    userId: 'u1',
-    type: 'LESSON_COMPLETED',
-    message: 'You completed "Components & Props" in Introduction to React',
-    createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
-  },
-  {
-    id: '2',
-    userId: 'u1',
-    type: 'QUIZ_PASSED',
-    message: 'You passed the quiz "Variables Quiz" with 85%',
-    createdAt: new Date(Date.now() - 1 * 86400000).toISOString(),
-  },
-  {
-    id: '3',
-    userId: 'u1',
-    type: 'ENROLLMENT',
-    message: 'You enrolled in "Spring Boot Mastery"',
-    createdAt: new Date(Date.now() - 4 * 86400000).toISOString(),
-  },
-  {
-    id: '4',
-    userId: 'u1',
-    type: 'CERTIFICATE_EARNED',
-    message: 'You earned a certificate for "UI/UX Design Principles"',
-    createdAt: new Date(Date.now() - 14 * 86400000).toISOString(),
-  },
-];
-
 const iconForType = (t: string): string => {
   switch (t) {
     case 'LESSON_COMPLETED': return '✓';
@@ -83,7 +52,7 @@ const ActivityFeedPage: React.FC = () => {
     setLoading(true);
     getMyActivity()
       .then((res) => setItems(res.data || []))
-      .catch(() => setItems(MOCK))
+      .catch(() => setItems([]))
       .finally(() => setLoading(false));
   }, []);
 

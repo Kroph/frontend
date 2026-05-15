@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import {
-  createPaypalOrder,
-  capturePaypalOrder,
   createSubscription,
   confirmSubscription,
   enrollFree,
@@ -11,21 +9,6 @@ import {
 import { getCourseById, Course } from '../api/courses';
 import { isAuthenticated } from '../api/auth';
 import './css/CheckoutPage.css';
-
-const MOCK_COURSE: Course = {
-  id: '1',
-  title: 'Introduction to React',
-  description: 'Learn React from scratch with hands-on projects.',
-  teacherId: 't1',
-  teacherName: 'Alice Johnson',
-  category: 'Technology',
-  level: 'Beginner',
-  published: true,
-  createdAt: '',
-  updatedAt: '',
-  price: 49,
-  rating: 4.7,
-};
 
 type Step = 'choose' | 'redirect' | 'capturing' | 'success' | 'error';
 
@@ -36,10 +19,8 @@ const CheckoutPage: React.FC = () => {
 
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
-
   const [step, setStep] = useState<Step>('choose');
   const [errorMsg, setErrorMsg] = useState('');
-  const [mode, setMode] = useState<'one-time' | 'subscription' | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated()) navigate('/login', { replace: true });
@@ -50,49 +31,24 @@ const CheckoutPage: React.FC = () => {
     setLoading(true);
     getCourseById(id)
       .then((res) => setCourse(res.data))
-      .catch(() => setCourse({ ...MOCK_COURSE, id }))
+      .catch(() => setCourse(null))
       .finally(() => setLoading(false));
   }, [id]);
 
   useEffect(() => {
-    const orderToken = params.get('token');
     const subscriptionId = params.get('subscription_id');
-
-    if (orderToken) {
-      setStep('capturing');
-      capturePaypalOrder(orderToken)
-        .then(() => setStep('success'))
-        .catch((err) => {
-          setErrorMsg(err?.response?.data?.message || 'Could not capture payment.');
-          setStep('error');
-        });
-    } else if (subscriptionId) {
+    if (subscriptionId) {
       setStep('capturing');
       confirmSubscription(subscriptionId)
         .then(() => setStep('success'))
-        .catch((err) => {
+        .catch((err: any) => {
           setErrorMsg(err?.response?.data?.message || 'Could not confirm subscription.');
           setStep('error');
         });
     }
   }, [params]);
 
-  const handleOneTime = async () => {
-    if (!id) return;
-    setMode('one-time');
-    setStep('redirect');
-    setErrorMsg('');
-    try {
-      const res = await createPaypalOrder(id);
-      window.location.href = res.data.approveUrl;
-    } catch (err: any) {
-      setErrorMsg(err?.response?.data?.message || 'Could not start PayPal checkout.');
-      setStep('error');
-    }
-  };
-
   const handleSubscribe = async () => {
-    setMode('subscription');
     setStep('redirect');
     setErrorMsg('');
     try {
@@ -111,7 +67,7 @@ const CheckoutPage: React.FC = () => {
       await enrollFree(id);
       setStep('success');
     } catch (err: any) {
-      setErrorMsg(err?.response?.data?.message || 'Could not enroll. The course may not be free.');
+      setErrorMsg(err?.response?.data?.message || 'Could not enroll.');
       setStep('error');
     }
   };
@@ -134,11 +90,13 @@ const CheckoutPage: React.FC = () => {
     );
   }
 
+  const isFree = course.free === true;
+
   return (
     <div className="checkout-page">
       <Navbar />
       <div className="ck-container">
-        <button className="ck-back" onClick={() => navigate(`/courses/${course.id}`)}>
+        <button className="back-btn" onClick={() => navigate(`/courses/${course.id}`)}>
           ← Back to course
         </button>
 
@@ -156,38 +114,29 @@ const CheckoutPage: React.FC = () => {
                   <span>{course.teacherName || 'Educator'}</span>
                 </div>
                 <div className="ck-summary-row total">
-                  <span>Price</span>
-                  <b>{course.price ? `$${course.price}` : 'Free'}</b>
+                  <span>Access</span>
+                  <b>{isFree ? 'Free' : 'Subscription required'}</b>
                 </div>
               </div>
 
-              {course.price ? (
-                <div className="ck-options">
-                  <button className="ck-pay-btn ck-paypal" onClick={handleOneTime}>
-                    <span className="ck-paypal-logo">PayPal</span>
-                    <span>Pay ${course.price}</span>
-                  </button>
-
-                  <div className="ck-divider"><span>or</span></div>
-
-                  <div className="ck-sub-card">
-                    <div>
-                      <h3>Subscribe & access everything</h3>
-                      <p>One subscription unlocks every paid course on the platform.</p>
-                    </div>
-                    <button className="ck-sub-btn" onClick={handleSubscribe}>
-                      Start subscription
-                    </button>
-                  </div>
-                </div>
-              ) : (
+              {isFree ? (
                 <button className="ck-pay-btn" onClick={handleFreeEnroll}>
                   Enroll for free
                 </button>
+              ) : (
+                <div className="ck-sub-card">
+                  <div>
+                    <h3>Subscribe &amp; access everything</h3>
+                    <p>One subscription unlocks every subscription-based course on the platform.</p>
+                  </div>
+                  <button className="ck-sub-btn" onClick={handleSubscribe}>
+                    Start subscription
+                  </button>
+                </div>
               )}
 
               <p className="ck-fineprint">
-                Payments are processed securely by PayPal. You can cancel a subscription at any time.
+                Subscription payments are processed securely by PayPal. You can cancel at any time.
               </p>
             </>
           )}
@@ -203,7 +152,7 @@ const CheckoutPage: React.FC = () => {
           {step === 'capturing' && (
             <div className="ck-state">
               <div className="ck-spinner" />
-              <h2>Confirming your {mode === 'subscription' ? 'subscription' : 'payment'}...</h2>
+              <h2>Confirming your subscription...</h2>
               <p>Hold on a moment.</p>
             </div>
           )}
@@ -214,16 +163,10 @@ const CheckoutPage: React.FC = () => {
               <h2>You're enrolled!</h2>
               <p>You now have full access to <b>{course.title}</b>.</p>
               <div className="ck-success-actions">
-                <button
-                  className="ck-pay-btn"
-                  onClick={() => navigate(`/courses/${course.id}`)}
-                >
+                <button className="ck-pay-btn" onClick={() => navigate(`/courses/${course.id}`)}>
                   Start learning
                 </button>
-                <button
-                  className="ck-secondary-btn"
-                  onClick={() => navigate('/my-enrollments')}
-                >
+                <button className="ck-secondary-btn" onClick={() => navigate('/my-enrollments')}>
                   My courses
                 </button>
               </div>

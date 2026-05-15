@@ -1,5 +1,5 @@
 import api from './index';
-import type { Course } from './courses';
+import type { Course, Lesson } from './courses';
 
 export interface CreateCourseFields {
   title: string;
@@ -8,7 +8,6 @@ export interface CreateCourseFields {
   level?: string;
   published?: boolean;
   free?: boolean;
-  price?: number;
   thumbnailFile?: File | null;
 }
 
@@ -20,7 +19,6 @@ export const createCourse = (data: CreateCourseFields) => {
   if (data.level) form.append('level', data.level);
   if (data.published !== undefined) form.append('published', String(data.published));
   form.append('free', String(data.free ?? true));
-  if (!data.free) form.append('price', '0');
   if (data.thumbnailFile) form.append('thumbnailFile', data.thumbnailFile);
 
   return api.post<Course>('/courses', form, {
@@ -29,16 +27,18 @@ export const createCourse = (data: CreateCourseFields) => {
 };
 
 export const createLesson = (courseId: string, formData: FormData) =>
-  api.post(`/lessons/course/${courseId}`, formData, {
+  api.post<Lesson>(`/lessons/course/${courseId}`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 
 export interface CreateQuizData {
   title: string;
+  description: string;
+  passingScore?: number;
   questions: {
     question: string;
-    answers: string[];
-    correctIndex: number;
+    options: string[];
+    correctAnswerIndex: number;
   }[];
 }
 
@@ -53,7 +53,6 @@ export const updateCourse = (courseId: string, data: Partial<CreateCourseFields>
   if (data.level) form.append('level', data.level);
   if (data.published !== undefined) form.append('published', String(data.published));
   if (data.free !== undefined) form.append('free', String(data.free));
-  if (data.price !== undefined) form.append('price', String(data.price));
   if (data.thumbnailFile) form.append('thumbnailFile', data.thumbnailFile);
 
   return api.put<Course>(`/courses/${courseId}`, form, {

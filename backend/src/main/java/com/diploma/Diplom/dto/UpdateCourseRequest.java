@@ -1,7 +1,6 @@
 package com.diploma.Diplom.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -25,7 +24,9 @@ public class UpdateCourseRequest {
     @Size(max = 50, message = "Level must not exceed 50 characters")
     private String level;
 
-    @Schema(description = "The publication status of the course, which is required for the update")
-    @NotNull(message = "Published flag is required")
+    @Schema(description = "The publication status of the course")
     private Boolean published;
+
+    @Schema(description = "Whether the course is free; false means subscription required")
+    private Boolean free;
 }

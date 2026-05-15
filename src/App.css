@@ -42,3 +42,23 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.back-btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  color: var(--text-primary);
+}

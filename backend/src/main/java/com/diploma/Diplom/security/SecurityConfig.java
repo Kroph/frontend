@@ -43,6 +43,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers("/auth/register", "/auth/login", "/auth/verify").permitAll();
                 auth.requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll();
+                auth.requestMatchers("/courses/public").permitAll();
+                auth.requestMatchers("/courses/{courseId}").permitAll();
+                auth.requestMatchers("/lessons/course/**").permitAll();
                 auth.requestMatchers(
                         "/swagger-ui/**",
                         "/swagger-ui.html",

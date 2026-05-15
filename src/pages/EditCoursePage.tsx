@@ -13,25 +13,6 @@ import { getCourseById, Course } from '../api/courses';
 import { isAuthenticated } from '../api/auth';
 import './css/EditCoursePage.css';
 
-const MOCK_COURSE: Course = {
-  id: '1',
-  title: 'Introduction to React',
-  description: 'Learn React from scratch.',
-  teacherId: 't1',
-  teacherName: 'You',
-  category: 'Technology',
-  level: 'Beginner',
-  published: true,
-  createdAt: '',
-  updatedAt: '',
-  price: 49,
-};
-
-const MOCK_LESSONS: Lesson[] = [
-  { id: 'l1', courseId: '1', title: 'Setup', orderIndex: 0, duration: 25, published: true },
-  { id: 'l2', courseId: '1', title: 'Components', orderIndex: 1, duration: 35, published: true },
-];
-
 const EditCoursePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -47,7 +28,7 @@ const EditCoursePage: React.FC = () => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [level, setLevel] = useState('Beginner');
-  const [price, setPrice] = useState('');
+  const [free, setFree] = useState(true);
   const [published, setPublished] = useState(false);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
 
@@ -59,15 +40,17 @@ const EditCoursePage: React.FC = () => {
     if (!id) return;
     setLoading(true);
     Promise.allSettled([getCourseById(id), getLessonsByCourse(id)]).then(([cRes, lRes]) => {
-      const c = cRes.status === 'fulfilled' ? cRes.value.data : { ...MOCK_COURSE, id };
-      setCourse(c);
-      setTitle(c.title);
-      setDescription(c.description || '');
-      setCategory(c.category || '');
-      setLevel(c.level || 'Beginner');
-      setPrice(c.price !== undefined ? String(c.price) : '');
-      setPublished(c.published);
-      setLessons(lRes.status === 'fulfilled' ? lRes.value.data : MOCK_LESSONS);
+      const c = cRes.status === 'fulfilled' ? cRes.value.data : null;
+      if (c) {
+        setCourse(c);
+        setTitle(c.title);
+        setDescription(c.description || '');
+        setCategory(c.category || '');
+        setLevel(c.level || 'Beginner');
+        setFree(c.free !== false);
+        setPublished(c.published);
+      }
+      setLessons(lRes.status === 'fulfilled' ? lRes.value.data : []);
       setLoading(false);
     });
   }, [id]);
@@ -82,7 +65,7 @@ const EditCoursePage: React.FC = () => {
       fd.append('description', description);
       fd.append('category', category);
       fd.append('level', level);
-      if (price !== '') fd.append('price', price);
+      fd.append('free', String(free));
       fd.append('published', String(published));
       if (thumbnail) fd.append('thumbnail', thumbnail);
 
@@ -143,7 +126,7 @@ const EditCoursePage: React.FC = () => {
     <div className="edit-course-page">
       <Navbar />
       <div className="ec-container">
-        <button className="ec-back" onClick={() => navigate(`/courses/${course.id}`)}>
+        <button className="back-btn" onClick={() => navigate(`/courses/${course.id}`)}>
           ← Back to course
         </button>
 
@@ -200,15 +183,15 @@ const EditCoursePage: React.FC = () => {
               </select>
             </label>
             <label className="ec-field">
-              <span>Price (USD)</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+              <span>Access</span>
+              <select
+                value={free ? 'free' : 'subscription'}
+                onChange={(e) => setFree(e.target.value === 'free')}
                 className="ec-input"
-              />
+              >
+                <option value="free">Free</option>
+                <option value="subscription">Subscription only</option>
+              </select>
             </label>
           </div>
 
@@ -265,7 +248,7 @@ const EditCoursePage: React.FC = () => {
                       </p>
                       <p className="ec-lesson-meta">
                         {l.duration ? `${l.duration} min` : 'No duration set'}
-                        {' · '}
+                        {' В· '}
                         {l.published ? 'Published' : 'Draft'}
                       </p>
                     </div>

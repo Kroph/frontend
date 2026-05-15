@@ -10,41 +10,6 @@ import {
 import { isAuthenticated } from '../api/auth';
 import './css/PaymentHistoryPage.css';
 
-const MOCK_PAYMENTS: Payment[] = [
-  {
-    id: 'p1',
-    userId: 'u1',
-    courseId: '1',
-    paypalOrderId: '8KX12345AB',
-    amount: 49,
-    currency: 'USD',
-    status: 'CAPTURED',
-    createdAt: new Date(Date.now() - 30 * 86400000).toISOString(),
-  },
-  {
-    id: 'p2',
-    userId: 'u1',
-    courseId: '4',
-    paypalOrderId: '7QW54321CD',
-    amount: 89,
-    currency: 'USD',
-    status: 'CAPTURED',
-    createdAt: new Date(Date.now() - 7 * 86400000).toISOString(),
-  },
-];
-
-const MOCK_SUBS: Subscription[] = [
-  {
-    id: 's1',
-    userId: 'u1',
-    paypalSubscriptionId: 'I-BW452GLLEP1G',
-    planId: 'P-58N535868G1027601NHFZDXQ',
-    status: 'ACTIVE',
-    startDate: new Date(Date.now() - 60 * 86400000).toISOString(),
-    nextBillingDate: new Date(Date.now() + 30 * 86400000).toISOString(),
-  },
-];
-
 const formatDate = (iso?: string) =>
   iso ? new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
 
@@ -66,8 +31,8 @@ const PaymentHistoryPage: React.FC = () => {
         getMyPayments(),
         getMySubscriptions(),
       ]);
-      setPayments(pRes.status === 'fulfilled' ? pRes.value.data : MOCK_PAYMENTS);
-      setSubs(sRes.status === 'fulfilled' ? sRes.value.data : MOCK_SUBS);
+      setPayments(pRes.status === 'fulfilled' ? pRes.value.data : []);
+      setSubs(sRes.status === 'fulfilled' ? sRes.value.data : []);
       setLoading(false);
     };
     load();

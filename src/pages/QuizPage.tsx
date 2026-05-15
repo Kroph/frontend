@@ -12,30 +12,6 @@ import {
 import { isAuthenticated } from '../api/auth';
 import './css/QuizPage.css';
 
-const MOCK_QUIZ: Quiz = {
-  id: 'q1',
-  lessonId: 'l1',
-  title: 'Variables Quiz',
-  description: 'Test your understanding of variable declaration in modern JS.',
-  passingScore: 70,
-  timeLimitSeconds: 300,
-  published: true,
-  questions: [
-    {
-      question: 'Which keyword declares a constant in JavaScript?',
-      options: ['var', 'let', 'const', 'final'],
-    },
-    {
-      question: 'Which one creates a block-scoped variable?',
-      options: ['var', 'let', 'function', 'global'],
-    },
-    {
-      question: 'What does `typeof null` return?',
-      options: ['null', 'undefined', 'object', 'string'],
-    },
-  ],
-};
-
 const formatTime = (s: number): string => {
   const m = Math.floor(s / 60);
   const sec = s % 60;
@@ -65,7 +41,7 @@ const QuizPage: React.FC = () => {
     if (!quizId) return;
     setLoading(true);
     Promise.allSettled([getQuiz(quizId), getMyQuizAttempts(quizId)]).then(([qRes, aRes]) => {
-      setQuiz(qRes.status === 'fulfilled' ? qRes.value.data : { ...MOCK_QUIZ, id: quizId });
+      setQuiz(qRes.status === 'fulfilled' ? qRes.value.data : null);
       setAttempts(aRes.status === 'fulfilled' ? aRes.value.data : []);
       setLoading(false);
     });
@@ -116,21 +92,11 @@ const QuizPage: React.FC = () => {
       const res = await submitQuiz(quizId, ordered);
       setResult(res.data);
       setAttempts((prev) => [res.data, ...prev]);
+      setPhase('result');
     } catch (err: any) {
-      const fake: QuizAttempt = {
-        id: `local-${Date.now()}`,
-        userId: 'me',
-        quizId,
-        answers: ordered,
-        score: 0,
-        passed: false,
-        completedAt: new Date().toISOString(),
-      };
-      setResult(fake);
       alert(err?.response?.data?.message || 'Could not submit quiz. Try again.');
     } finally {
       setSubmitting(false);
-      setPhase('result');
     }
   };
 
@@ -157,7 +123,7 @@ const QuizPage: React.FC = () => {
       <div className="quiz-page">
         <Navbar />
         <div className="quiz-intro">
-          <button className="quiz-back-btn" onClick={() => navigate(-1)}>
+          <button className="back-btn" onClick={() => navigate(-1)}>
             ← Back
           </button>
           <h1 className="quiz-title">{quiz.title}</h1>
@@ -189,7 +155,7 @@ const QuizPage: React.FC = () => {
             <div className="quiz-best">
               <p>
                 Best so far: <b>{bestAttempt.score}%</b>{' '}
-                {bestAttempt.passed ? '✓ passed' : '✗ not passed'}
+                {bestAttempt.passed ? 'вњ“ passed' : 'вњ— not passed'}
               </p>
               <p className="quiz-attempt-count">{attempts.length} attempt{attempts.length === 1 ? '' : 's'}</p>
             </div>
@@ -209,7 +175,7 @@ const QuizPage: React.FC = () => {
         <Navbar />
         <div className="quiz-result">
           <div className={`quiz-result-icon ${result.passed ? 'pass' : 'fail'}`}>
-            {result.passed ? '✓' : '✗'}
+            {result.passed ? 'вњ“' : 'вњ—'}
           </div>
           <h1>{result.passed ? 'Passed!' : 'Not passed'}</h1>
           <p className="quiz-result-score">{result.score}%</p>
@@ -217,7 +183,7 @@ const QuizPage: React.FC = () => {
             Passing score for this quiz is {quiz.passingScore}%.
           </p>
           <div className="quiz-result-actions">
-            <button className="quiz-back-btn" onClick={() => navigate(-1)}>
+            <button className="back-btn" onClick={() => navigate(-1)}>
               ← Back to lesson
             </button>
             <button className="quiz-start-btn" onClick={() => setPhase('intro')}>

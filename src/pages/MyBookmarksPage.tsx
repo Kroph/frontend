@@ -5,29 +5,6 @@ import { getMyBookmarks, toggleBookmark, BookmarkCourse } from '../api';
 import { isAuthenticated } from '../api/auth';
 import './css/MyBookmarksPage.css';
 
-const MOCK: BookmarkCourse[] = [
-  {
-    id: '2',
-    title: 'Advanced TypeScript',
-    description: 'Deep dive into TS generics & utility types.',
-    teacherName: 'Bob Smith',
-    category: 'Technology',
-    level: 'Advanced',
-    price: 79,
-    rating: 4.9,
-  },
-  {
-    id: '3',
-    title: 'UI/UX Design Principles',
-    description: 'Master design thinking and prototyping.',
-    teacherName: 'Carol White',
-    category: 'Design',
-    level: 'Intermediate',
-    price: 59,
-    rating: 4.5,
-  },
-];
-
 const MyBookmarksPage: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<BookmarkCourse[]>([]);
@@ -41,7 +18,7 @@ const MyBookmarksPage: React.FC = () => {
     setLoading(true);
     getMyBookmarks()
       .then((res) => setItems(res.data || []))
-      .catch(() => setItems(MOCK))
+      .catch(() => setItems([]))
       .finally(() => setLoading(false));
   }, []);
 
@@ -78,10 +55,7 @@ const MyBookmarksPage: React.FC = () => {
               <div key={c.id} className="bm-card">
                 <Link to={`/courses/${c.id}`} className="bm-thumb">
                   {c.thumbnail ? (
-                    <img
-                      src={`http://localhost:8080/files?path=${c.thumbnail}`}
-                      alt={c.title}
-                    />
+                    <img src={c.thumbnail} alt={c.title} />
                   ) : (
                     <span className="bm-thumb-ph">{c.title?.[0] || '?'}</span>
                   )}

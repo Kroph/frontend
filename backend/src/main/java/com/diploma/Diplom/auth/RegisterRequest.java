@@ -1,11 +1,8 @@
 package com.diploma.Diplom.auth;
 
-import com.diploma.Diplom.model.Role;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -32,11 +29,4 @@ public class RegisterRequest {
         message = "Password must contain at least one letter and one digit"
     )
     private String password;
-
-    @Schema(
-        description = "Role chosen at registration: STUDENT or TEACHER only. ADMIN cannot be self-assigned.",
-        allowableValues = {"STUDENT", "TEACHER"}
-    )
-    @NotNull(message = "Role is required")
-    private Role role;
 }

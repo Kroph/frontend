@@ -17,32 +17,6 @@ interface Row {
   course: Course | null;
 }
 
-const MOCK_ROWS: Row[] = [
-  {
-    cert: {
-      id: 'cert-1',
-      userId: 'u1',
-      userName: 'Alex Johnson',
-      courseId: '4',
-      courseTitle: 'Spring Boot Mastery',
-      issuedAt: new Date(Date.now() - 14 * 86400000).toISOString(),
-      verificationCode: 'demo-1234',
-    },
-    course: {
-      id: '4',
-      title: 'Spring Boot Mastery',
-      description: '',
-      teacherId: 't4',
-      teacherName: 'David Lee',
-      category: 'Technology',
-      level: 'Intermediate',
-      published: true,
-      createdAt: '',
-      updatedAt: '',
-    },
-  },
-];
-
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 
@@ -90,7 +64,7 @@ const MyCertificatesPage: React.FC = () => {
 
         setRows(expanded.filter((r): r is Row => r !== null));
       } catch {
-        setRows(MOCK_ROWS);
+        setRows([]);
       } finally {
         setLoading(false);
       }

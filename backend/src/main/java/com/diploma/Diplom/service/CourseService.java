@@ -2,7 +2,6 @@ package com.diploma.Diplom.service;
 
 import com.diploma.Diplom.dto.CreateCourseRequest;
 import com.diploma.Diplom.dto.UpdateCourseRequest;
-import com.diploma.Diplom.exception.BadRequestException;
 import com.diploma.Diplom.exception.ForbiddenException;
 import com.diploma.Diplom.exception.ResourceNotFoundException;
 import com.diploma.Diplom.model.Course;
@@ -42,22 +41,16 @@ public class CourseService {
 
         Course course = new Course();
         course.setTeacherId(user.getId());
+        course.setTeacherName(user.getName());
         course.setTitle(request.getTitle());
         course.setDescription(request.getDescription());
         course.setCategory(request.getCategory());
         course.setLevel(request.getLevel());
         course.setPublished(request.getPublished() != null ? request.getPublished() : false);
-        course.setFree(request.getFree());
+        boolean isFree = Boolean.TRUE.equals(request.getFree());
+        course.setFree(isFree);
         course.setCurrency(DEFAULT_CURRENCY);
-
-        if (Boolean.TRUE.equals(request.getFree())) {
-            course.setPrice(BigDecimal.ZERO);
-        } else {
-        if (request.getPrice() == null) {
-            throw new BadRequestException("Price is required for paid course");
-        }
-        course.setPrice(request.getPrice());
-        }
+        course.setPrice(BigDecimal.ZERO);
 
         if (thumbnailFile != null && !thumbnailFile.isEmpty()) {
             CloudinaryService.FileUploadResult uploaded =
@@ -74,12 +67,14 @@ public class CourseService {
 
     public List<Course> getTeacherCourses(String userId) {
         User user = getApprovedTeacher(userId);
-        return courseRepository.findByTeacherId(user.getId());
+        return courseRepository.findByTeacherId(user.getId())
+                .stream().map(this::populateTeacherName).toList();
     }
 
     public Course getCourseById(String courseId) {
-        return courseRepository.findById(courseId)
+        Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + courseId));
+        return populateTeacherName(course);
     }
 
     public Course updateCourse(String userId,
@@ -98,6 +93,10 @@ public class CourseService {
         if (request.getCategory() != null) course.setCategory(request.getCategory());
         if (request.getLevel() != null) course.setLevel(request.getLevel());
         if (request.getPublished() != null) course.setPublished(request.getPublished());
+        if (request.getFree() != null) {
+            course.setFree(request.getFree());
+            course.setPrice(BigDecimal.ZERO);
+        }
 
         if (thumbnailFile != null && !thumbnailFile.isEmpty()) {
             if (course.getThumbnailPublicId() != null) {
@@ -130,14 +129,26 @@ public class CourseService {
     }
 
     public Page<Course> getPublicCourses(String category, String level, Pageable pageable) {
+        Page<Course> page;
         if (category != null && level != null) {
-            return courseRepository.findByPublishedTrueAndCategoryAndLevel(category, level, pageable);
+            page = courseRepository.findByPublishedTrueAndCategoryAndLevel(category, level, pageable);
         } else if (category != null) {
-            return courseRepository.findByPublishedTrueAndCategory(category, pageable);
+            page = courseRepository.findByPublishedTrueAndCategory(category, pageable);
         } else if (level != null) {
-            return courseRepository.findByPublishedTrueAndLevel(level, pageable);
+            page = courseRepository.findByPublishedTrueAndLevel(level, pageable);
+        } else {
+            page = courseRepository.findByPublishedTrue(pageable);
         }
-        return courseRepository.findByPublishedTrue(pageable);
+        return page.map(this::populateTeacherName);
+    }
+
+    private Course populateTeacherName(Course course) {
+        if (course.getTeacherName() == null && course.getTeacherId() != null) {
+            userRepository.findById(course.getTeacherId())
+                    .ifPresent(u -> course.setTeacherName(u.getName()));
+        }
+        course.setLessonCount(lessonRepository.countByCourseId(course.getId()));
+        return course;
     }
 
     private User getApprovedTeacher(String userId) {

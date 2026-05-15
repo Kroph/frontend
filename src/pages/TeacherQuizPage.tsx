@@ -11,36 +11,6 @@ import {
 import { isAuthenticated } from '../api/auth';
 import './css/TeacherQuizPage.css';
 
-const MOCK_QUESTIONS: TeacherQuizQuestion[] = [
-  {
-    questionText: 'Which teaching approach is most effective for adult learners?',
-    options: [
-      'Lecture-only with no interaction',
-      'Problem-based learning with real-world examples',
-      'Memorisation drills',
-      'Random topic switching',
-    ],
-  },
-  {
-    questionText: 'What is the best way to give feedback on student work?',
-    options: [
-      'Only highlight what is wrong',
-      'Skip feedback to save time',
-      'Specific, actionable, and timely',
-      'Generic praise on every submission',
-    ],
-  },
-  {
-    questionText: 'How should a course outline be structured?',
-    options: [
-      'Random order of topics',
-      'Most difficult content first',
-      'Logical progression from fundamentals to advanced',
-      'Alphabetical by topic name',
-    ],
-  },
-];
-
 const TeacherQuizPage: React.FC = () => {
   const { applicationId } = useParams<{ applicationId: string }>();
   const navigate = useNavigate();
@@ -65,7 +35,7 @@ const TeacherQuizPage: React.FC = () => {
       setQuestions(
         qRes.status === 'fulfilled' && qRes.value.data?.length
           ? qRes.value.data
-          : MOCK_QUESTIONS
+          : []
       );
       if (rRes.status === 'fulfilled' && rRes.value.data) setResult(rRes.value.data);
       setLoading(false);
@@ -106,7 +76,7 @@ const TeacherQuizPage: React.FC = () => {
         <Navbar />
         <div className="tquiz-result">
           <div className={`tquiz-result-icon ${result.passed ? 'pass' : 'fail'}`}>
-            {result.passed ? '✓' : '✗'}
+            {result.passed ? 'вњ“' : 'вњ—'}
           </div>
           <h1>{result.passed ? 'You passed' : 'Not passed'}</h1>
           <p className="tquiz-result-score">{result.score}%</p>
@@ -125,7 +95,7 @@ const TeacherQuizPage: React.FC = () => {
     <div className="tquiz-page">
       <Navbar />
       <div className="tquiz-container">
-        <button className="tquiz-back" onClick={() => navigate(-1)}>
+        <button className="back-btn" onClick={() => navigate(-1)}>
           ← Back
         </button>
 

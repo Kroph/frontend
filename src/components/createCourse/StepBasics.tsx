@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { CourseDraft } from '../../types/createCourse';
 
 const CATEGORIES = [
@@ -12,35 +12,12 @@ interface Props {
 }
 
 const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
-  const [tagInput, setTagInput] = useState('');
-  const tagInputRef = useRef<HTMLInputElement>(null);
-
-  const addTag = (raw: string) => {
-    const val = raw.trim().replace(/,/g, '');
-    if (!val || draft.tags.includes(val)) return;
-    updateDraft({ tags: [...draft.tags, val] });
-  };
-
-  const removeTag = (val: string) => {
-    updateDraft({ tags: draft.tags.filter(t => t !== val) });
-  };
-
-  const handleTagKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      addTag(tagInput);
-      setTagInput('');
-    } else if (e.key === 'Backspace' && !tagInput && draft.tags.length) {
-      updateDraft({ tags: draft.tags.slice(0, -1) });
-    }
-  };
-
   const handleThumbUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = ev => {
-      if (ev.target?.result) updateDraft({ thumbnail: ev.target.result as string });
+      if (ev.target?.result) updateDraft({ thumbnail: ev.target.result as string, thumbnailFile: file });
     };
     reader.readAsDataURL(file);
   };
@@ -96,29 +73,6 @@ const StepBasics: React.FC<Props> = ({ draft, updateDraft, onNext }) => {
             </div>
           </div>
 
-          {/* Tags */}
-          <div className="cc-field">
-            <label className="cc-label">Tags</label>
-            <div
-              className="cc-tags-wrap"
-              onClick={() => tagInputRef.current?.focus()}
-            >
-              {draft.tags.map(tag => (
-                <span key={tag} className="cc-tag-pill">
-                  {tag}
-                  <button type="button" onClick={() => removeTag(tag)}>×</button>
-                </span>
-              ))}
-              <input
-                ref={tagInputRef}
-                className="cc-tag-input"
-                placeholder={draft.tags.length === 0 ? 'Type a tag and press Enter…' : ''}
-                value={tagInput}
-                onChange={e => setTagInput(e.target.value)}
-                onKeyDown={handleTagKey}
-              />
-            </div>
-          </div>
         </div>
       </div>
 

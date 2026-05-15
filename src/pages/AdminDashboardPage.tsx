@@ -15,66 +15,21 @@ import {
 import { isAuthenticated } from '../api/auth';
 import './css/AdminDashboardPage.css';
 
-const MOCK_STATS: AdminStats = {
-  totalUsers: 1247,
-  totalStudents: 1189,
-  totalTeachers: 56,
-  totalCourses: 87,
-  totalEnrollments: 3421,
-  totalRevenue: 28450.5,
+const isAiFallback = (app: TeacherApplicationDetail) =>
+  app.aiSummary?.includes('AI сервис недоступен') ?? false;
+
+const formatDate = (raw: string | number[]) => {
+  if (Array.isArray(raw)) {
+    const [y, m, d] = raw as number[];
+    return new Date(y, m - 1, d).toLocaleDateString(undefined, {
+      year: 'numeric', month: 'short', day: 'numeric',
+    });
+  }
+  const d = new Date(raw);
+  return isNaN(d.getTime()) ? String(raw) : d.toLocaleDateString(undefined, {
+    year: 'numeric', month: 'short', day: 'numeric',
+  });
 };
-
-const MOCK_USERS: AdminUser[] = [
-  {
-    id: 'u1',
-    name: 'Alex Johnson',
-    email: 'alex@example.com',
-    role: 'STUDENT',
-    enabled: true,
-    teacherApproved: false,
-    createdAt: new Date(Date.now() - 90 * 86400000).toISOString(),
-  },
-  {
-    id: 'u2',
-    name: 'Maria Singh',
-    email: 'maria@example.com',
-    role: 'TEACHER',
-    enabled: true,
-    teacherApproved: true,
-    createdAt: new Date(Date.now() - 200 * 86400000).toISOString(),
-  },
-  {
-    id: 'u3',
-    name: 'Admin',
-    email: 'admin@couteach.com',
-    role: 'ADMIN',
-    enabled: true,
-    teacherApproved: false,
-    createdAt: new Date(Date.now() - 365 * 86400000).toISOString(),
-  },
-];
-
-const MOCK_APPS: TeacherApplicationDetail[] = [
-  {
-    id: 'app-1',
-    userId: 'u4',
-    fullName: 'Sarah Wilson',
-    email: 'sarah@example.com',
-    specialization: 'Frontend Development',
-    yearsOfExperience: 5,
-    status: 'PENDING',
-    score: 87,
-    aiSummary:
-      'Strong frontend background with React, Vue, and modern tooling. Has open-source contributions.',
-    aiStrengths: 'React, TypeScript, Web performance, Accessibility',
-    aiWeaknesses: 'Limited backend experience',
-    aiRecommendation: 'Recommended for approval — solid teaching potential.',
-    createdAt: new Date(Date.now() - 3 * 86400000).toISOString(),
-  },
-];
-
-const formatDate = (iso: string) =>
-  new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 
 const formatMoney = (n: number) =>
   n.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
@@ -87,6 +42,7 @@ const AdminDashboardPage: React.FC = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [apps, setApps] = useState<TeacherApplicationDetail[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [reviewModal, setReviewModal] = useState<TeacherApplicationDetail | null>(null);
 
@@ -97,15 +53,21 @@ const AdminDashboardPage: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const [sRes, uRes, aRes] = await Promise.allSettled([
-        getAdminStats(),
-        getAdminUsers(),
-        getPendingApplications(),
-      ]);
-      setStats(sRes.status === 'fulfilled' ? sRes.value.data : MOCK_STATS);
-      setUsers(uRes.status === 'fulfilled' ? uRes.value.data : MOCK_USERS);
-      setApps(aRes.status === 'fulfilled' ? aRes.value.data : MOCK_APPS);
-      setLoading(false);
+      setError('');
+      try {
+        const [sRes, uRes, aRes] = await Promise.all([
+          getAdminStats(),
+          getAdminUsers(),
+          getPendingApplications(),
+        ]);
+        setStats(sRes.data);
+        setUsers(uRes.data);
+        setApps(aRes.data);
+      } catch (err: any) {
+        setError(err?.response?.data?.message || 'Failed to load dashboard data.');
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   }, []);
@@ -123,19 +85,21 @@ const AdminDashboardPage: React.FC = () => {
   const handleApprove = async (appId: string, comment?: string) => {
     try {
       await approveApplication(appId, comment);
-    } catch {
+      setApps((prev) => prev.filter((a) => a.id !== appId));
+      setReviewModal(null);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Could not approve application.');
     }
-    setApps((prev) => prev.filter((a) => a.id !== appId));
-    setReviewModal(null);
   };
 
   const handleReject = async (appId: string, comment?: string) => {
     try {
       await rejectApplication(appId, comment);
-    } catch {
+      setApps((prev) => prev.filter((a) => a.id !== appId));
+      setReviewModal(null);
+    } catch (err: any) {
+      alert(err?.response?.data?.message || 'Could not reject application.');
     }
-    setApps((prev) => prev.filter((a) => a.id !== appId));
-    setReviewModal(null);
   };
 
   const filteredUsers = users.filter(
@@ -146,12 +110,10 @@ const AdminDashboardPage: React.FC = () => {
 
   return (
     <div className="admin-page">
-      <Navbar />
       <div className="adm-container">
         <header className="adm-header">
           <h1>Admin dashboard</h1>
-          <p className="adm-sub">Manage users, applications, and watch platform health.</p>
-        </header>
+          </header>
 
         <div className="adm-tabs">
           <button
@@ -176,31 +138,32 @@ const AdminDashboardPage: React.FC = () => {
 
         {loading ? (
           <p className="adm-empty">Loading...</p>
-        ) : tab === 'overview' && stats ? (
-          <div className="adm-stats-grid">
-            <div className="adm-stat-card">
-              <p className="adm-stat-label">Total users</p>
-              <p className="adm-stat-value">{stats.totalUsers.toLocaleString()}</p>
-              <p className="adm-stat-foot">
-                {stats.totalStudents} students · {stats.totalTeachers} teachers
-              </p>
+        ) : error ? (
+          <p className="adm-empty" style={{ color: 'var(--danger, #e53e3e)' }}>{error}</p>
+        ) : tab === 'overview' ? (
+          stats ? (
+            <div className="adm-stats-grid">
+              <div className="adm-stat-card">
+                <p className="adm-stat-label">Total users</p>
+                <p className="adm-stat-value">{stats.totalUsers.toLocaleString()}</p>
+                <p className="adm-stat-foot">
+                  {stats.totalStudents} students · {stats.totalTeachers} teachers
+                </p>
+              </div>
+              <div className="adm-stat-card">
+                <p className="adm-stat-label">Courses</p>
+                <p className="adm-stat-value">{stats.totalCourses.toLocaleString()}</p>
+                <p className="adm-stat-foot">Published</p>
+              </div>
+              <div className="adm-stat-card">
+                <p className="adm-stat-label">Enrollments</p>
+                <p className="adm-stat-value">{stats.totalEnrollments.toLocaleString()}</p>
+                <p className="adm-stat-foot">All-time</p>
+              </div>
             </div>
-            <div className="adm-stat-card">
-              <p className="adm-stat-label">Courses</p>
-              <p className="adm-stat-value">{stats.totalCourses.toLocaleString()}</p>
-              <p className="adm-stat-foot">Published</p>
-            </div>
-            <div className="adm-stat-card">
-              <p className="adm-stat-label">Enrollments</p>
-              <p className="adm-stat-value">{stats.totalEnrollments.toLocaleString()}</p>
-              <p className="adm-stat-foot">All-time</p>
-            </div>
-            <div className="adm-stat-card highlight">
-              <p className="adm-stat-label">Revenue</p>
-              <p className="adm-stat-value">{formatMoney(stats.totalRevenue)}</p>
-              <p className="adm-stat-foot">From captured payments</p>
-            </div>
-          </div>
+          ) : (
+            <p className="adm-empty">No stats available.</p>
+          )
         ) : tab === 'users' ? (
           <>
             <input
@@ -232,7 +195,7 @@ const AdminDashboardPage: React.FC = () => {
                     <span className={u.enabled ? 'adm-on' : 'adm-off'}>
                       {u.enabled ? '● Active' : '○ Disabled'}
                     </span>
-                    <span className="adm-mono">{formatDate(u.createdAt)}</span>
+                    <span className="adm-mono">{formatDate(u.createdAt as any)}</span>
                     <span>
                       {u.role !== 'ADMIN' && (
                         <button
@@ -262,7 +225,7 @@ const AdminDashboardPage: React.FC = () => {
                         {a.email} · {a.specialization} · {a.yearsOfExperience}yr
                       </p>
                     </div>
-                    {a.score !== undefined && (
+                    {a.score !== undefined && !isAiFallback(a) && (
                       <div className="adm-app-score">
                         <span>{a.score}</span>
                         <small>AI score</small>
@@ -326,7 +289,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ app, onClose, onApprove, onRe
           {app.email} · {app.specialization} · {app.yearsOfExperience}yr
         </p>
 
-        {app.score !== undefined && (
+        {app.score !== undefined && !isAiFallback(app) && (
           <div className="adm-modal-score">
             <p>AI screening score</p>
             <h3>{app.score} / 100</h3>

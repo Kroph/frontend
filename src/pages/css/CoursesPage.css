@@ -64,7 +64,6 @@
   background: rgba(255,255,255,0.1);
 }
 
-.search-icon { font-size: 1.3rem; font-style: normal; }
 .toolbar-label { font-size: 1rem; }
 
 .courses-body {
@@ -72,22 +71,30 @@
   align-items: flex-start;
 }
 
+.filter-btn-wrap {
+  position: relative;
+}
+
 .filter-panel {
-  width: 200px;
-  min-width: 200px;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 200;
+  width: 380px;
   background: var(--bg-card-dark);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
   padding: 1.2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-  border-left: 1px solid rgba(255,255,255,0.06);
-  min-height: calc(100vh - 120px);
-  animation: slideIn 0.2s ease-out;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem 1.2rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  animation: slideIn 0.15s ease-out;
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateX(8px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .filter-group {
@@ -98,7 +105,7 @@
 
 .filter-group-label {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -174,12 +181,25 @@
   box-shadow: 0 10px 32px rgba(0,0,0,0.25);
 }
 
+.course-category {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #7dd3fc;
+  background: rgba(125, 211, 252, 0.12);
+  border: 1px solid rgba(125, 211, 252, 0.3);
+  border-radius: 20px;
+  padding: 0.15rem 0.6rem;
+  margin: 0.4rem 0.9rem 0;
+}
+
 .course-topic {
   font-family: var(--font-mono);
   font-style: italic;
   font-size: 0.95rem;
   color: var(--text-primary);
-  padding: 0.7rem 0.9rem 0.4rem;
+  padding: 0.4rem 0.9rem 0.4rem;
 }
 
 .course-thumbnail {
@@ -213,6 +233,13 @@
   font-size: 0.82rem;
   color: var(--text-secondary);
   padding: 0.5rem 0.9rem 0.2rem;
+}
+
+.course-lessons {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 0 0.9rem 0.2rem;
 }
 
 .course-footer {

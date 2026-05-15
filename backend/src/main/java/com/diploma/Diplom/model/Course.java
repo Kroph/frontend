@@ -27,6 +27,9 @@ public class Course {
 
     @Schema(description = "MongoDB ID of the teacher who owns this course")
     private String teacherId;
+
+    @Schema(description = "Display name of the teacher, denormalized for read performance")
+    private String teacherName;
  
     @Schema(description = "Category tag", example = "Programming")
     private String category;
@@ -55,6 +58,9 @@ public class Course {
     private LocalDateTime updatedAt;
 
     private String thumbnailPublicId;
+
+    @Schema(description = "Number of lessons in this course")
+    private long lessonCount;
 
     @Schema(description = "Average rating 1.0–5.0, recalculated on every new rating", example = "4.3")
     private double avgRating;

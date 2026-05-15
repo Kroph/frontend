@@ -17,72 +17,6 @@ interface EnrollmentRow {
   progress: CourseProgress | null;
 }
 
-const MOCK_ROWS: EnrollmentRow[] = [
-  {
-    enrollment: {
-      id: 'e1',
-      userId: 'u1',
-      courseId: '1',
-      status: 'ACTIVE',
-      enrolledAt: new Date(Date.now() - 7 * 86400000).toISOString(),
-    },
-    course: {
-      id: '1',
-      title: 'Introduction to React',
-      description: 'Learn React from scratch',
-      teacherId: 't1',
-      teacherName: 'Alice Johnson',
-      category: 'Technology',
-      level: 'Beginner',
-      published: true,
-      createdAt: '',
-      updatedAt: '',
-      price: 49,
-      rating: 4.7,
-    },
-    progress: {
-      id: 'p1',
-      userId: 'u1',
-      courseId: '1',
-      completedLessonIds: ['l1', 'l2'],
-      progressPercent: 50,
-      completed: false,
-    },
-  },
-  {
-    enrollment: {
-      id: 'e2',
-      userId: 'u1',
-      courseId: '4',
-      status: 'ACTIVE',
-      enrolledAt: new Date(Date.now() - 30 * 86400000).toISOString(),
-    },
-    course: {
-      id: '4',
-      title: 'Spring Boot Mastery',
-      description: 'Build production-grade REST APIs',
-      teacherId: 't4',
-      teacherName: 'David Lee',
-      category: 'Technology',
-      level: 'Intermediate',
-      published: true,
-      createdAt: '',
-      updatedAt: '',
-      price: 89,
-      rating: 4.8,
-    },
-    progress: {
-      id: 'p2',
-      userId: 'u1',
-      courseId: '4',
-      completedLessonIds: ['l1', 'l2', 'l3', 'l4', 'l5'],
-      progressPercent: 100,
-      completed: true,
-      certificateId: 'cert-mock-1',
-    },
-  },
-];
-
 const MyEnrollmentsPage: React.FC = () => {
   const navigate = useNavigate();
 
@@ -115,7 +49,7 @@ const MyEnrollmentsPage: React.FC = () => {
         );
         setRows(expanded);
       } catch {
-        setRows(MOCK_ROWS);
+        setRows([]);
       } finally {
         setLoading(false);
       }
@@ -185,17 +119,15 @@ const MyEnrollmentsPage: React.FC = () => {
               const pct = r.progress?.progressPercent ?? 0;
               const done = r.progress?.completed;
               return (
-                <Link
+                <div
                   key={r.enrollment.id}
-                  to={`/courses/${r.enrollment.courseId}`}
                   className="enr-card"
+                  onClick={() => navigate(`/courses/${r.enrollment.courseId}`)}
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="enr-thumb">
                     {c?.thumbnail ? (
-                      <img
-                        src={`http://localhost:8080/files?path=${c.thumbnail}`}
-                        alt={c.title}
-                      />
+                      <img src={c.thumbnail} alt={c.title} />
                     ) : (
                       <span className="enr-thumb-ph">{c?.title?.[0] || '?'}</span>
                     )}
@@ -220,7 +152,7 @@ const MyEnrollmentsPage: React.FC = () => {
                       </Link>
                     )}
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>

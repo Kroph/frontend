@@ -16,7 +16,6 @@ const defaultDraft = (): CourseDraft => ({
   level: '',
   duration: '',
   thumbnail: '',
-  tags: [],
   lessons: [],
   visibility: 'published',
   free: true,
@@ -122,60 +121,63 @@ const CreateCoursePage: React.FC = () => {
           </button>
         </div>
 
-        {/* Step tabs */}
-        <div className="cc-steps">
-          {STEPS.map((label, i) => (
-            <button
-              key={i}
-              className={[
-                'cc-step-btn',
-                i === step ? 'cc-step-btn--active' : '',
-                i < step  ? 'cc-step-btn--done'   : '',
-              ].join(' ')}
-              onClick={() => goTo(i)}
-            >
-              <span className="cc-step-num">{i < step ? '✓' : i + 1}</span>
-              <span className="cc-step-label">{label}</span>
-            </button>
-          ))}
-        </div>
+        <div className="cc-layout">
+          <div className="cc-sidebar">
+            <div className="cc-steps">
+              {STEPS.map((label, i) => (
+                <button
+                  key={i}
+                  className={[
+                    'cc-step-btn',
+                    i === step ? 'cc-step-btn--active' : '',
+                    i < step  ? 'cc-step-btn--done'   : '',
+                  ].join(' ')}
+                  onClick={() => goTo(i)}
+                >
+                  <span className="cc-step-num">{i < step ? '✓' : i + 1}</span>
+                  <span className="cc-step-label">{label}</span>
+                </button>
+              ))}
+            </div>
+            <div className="cc-progress">
+              <div
+                className="cc-progress-fill"
+                style={{ width: `${((step + 1) / 3) * 100}%` }}
+              />
+            </div>
+          </div>
 
-        {/* Progress bar */}
-        <div className="cc-progress">
-          <div
-            className="cc-progress-fill"
-            style={{ width: `${((step + 1) / 3) * 100}%` }}
-          />
+          {/* Right main: step panels */}
+          <div className="cc-main">
+            {step === 0 && (
+              <StepBasics
+                draft={draft}
+                updateDraft={updateDraft}
+                onNext={() => goTo(1)}
+              />
+            )}
+            {step === 1 && (
+              <StepLessons
+                lessons={draft.lessons}
+                updateLesson={updateLesson}
+                addLesson={addLesson}
+                deleteLesson={deleteLesson}
+                toast={toast}
+                onBack={() => goTo(0)}
+                onNext={() => goTo(2)}
+              />
+            )}
+            {step === 2 && (
+              <StepPublish
+                draft={draft}
+                updateDraft={updateDraft}
+                toast={toast}
+                onBack={() => goTo(1)}
+                onDone={() => navigate('/courses')}
+              />
+            )}
+          </div>
         </div>
-
-        {/* Step panels */}
-        {step === 0 && (
-          <StepBasics
-            draft={draft}
-            updateDraft={updateDraft}
-            onNext={() => goTo(1)}
-          />
-        )}
-        {step === 1 && (
-          <StepLessons
-            lessons={draft.lessons}
-            updateLesson={updateLesson}
-            addLesson={addLesson}
-            deleteLesson={deleteLesson}
-            toast={toast}
-            onBack={() => goTo(0)}
-            onNext={() => goTo(2)}
-          />
-        )}
-        {step === 2 && (
-          <StepPublish
-            draft={draft}
-            updateDraft={updateDraft}
-            toast={toast}
-            onBack={() => goTo(1)}
-            onDone={() => navigate('/courses')}
-          />
-        )}
       </div>
     </div>
   );

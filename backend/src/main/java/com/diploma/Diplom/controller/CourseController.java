@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -56,7 +55,7 @@ public class CourseController {
         throw new AuthenticationCredentialsNotFoundException("Unauthorized");
     }
 
-    private String getEmail(Authentication authentication) {
+    private String getUserId(Authentication authentication) {
         Authentication auth = resolveAuthentication(authentication);
 
         String name = auth.getName();
@@ -122,8 +121,7 @@ public class CourseController {
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "level", required = false) String level,
             @RequestPart(value = "thumbnailFile", required = false) MultipartFile thumbnailFile,
-            @RequestParam(value = "free", required = false) Boolean free,
-            @RequestParam(value = "price", required = false) BigDecimal price
+            @RequestParam(value = "free", required = false) Boolean free
     ) {
         requireTeacher(null);
         validateCreateCourseFields(title, description, category);
@@ -134,9 +132,8 @@ public class CourseController {
         request.setCategory(category);
         request.setLevel(level);
         request.setFree(free);
-        request.setPrice(price);
 
-        return courseService.createCourse(getEmail(null), request, thumbnailFile);
+        return courseService.createCourse(getUserId(null), request, thumbnailFile);
     }
 
     @Operation(
@@ -156,7 +153,7 @@ public class CourseController {
     @PreAuthorize("hasRole('TEACHER')")
     public List<Course> getMyCourses(Authentication authentication) {
         requireTeacher(authentication);
-        return courseService.getTeacherCourses(getEmail(authentication));
+        return courseService.getTeacherCourses(getUserId(authentication));
     }
 
     @Operation(
@@ -202,6 +199,8 @@ public class CourseController {
             @RequestParam(required = false) String level,
             @Parameter(description = "true to publish, false to unpublish")
             @RequestParam(required = false) Boolean published,
+            @Parameter(description = "true = free, false = subscription required")
+            @RequestParam(required = false) Boolean free,
             @RequestParam(required = false) MultipartFile thumbnailFile
     ) {
         UpdateCourseRequest request = new UpdateCourseRequest();
@@ -210,8 +209,9 @@ public class CourseController {
         request.setCategory(category);
         request.setLevel(level);
         request.setPublished(published);
+        request.setFree(free);
 
-        return courseService.updateCourse(getEmail(authentication), courseId, request, thumbnailFile);
+        return courseService.updateCourse(getUserId(authentication), courseId, request, thumbnailFile);
     }
 
     @Operation(
@@ -225,7 +225,7 @@ public class CourseController {
     @DeleteMapping("/{courseId}")
     @PreAuthorize("hasRole('TEACHER')")
     public String deleteCourse(Authentication authentication, @PathVariable String courseId) {
-        courseService.deleteCourse(getEmail(authentication), courseId);
+        courseService.deleteCourse(getUserId(authentication), courseId);
         return "Course deleted successfully";
     }
 

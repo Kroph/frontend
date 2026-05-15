@@ -285,13 +285,17 @@ export const getAllApplications = () =>
 export const getPendingApplications = () =>
   api.get<TeacherApplicationDetail[]>('/teacher-applications/pending');
 export const approveApplication = (applicationId: string, comment?: string) =>
-  api.post<TeacherApplicationDetail>(`/teacher-applications/${applicationId}/approve`, {
-    reviewComment: comment,
-  });
+  api.post<TeacherApplicationDetail>(
+    `/teacher-applications/${applicationId}/approve`,
+    null,
+    { params: comment ? { reviewComment: comment } : undefined }
+  );
 export const rejectApplication = (applicationId: string, comment?: string) =>
-  api.post<TeacherApplicationDetail>(`/teacher-applications/${applicationId}/reject`, {
-    reviewComment: comment,
-  });
+  api.post<TeacherApplicationDetail>(
+    `/teacher-applications/${applicationId}/reject`,
+    null,
+    { params: comment ? { reviewComment: comment } : undefined }
+  );
 
 export interface TeacherQuizQuestion {
   id?: string;

@@ -7,85 +7,6 @@ import { getProfile, getMyReviews, updateProfile, UserProfile, Review } from '..
 import { isAuthenticated, getUserRole } from '../api/auth';
 import './css/ProfilePage.css';
 
-const MOCK_PROFILE: UserProfile = {
-  id: 'u1',
-  name: 'Alex Johnson',
-  email: 'alex@example.com',
-  bio: 'Passionate educator & lifelong learner. Building great courses one lesson at a time.',
-  socialLinks: {
-    twitter: 'https://twitter.com',
-    linkedin: 'https://linkedin.com',
-    github: 'https://github.com',
-  },
-  courseCount: 5,
-  enrolledCount: 12,
-  role: 'student',
-};
-
-const MOCK_REVIEWS: Review[] = [
-  {
-    id: 'r1',
-    reviewerName: 'Maria S.',
-    rating: 5,
-    comment: 'Outstanding course! Explained everything clearly and the examples were spot on.',
-    courseTitle: 'Introduction to React',
-    createdAt: '2024-11-10',
-  },
-  {
-    id: 'r2',
-    reviewerName: 'James T.',
-    rating: 4,
-    comment: 'Very well structured. I learned a lot in a short amount of time.',
-    courseTitle: 'Advanced TypeScript',
-    createdAt: '2024-12-03',
-  },
-];
-
-const MOCK_COURSES: Course[] = [
-  {
-    id: '1',
-    title: 'Introduction to React',
-    description: 'Learn React from scratch',
-    teacherId: 'u1',
-    teacherName: 'Alex Johnson',
-    category: 'Technology',
-    level: 'Beginner',
-    published: true,
-    createdAt: '',
-    updatedAt: '',
-    price: 49,
-    rating: 4.7,
-  },
-  {
-    id: '2',
-    title: 'Advanced TypeScript',
-    description: 'Deep dive into TypeScript',
-    teacherId: 'u1',
-    teacherName: 'Alex Johnson',
-    category: 'Technology',
-    level: 'Advanced',
-    published: true,
-    createdAt: '',
-    updatedAt: '',
-    price: 79,
-    rating: 4.9,
-  },
-  {
-    id: '3',
-    title: 'UI/UX Design Principles',
-    description: 'Master design thinking',
-    teacherId: 'u1',
-    teacherName: 'Alex Johnson',
-    category: 'Design',
-    level: 'Intermediate',
-    published: true,
-    createdAt: '',
-    updatedAt: '',
-    price: 59,
-    rating: 4.5,
-  },
-];
-
 const StarRating: React.FC<{ rating: number; size?: 'sm' | 'md' }> = ({
   rating,
   size = 'sm',
@@ -201,7 +122,6 @@ const EditProfileModal: React.FC<EditModalProps> = ({ profile, onClose, onSave }
           />
         </div>
 
-        {/* Teacher application — only show if not already qualified */}
         {!(['teacher', 'educator', 'TEACHER', 'EDUCATOR'].includes(getUserRole() ?? '')) && (
           <div className="modal-teacher-apply">
             <div className="modal-teacher-apply-info">
@@ -264,18 +184,18 @@ const ProfilePage: React.FC = () => {
         ]);
 
         setProfile(
-          profileRes.status === 'fulfilled' ? profileRes.value.data : MOCK_PROFILE
+          profileRes.status === 'fulfilled' ? profileRes.value.data : null
         );
         setCourses(
           coursesRes.status === 'fulfilled' ? (coursesRes.value.data as unknown as Course[]) : []
         );
         setReviews(
-          reviewsRes.status === 'fulfilled' ? reviewsRes.value.data : MOCK_REVIEWS
+          reviewsRes.status === 'fulfilled' ? reviewsRes.value.data : []
         );
       } catch {
-        setProfile(MOCK_PROFILE);
-        setCourses(MOCK_COURSES);
-        setReviews(MOCK_REVIEWS);
+        setProfile(null);
+        setCourses([]);
+        setReviews([]);
       } finally {
         setLoading(false);
       }
@@ -455,7 +375,7 @@ const ProfilePage: React.FC = () => {
                     <div className="pcc-thumbnail">
                       {course.thumbnail ? (
                         <img
-                          src={course.thumbnail.startsWith('http') ? course.thumbnail : `http://localhost:8080/files?path=${course.thumbnail}`}
+                          src={course.thumbnail}
                           alt={course.title}
                         />
                       ) : (

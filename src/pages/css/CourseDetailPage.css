@@ -14,56 +14,22 @@
 .detail-topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 1rem 2.5rem;
-}
-
-.detail-back-btn {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  color: var(--text-primary);
-  background: transparent;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-radius: 20px;
-  padding: 0.38rem 1.3rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.detail-back-btn:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: var(--text-primary);
-}
-
-.detail-price-label {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  letter-spacing: 0.5px;
 }
 
 .detail-content {
   display: grid;
-  grid-template-columns: 1fr 0.72fr;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 0.9fr;
+  gap: 2rem;
   padding: 0 2.5rem 3rem;
   max-width: 1150px;
   margin: 0 auto;
+  align-items: start;
 }
 
 .detail-left {
   display: flex;
   flex-direction: column;
-  gap: 0;
-}
-
-.detail-topic {
-  font-family: var(--font-mono);
-  font-style: italic;
-  font-size: 1.15rem;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-  letter-spacing: 0.3px;
 }
 
 .detail-media {
@@ -116,11 +82,41 @@
 .detail-stars { color: #f0c040; font-style: normal; }
 .detail-rating-num { color: var(--text-secondary); font-style: italic; }
 
+.detail-tags-row {
+  background: var(--bg-card);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 0.6rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.detail-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  background: var(--btn-dark);
+  border-radius: 12px;
+  padding: 0.25rem 0.85rem;
+  letter-spacing: 0.3px;
+}
+
 .detail-lessons-box {
   background: var(--bg-card);
   border-radius: 0 0 12px 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
   padding: 0.9rem 1rem;
   min-height: 80px;
+}
+
+.detail-lessons-header {
+  font-family: var(--font-mono);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 0.6rem;
 }
 
 .detail-lessons-list {
@@ -159,8 +155,8 @@
 .detail-lessons-empty {
   font-family: var(--font-mono);
   font-style: italic;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
 .detail-right {
@@ -171,19 +167,51 @@
 .detail-about-card {
   background: var(--bg-card);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.8rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  height: 100%;
+  gap: 1.2rem;
 }
 
-.detail-about-title {
+.detail-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.detail-topic {
   font-family: var(--font-mono);
   font-style: italic;
   font-size: 1.35rem;
   font-weight: 400;
   color: var(--text-primary);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.detail-access-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.25rem 0.85rem;
+  white-space: nowrap;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  letter-spacing: 0.4px;
+}
+
+.detail-access-badge.free {
+  background: rgba(40, 167, 69, 0.2);
+  color: #5ddf82;
+  border: 1px solid rgba(40, 167, 69, 0.4);
+}
+
+.detail-access-badge.subscription {
+  background: rgba(255, 140, 0, 0.15);
+  color: #ffaa40;
+  border: 1px solid rgba(255, 140, 0, 0.4);
 }
 
 .detail-about-text {
@@ -191,23 +219,6 @@
   font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.75;
-  flex: 1;
-}
-
-.detail-tags {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-.detail-tag {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-primary);
-  background: var(--btn-dark);
-  border-radius: 12px;
-  padding: 0.25rem 0.85rem;
-  letter-spacing: 0.3px;
 }
 
 .detail-enroll-btn {
@@ -223,7 +234,7 @@
   transition: all 0.2s;
   align-self: flex-start;
   letter-spacing: 0.5px;
-  margin-top: 0.5rem;
+  margin-top: auto;
 }
 
 .detail-enroll-btn:hover {

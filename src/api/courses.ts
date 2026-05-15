@@ -16,6 +16,7 @@ export interface Course {
   rating?: number;
   avgRating?: number;
   free?: boolean;
+  lessonCount?: number;
 }
 
 export interface Lesson {

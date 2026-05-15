@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { CourseDraft, CreateCoursePayload } from '../../types/createCourse';
-import { createCourse } from '../../api/createCourse';
+import { CourseDraft } from '../../types/createCourse';
+import { createCourse, createLesson, createQuiz } from '../../api/createCourse';
 
 interface Props {
   draft: CourseDraft;
@@ -10,49 +10,61 @@ interface Props {
   onDone: () => void;
 }
 
-const buildPayload = (draft: CourseDraft, visibility: 'draft' | 'published'): CreateCoursePayload => ({
-  title:          draft.title,
-  description:    draft.description,
-  category:       draft.category,
-  level:          draft.level,
-  published:      visibility === 'published',
-  free:           draft.free,
-  thumbnail:      draft.thumbnail.length < 12 ? draft.thumbnail : '[image]',
-  estimatedHours: draft.duration ? parseInt(draft.duration, 10) : null,
-  tags:           draft.tags,
-  lessons:        draft.lessons.map((l, i) => ({
-    title:              l.title,
-    description:        l.description,
-    orderIndex:         i + 1,
-    duration:           l.duration ? parseInt(l.duration, 10) : null,
-    contentType:        l.contentType,
-    lectureText:        l.text     || null,
-    videoUrl:           l.videoUrl || null,
-    videoFileName:      l.videoFileName || null,
-    lecturePdfFileName: l.pdfFileName  || null,
-    quiz:               l.quiz.map(q => ({
-      question:     q.text,
-      answers:      [...q.answers],
-      correctIndex: q.correct,
-    })),
-  })),
-});
-
 const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDone }) => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const payload  = buildPayload(draft, draft.visibility);
   const totalQ   = draft.lessons.reduce((s, l) => s + l.quiz.length, 0);
   const totalMin = draft.lessons.reduce((s, l) => s + (parseInt(l.duration || '0', 10) || 0), 0);
 
   const handlePublish = async () => {
     setLoading(true);
     try {
-      await createCourse(payload);
+      const courseRes = await createCourse({
+        title:         draft.title,
+        description:   draft.description,
+        category:      draft.category,
+        level:         draft.level || undefined,
+        published:     draft.visibility === 'published',
+        free:          draft.free,
+        thumbnailFile: draft.thumbnailFile ?? null,
+      });
+      const courseId = courseRes.data.id;
+
+      for (const lesson of draft.lessons) {
+        const form = new FormData();
+        form.append('title', lesson.title);
+        form.append('orderIndex', String(lesson.orderIndex));
+        form.append('duration', String(Math.max(1, parseInt(lesson.duration || '1', 10))));
+        if (lesson.description) form.append('description', lesson.description);
+        if (lesson.contentType === 'text' && lesson.text)
+          form.append('lectureText', lesson.text);
+        if (lesson.contentType === 'video' && lesson.videoFile)
+          form.append('videoFile', lesson.videoFile);
+        if (lesson.contentType === 'file' && lesson.pdfFile)
+          form.append('lecturePdfFile', lesson.pdfFile);
+        if (lesson.quiz.length > 0)
+          form.append('quizRequired', 'true');
+
+        const lessonRes = await createLesson(courseId, form);
+        const lessonId = lessonRes.data.id;
+
+        if (lesson.quiz.length > 0) {
+          await createQuiz(lessonId, {
+            title:       `${lesson.title} Quiz`,
+            description: `Quiz for lesson: ${lesson.title}`,
+            passingScore: 70,
+            questions:   lesson.quiz.map(q => ({
+              question:           q.text,
+              options:            [...q.answers],
+              correctAnswerIndex: q.correct,
+            })),
+          });
+        }
+      }
+
       setSubmitted(true);
       toast('Course created successfully!', 'ok');
-      if (draft.lessons.length) toast(`${draft.lessons.length} lesson(s) sent to API`);
       setTimeout(onDone, 1500);
     } catch (err: any) {
       toast(err?.response?.data?.message || 'Failed to create course', 'err');
@@ -61,13 +73,11 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
     }
   };
 
-
   const reviewRows: [string, string, boolean][] = [
     ['Title',       draft.title       || '—', !draft.title],
     ['Category',    draft.category    || '—', !draft.category],
     ['Description', draft.description ? draft.description.slice(0, 70) + '…' : '—', !draft.description],
-    ['Tags',        draft.tags.length  ? draft.tags.join(', ') : '—', !draft.tags.length],
-    ['Duration',    draft.duration     ? `${draft.duration} hrs`        : '—', !draft.duration],
+    ['Duration',    draft.duration     ? `${draft.duration} hrs` : '—', !draft.duration],
   ];
 
   return (

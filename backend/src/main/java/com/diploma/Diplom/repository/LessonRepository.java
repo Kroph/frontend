@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface LessonRepository extends MongoRepository<Lesson, String> {
     List<Lesson> findByCourseIdOrderByOrderIndexAsc(String courseId);
+    long countByCourseId(String courseId);
 }

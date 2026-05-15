@@ -30,40 +30,8 @@ export interface CourseDraft {
   level: string;
   duration: string;
   thumbnail: string;
-  tags: string[];
+  thumbnailFile?: File;
   lessons: LessonDraft[];
   visibility: 'draft' | 'published';
   free: boolean;
-}
-
-export interface CreateCoursePayload {
-  title: string;
-  description: string;
-  category: string;
-  level: string;
-  published: boolean;
-  free: boolean;
-  thumbnail: string;
-  estimatedHours: number | null;
-  tags: string[];
-  lessons: CreateLessonPayload[];
-}
-
-export interface CreateLessonPayload {
-  title: string;
-  description: string;
-  orderIndex: number;
-  duration: number | null;
-  contentType: ContentType;
-  lectureText: string | null;
-  videoUrl: string | null;
-  videoFileName: string | null;
-  lecturePdfFileName: string | null;
-  quiz: CreateQuizPayload[];
-}
-
-export interface CreateQuizPayload {
-  question: string;
-  answers: string[];
-  correctIndex: number;
 }

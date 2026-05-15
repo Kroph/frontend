@@ -22,49 +22,6 @@ import {
 import { isAuthenticated } from '../api/auth';
 import './css/LessonPage.css';
 
-const MOCK_LESSON: Lesson = {
-  id: 'l1',
-  courseId: '1',
-  title: 'Getting Started with React',
-  description: 'Setup your environment and create your first component',
-  orderIndex: 1,
-  duration: 25,
-  lectureText:
-    'In this lesson, we cover environment setup, project scaffolding with Vite, and the anatomy of a React component. By the end, you will be able to create a simple functional component and render it to the page.',
-  published: true,
-  quizRequired: false,
-};
-
-const MOCK_LESSONS: Lesson[] = [
-  { id: 'l1', courseId: '1', title: 'Getting Started with React', orderIndex: 1, duration: 25, published: true },
-  { id: 'l2', courseId: '1', title: 'Components & Props', orderIndex: 2, duration: 35, published: true },
-  { id: 'l3', courseId: '1', title: 'State & useState Hook', orderIndex: 3, duration: 40, published: true },
-  { id: 'l4', courseId: '1', title: 'useEffect & Side Effects', orderIndex: 4, duration: 30, published: true },
-];
-
-const MOCK_COMMENTS: LessonComment[] = [
-  {
-    id: 'c1',
-    lessonId: 'l1',
-    userId: 'u2',
-    userName: 'Maria S.',
-    content: 'Could you explain the difference between npm and Vite again?',
-    parentId: null,
-    isTeacherAnswer: false,
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-  },
-  {
-    id: 'c2',
-    lessonId: 'l1',
-    userId: 't1',
-    userName: 'Alice (Teacher)',
-    content: 'npm is a package manager; Vite is a dev server / bundler. They solve different problems.',
-    parentId: null,
-    isTeacherAnswer: true,
-    createdAt: new Date(Date.now() - 3600000).toISOString(),
-  },
-];
-
 const formatTimeAgo = (iso: string): string => {
   const diff = Date.now() - new Date(iso).getTime();
   const minutes = Math.floor(diff / 60000);
@@ -129,7 +86,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div className="lc-body">
         <div className="lc-header">
           <span className="lc-name">{comment.userName || 'User'}</span>
-          {comment.isTeacherAnswer && <span className="lc-answer-badge">✓ Teacher answer</span>}
+          {comment.isTeacherAnswer && <span className="lc-answer-badge">вњ“ Teacher answer</span>}
           <span className="lc-time">{formatTimeAgo(comment.createdAt)}</span>
         </div>
         <p className="lc-content">{comment.content}</p>
@@ -227,18 +184,10 @@ const LessonPage: React.FC = () => {
       getQuizByLessonId(lessonId),
       isLessonUnlocked(courseId, lessonId),
     ]).then(([lRes, sRes, pRes, cRes, qRes, uRes]) => {
-      setLesson(
-        lRes.status === 'fulfilled'
-          ? lRes.value.data
-          : { ...MOCK_LESSON, id: lessonId, courseId }
-      );
-      setSiblings(
-        sRes.status === 'fulfilled'
-          ? sRes.value.data
-          : MOCK_LESSONS.filter((l) => l.courseId === courseId)
-      );
+      setLesson(lRes.status === 'fulfilled' ? lRes.value.data : null);
+      setSiblings(sRes.status === 'fulfilled' ? sRes.value.data : []);
       setProgress(pRes.status === 'fulfilled' ? pRes.value.data : null);
-      setComments(cRes.status === 'fulfilled' ? cRes.value.data : MOCK_COMMENTS);
+      setComments(cRes.status === 'fulfilled' ? cRes.value.data : []);
       setQuiz(qRes.status === 'fulfilled' ? qRes.value.data : null);
       setUnlocked(uRes.status === 'fulfilled' ? uRes.value.data.unlocked : true);
       setLoading(false);
@@ -256,19 +205,6 @@ const LessonPage: React.FC = () => {
       setNewComment('');
       setReplyTo(null);
     } catch {
-      const fake: LessonComment = {
-        id: `local-${Date.now()}`,
-        lessonId,
-        userId: currentUserId || 'me',
-        userName: 'You',
-        content: newComment.trim(),
-        parentId: replyTo,
-        isTeacherAnswer: false,
-        createdAt: new Date().toISOString(),
-      };
-      if (!replyTo) setComments((prev) => [fake, ...prev]);
-      setNewComment('');
-      setReplyTo(null);
     }
   };
 
@@ -351,10 +287,10 @@ const LessonPage: React.FC = () => {
           <h2>This lesson is locked</h2>
           <p>Complete previous lessons (and any required quizzes) to unlock this one.</p>
           <button
-            className="lesson-back-btn"
+            className="back-btn"
             onClick={() => navigate(`/courses/${courseId}`)}
           >
-            Back to course
+            ← Back to course
           </button>
         </div>
       </div>
@@ -366,7 +302,7 @@ const LessonPage: React.FC = () => {
       <Navbar />
 
       <div className="lesson-topbar">
-        <button className="lesson-back-btn" onClick={() => navigate(`/courses/${courseId}`)}>
+        <button className="back-btn" onClick={() => navigate(`/courses/${courseId}`)}>
           ← Back to course
         </button>
         {progress && (
@@ -394,7 +330,7 @@ const LessonPage: React.FC = () => {
                   >
                     <span className="ls-index">{l.orderIndex + 1}.</span>
                     <span className="ls-title">{l.title}</span>
-                    {done && <span className="ls-check">✓</span>}
+                    {done && <span className="ls-check">вњ“</span>}
                   </Link>
                 </li>
               );
@@ -448,9 +384,9 @@ const LessonPage: React.FC = () => {
               <div>
                 <h3>{quiz.title}</h3>
                 <p className="lesson-quiz-meta">
-                  {quiz.questions.length} questions · pass at {quiz.passingScore}%
+                  {quiz.questions.length} questions В· pass at {quiz.passingScore}%
                   {quiz.timeLimitSeconds
-                    ? ` · ${Math.round(quiz.timeLimitSeconds / 60)} min limit`
+                    ? ` В· ${Math.round(quiz.timeLimitSeconds / 60)} min limit`
                     : ''}
                 </p>
               </div>
@@ -470,7 +406,7 @@ const LessonPage: React.FC = () => {
               disabled={isCompleted || completing}
               onClick={handleMarkComplete}
             >
-              {isCompleted ? '✓ Completed' : completing ? 'Saving...' : 'Mark as complete'}
+              {isCompleted ? 'вњ“ Completed' : completing ? 'Saving...' : 'Mark as complete'}
             </button>
             {lesson.quizRequired && !hasPassedQuiz() && (
               <span className="lesson-gate-note">! Quiz must be passed first</span>

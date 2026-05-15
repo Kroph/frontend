@@ -4,16 +4,6 @@ import Navbar from '../components/Navbar';
 import { verifyCertificate, Certificate } from '../api';
 import './css/CertificatePage.css';
 
-const MOCK_CERT: Certificate = {
-  id: 'cert-1',
-  userId: 'u1',
-  userName: 'Alex Johnson',
-  courseId: 'c1',
-  courseTitle: 'Spring Boot Mastery',
-  issuedAt: new Date(Date.now() - 14 * 86400000).toISOString(),
-  verificationCode: 'demo-verification-code',
-};
-
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -39,7 +29,7 @@ const CertificateVerifyPage: React.FC = () => {
       if (err?.response?.status === 404) {
         setError('No certificate found for that code.');
       } else {
-        setCert({ ...MOCK_CERT, verificationCode: c.trim() });
+        setError('Could not verify certificate. Please try again.');
       }
     } finally {
       setLoading(false);
