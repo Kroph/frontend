@@ -237,6 +237,15 @@
   margin-bottom: 1rem;
 }
 
+.profile-section-title {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
 .courses-toolbar-row {
   display: flex;
   align-items: center;
@@ -266,6 +275,77 @@
   border-color: var(--accent);
 }
 
+.filter-btn-wrap {
+  position: relative;
+}
+
+.filter-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 200;
+  width: 280px;
+  background: var(--bg-card-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 1.2rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem 1.2rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  animation: filterSlideIn 0.15s ease-out;
+}
+
+.filter-panel-3col {
+  width: 400px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+@keyframes filterSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.filter-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filter-chip {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid transparent;
+  border-radius: 20px;
+  padding: 0.28rem 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-chip:hover { background: rgba(255, 255, 255, 0.13); }
+.filter-chip.active {
+  color: var(--text-primary);
+  background: var(--btn-dark);
+  border-color: var(--accent);
+}
+
 .toolbar-filter-btn {
   font-family: var(--font-mono);
   font-size: 0.88rem;
@@ -279,7 +359,8 @@
   transition: background 0.2s;
 }
 
-.toolbar-filter-btn:hover {
+.toolbar-filter-btn:hover,
+.toolbar-filter-btn.active {
   background: rgba(255, 255, 255, 0.1);
 }
 
