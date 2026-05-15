@@ -39,4 +39,7 @@ public class CreateLessonRequest {
     @Schema(description = "Whether a quiz is required for the lesson")
     @NotNull(message = "Quiz required flag is required")
     private Boolean quizRequired = false;
+
+    @Schema(description = "Whether the lesson is published")
+    private Boolean published;
 }

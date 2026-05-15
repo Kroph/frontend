@@ -76,7 +76,7 @@ const TeacherQuizPage: React.FC = () => {
         <Navbar />
         <div className="tquiz-result">
           <div className={`tquiz-result-icon ${result.passed ? 'pass' : 'fail'}`}>
-            {result.passed ? 'вњ“' : 'вњ—'}
+            {result.passed ? '✓' : '✕'}
           </div>
           <h1>{result.passed ? 'You passed' : 'Not passed'}</h1>
           <p className="tquiz-result-score">{result.score}%</p>

@@ -122,7 +122,7 @@ const MyEnrollmentsPage: React.FC = () => {
                 <div
                   key={r.enrollment.id}
                   className="enr-card"
-                  onClick={() => navigate(`/courses/${r.enrollment.courseId}`)}
+                  onClick={() => navigate(`/courses/${r.enrollment.courseId}/learn`)}
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="enr-thumb">

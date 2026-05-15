@@ -59,45 +59,74 @@ interface QCardProps {
   onChange: (patch: Partial<QuizQuestion>) => void;
   onDelete: () => void;
 }
-const QCard: React.FC<QCardProps> = ({ q, index, onChange, onDelete }) => (
-  <div className="lc-q-card">
-    <div className="lc-q-top">
-      <span className="lc-q-idx">Q{index + 1}</span>
-      <input
-        className="cc-input"
-        type="text"
-        style={{ fontSize: '0.88rem', padding: '0.5rem 0.85rem' }}
-        placeholder="Type your question…"
-        value={q.text}
-        onChange={e => onChange({ text: e.target.value })}
-      />
-      <button className="lc-q-del" onClick={onDelete}>✕</button>
-    </div>
+const QCard: React.FC<QCardProps> = ({ q, index, onChange, onDelete }) => {
+  const addAnswer = () => {
+    if (q.answers.length >= 8) return;
+    onChange({ answers: [...q.answers, ''] });
+  };
 
-    <div className="lc-ans-list">
-      {q.answers.map((ans, ai) => (
-        <div key={ai} className={`lc-ans-row ${q.correct === ai ? 'lc-ans-row--correct' : ''}`}>
-          <div
-            className={`lc-radio ${q.correct === ai ? 'lc-radio--on' : ''}`}
-            onClick={() => onChange({ correct: ai as 0 | 1 | 2 | 3 })}
-          />
-          <input
-            className="lc-ans-inp"
-            type="text"
-            placeholder={`Answer ${ai + 1}…`}
-            value={ans}
-            onChange={e => {
-              const updated = [...q.answers] as [string,string,string,string];
-              updated[ai] = e.target.value;
-              onChange({ answers: updated });
-            }}
-          />
+  const deleteAnswer = (ai: number) => {
+    const updated = q.answers.filter((_, i) => i !== ai);
+    const newCorrect = updated.length === 0 ? 0 : q.correct >= updated.length ? updated.length - 1 : q.correct;
+    onChange({ answers: updated, correct: newCorrect });
+  };
+
+  return (
+    <div className="lc-q-card">
+      <div className="lc-q-top">
+        <span className="lc-q-idx">Q{index + 1}</span>
+        <input
+          className="cc-input"
+          type="text"
+          style={{ fontSize: '0.88rem', padding: '0.5rem 0.85rem' }}
+          placeholder="Type your question…"
+          value={q.text}
+          onChange={e => onChange({ text: e.target.value })}
+        />
+        <button className="lc-q-del" onClick={onDelete}>✕</button>
+      </div>
+
+      {q.answers.length > 0 && (
+        <div className="lc-ans-list">
+          {q.answers.map((ans, ai) => (
+            <div
+              key={ai}
+              className={`lc-ans-row ${q.correct === ai ? 'lc-ans-row--correct' : ''}`}
+              onClick={() => onChange({ correct: ai })}
+            >
+              <div className={`lc-radio ${q.correct === ai ? 'lc-radio--on' : ''}`} />
+              <input
+                className="lc-ans-inp"
+                type="text"
+                placeholder={`Answer ${ai + 1}…`}
+                value={ans}
+                onClick={e => e.stopPropagation()}
+                onChange={e => {
+                  const updated = [...q.answers];
+                  updated[ai] = e.target.value;
+                  onChange({ answers: updated });
+                }}
+              />
+              <button
+                className="lc-ans-del"
+                onClick={e => { e.stopPropagation(); deleteAnswer(ai); }}
+              >✕</button>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
+
+      <div className="lc-q-footer">
+        {q.answers.length < 8 && (
+          <button className="lc-ans-add" onClick={addAnswer}>+ Add answer</button>
+        )}
+        {q.answers.length > 0 && (
+          <span className="lc-q-hint">Click an answer to mark it as correct</span>
+        )}
+      </div>
     </div>
-    <div className="lc-q-hint">Click a circle to mark the correct answer</div>
-  </div>
-);
+  );
+};
 
 const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast }) => {
   const isOpen = lesson.quizOpen;
@@ -115,7 +144,7 @@ const LessonCard: React.FC<Props> = ({ lesson, index, onChange, onDelete, toast 
 
   const addQuestion = () => {
     onChange({
-      quiz: [...lesson.quiz, { text: '', answers: ['', '', '', ''], correct: 0 }],
+      quiz: [...lesson.quiz, { text: '', answers: [], correct: 0 }],
       quizOpen: true,
     });
   };

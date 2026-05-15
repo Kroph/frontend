@@ -2,8 +2,8 @@ export type ContentType = 'text' | 'file' | 'video';
 
 export interface QuizQuestion {
   text: string;
-  answers: [string, string, string, string];
-  correct: 0 | 1 | 2 | 3;
+  answers: string[];
+  correct: number;
 }
 
 export interface LessonDraft {

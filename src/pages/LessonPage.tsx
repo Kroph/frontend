@@ -86,7 +86,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div className="lc-body">
         <div className="lc-header">
           <span className="lc-name">{comment.userName || 'User'}</span>
-          {comment.isTeacherAnswer && <span className="lc-answer-badge">вњ“ Teacher answer</span>}
+          {comment.isTeacherAnswer && <span className="lc-answer-badge">Teacher answer</span>}
           <span className="lc-time">{formatTimeAgo(comment.createdAt)}</span>
         </div>
         <p className="lc-content">{comment.content}</p>
@@ -256,7 +256,7 @@ const LessonPage: React.FC = () => {
 
   const hasPassedQuiz = (): boolean => {
     if (!quiz) return true;
-    return progress?.completedLessonIds.includes(lessonId || '') ?? false;
+    return progress?.passedQuizIds?.includes(quiz.id) ?? false;
   };
 
   const isCompleted = !!progress?.completedLessonIds?.includes(lessonId || '');
@@ -288,9 +288,9 @@ const LessonPage: React.FC = () => {
           <p>Complete previous lessons (and any required quizzes) to unlock this one.</p>
           <button
             className="back-btn"
-            onClick={() => navigate(`/courses/${courseId}`)}
+            onClick={() => navigate(`/courses/${courseId}/learn`)}
           >
-            ← Back to course
+            ← Back
           </button>
         </div>
       </div>
@@ -302,8 +302,8 @@ const LessonPage: React.FC = () => {
       <Navbar />
 
       <div className="lesson-topbar">
-        <button className="back-btn" onClick={() => navigate(`/courses/${courseId}`)}>
-          ← Back to course
+        <button className="back-btn" onClick={() => navigate(`/courses/${courseId}/learn`)}>
+          ← Back
         </button>
         {progress && (
           <div className="lesson-progress-pill">
@@ -319,7 +319,7 @@ const LessonPage: React.FC = () => {
         <aside className="lesson-sidebar">
           <h3 className="lesson-sidebar-title">Lessons</h3>
           <ul className="lesson-sidebar-list">
-            {siblings.map((l) => {
+            {siblings.map((l, idx) => {
               const done = progress?.completedLessonIds?.includes(l.id);
               const active = l.id === lessonId;
               return (
@@ -328,14 +328,25 @@ const LessonPage: React.FC = () => {
                     to={`/courses/${courseId}/lessons/${l.id}`}
                     className={`lesson-sidebar-item ${active ? 'active' : ''} ${done ? 'done' : ''}`}
                   >
-                    <span className="ls-index">{l.orderIndex + 1}.</span>
+                    <span className="ls-index">{idx + 1}.</span>
                     <span className="ls-title">{l.title}</span>
-                    {done && <span className="ls-check">вњ“</span>}
+                    {done && <span className="ls-check">Done</span>}
                   </Link>
                 </li>
               );
             })}
           </ul>
+
+          {progress?.completed && (
+            <div className="clp-sidebar-cert">
+              <button
+                className="clp-sidebar-cert-btn"
+                onClick={() => navigate('/certificates')}
+              >
+                Get Certificate
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* Main */}
@@ -344,19 +355,19 @@ const LessonPage: React.FC = () => {
           {lesson.description && <p className="lesson-desc">{lesson.description}</p>}
 
           {/* Video */}
+          {(lesson.videoUrl || lesson.videoFileName) && (
           <div className="lesson-video-wrap">
             {lesson.videoUrl ? (
               <video controls className="lesson-video" src={lesson.videoUrl} />
-            ) : lesson.videoFileName ? (
+            ) : (
               <video
                 controls
                 className="lesson-video"
                 src={`${API_BASE}/files?path=${lesson.videoFileName}`}
               />
-            ) : (
-              <div className="lesson-video-placeholder">No video for this lesson</div>
             )}
           </div>
+          )}
 
           {/* Lecture text */}
           {lesson.lectureText && (
@@ -379,39 +390,46 @@ const LessonPage: React.FC = () => {
           )}
 
           {/* Quiz */}
-          {quiz && (
+          {quiz && (isTeacher || quiz.published) && (
             <section className="lesson-quiz-card">
               <div>
                 <h3>{quiz.title}</h3>
                 <p className="lesson-quiz-meta">
-                  {quiz.questions.length} questions В· pass at {quiz.passingScore}%
+                  {quiz.questions.length} questions · pass at {quiz.passingScore}%
                   {quiz.timeLimitSeconds
-                    ? ` В· ${Math.round(quiz.timeLimitSeconds / 60)} min limit`
+                    ? ` · ${Math.round(quiz.timeLimitSeconds / 60)} min limit`
                     : ''}
                 </p>
+                {isTeacher && !quiz.published && (
+                  <p className="lesson-quiz-unpublished">Not published — students cannot see this quiz</p>
+                )}
               </div>
-              <button
-                className="lesson-quiz-btn"
-                onClick={() => navigate(`/quizzes/${quiz.id}`)}
-              >
-                {hasPassedQuiz() ? 'Review quiz' : 'Take quiz'}
-              </button>
+              {!isTeacher && quiz.published && (
+                <button
+                  className="lesson-quiz-btn"
+                  onClick={() => navigate(`/quizzes/${quiz.id}`)}
+                >
+                  {hasPassedQuiz() ? 'Review quiz' : 'Take quiz'}
+                </button>
+              )}
             </section>
           )}
 
           {/* Mark complete */}
-          <div className="lesson-complete-row">
-            <button
-              className="lesson-complete-btn"
-              disabled={isCompleted || completing}
-              onClick={handleMarkComplete}
-            >
-              {isCompleted ? 'вњ“ Completed' : completing ? 'Saving...' : 'Mark as complete'}
-            </button>
-            {lesson.quizRequired && !hasPassedQuiz() && (
-              <span className="lesson-gate-note">! Quiz must be passed first</span>
-            )}
-          </div>
+          {!isTeacher && (
+            <div className="lesson-complete-row">
+              <button
+                className="lesson-complete-btn"
+                disabled={isCompleted || completing || (!!lesson.quizRequired && !hasPassedQuiz())}
+                onClick={handleMarkComplete}
+              >
+                {isCompleted ? 'Completed' : completing ? 'Saving...' : 'Mark as complete'}
+              </button>
+              {lesson.quizRequired && !hasPassedQuiz() && (
+                <span className="lesson-gate-note">Pass the quiz to unlock completion</span>
+              )}
+            </div>
+          )}
 
           {/* Comments */}
           <section className="lesson-comments-section">

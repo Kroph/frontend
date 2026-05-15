@@ -35,6 +35,7 @@ export interface CreateQuizData {
   title: string;
   description: string;
   passingScore?: number;
+  published?: boolean;
   questions: {
     question: string;
     options: string[];

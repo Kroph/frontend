@@ -121,7 +121,8 @@ public class CourseController {
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "level", required = false) String level,
             @RequestPart(value = "thumbnailFile", required = false) MultipartFile thumbnailFile,
-            @RequestParam(value = "free", required = false) Boolean free
+            @RequestParam(value = "free", required = false) Boolean free,
+            @RequestParam(value = "published", required = false) Boolean published
     ) {
         requireTeacher(null);
         validateCreateCourseFields(title, description, category);
@@ -132,6 +133,7 @@ public class CourseController {
         request.setCategory(category);
         request.setLevel(level);
         request.setFree(free);
+        request.setPublished(published);
 
         return courseService.createCourse(getUserId(null), request, thumbnailFile);
     }

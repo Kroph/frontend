@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.diploma.Diplom.dto.CertificateResponse;
 import com.diploma.Diplom.model.Certificate;
 import com.diploma.Diplom.service.CertificateService;
+import com.diploma.Diplom.util.SecurityUtils;
 
 @RestController
 @RequestMapping("/api/certificates")
@@ -22,9 +23,12 @@ import com.diploma.Diplom.service.CertificateService;
 public class CertificateController {
 
     private final CertificateService certificateService;
+    private final SecurityUtils securityUtils;
 
-    public CertificateController(CertificateService certificateService) {
+    public CertificateController(CertificateService certificateService,
+                                  SecurityUtils securityUtils) {
         this.certificateService = certificateService;
+        this.securityUtils = securityUtils;
     }
 
     @Operation(
@@ -63,6 +67,18 @@ public class CertificateController {
     public ResponseEntity<CertificateResponse> regenerateCertificate(
             @Parameter(description = "Certificate ID") @PathVariable String id) {
         return ResponseEntity.ok(certificateService.regenerateCertificate(id));
+    }
+
+    @Operation(
+        summary = "Get all certificates for the authenticated user",
+        responses = @ApiResponse(responseCode = "200",
+            content = @Content(array = @io.swagger.v3.oas.annotations.media.ArraySchema(
+                schema = @Schema(implementation = Certificate.class))))
+    )
+    @GetMapping("/my")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<java.util.List<Certificate>> getMyCertificates() {
+        return ResponseEntity.ok(certificateService.getMyCertificates(securityUtils.getCurrentUserId()));
     }
 
     @Operation(

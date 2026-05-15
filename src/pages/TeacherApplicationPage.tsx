@@ -1,8 +1,9 @@
-import React, { useState, useRef, DragEvent } from 'react';
+﻿import React, { useState, useRef, DragEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { submitTeacherApplication } from '../api/profile';
 import './css/TeacherApplicationPage.css';
+const CATEGORIES = ['Programming', 'Mathematics', 'Physics', 'Sciences'];
 
 type Step = 'form' | 'submitting' | 'success' | 'error';
 
@@ -40,8 +41,7 @@ const TeacherApplicationPage: React.FC = () => {
     if (!fullName.trim() || fullName.trim().length < 2) errors.fullName = 'Full name must be at least 2 characters.';
     if (fullName.trim().length > 20) errors.fullName = 'Full name must be 20 characters or fewer.';
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Enter a valid email address.';
-    if (!specialization.trim() || specialization.trim().length < 2) errors.specialization = 'Specialization must be at least 2 characters.';
-    if (specialization.trim().length > 50) errors.specialization = 'Specialization must be 50 characters or fewer.';
+    if (!specialization) errors.specialization = 'Please select a direction.';
     const exp = parseInt(yearsOfExperience, 10);
     if (isNaN(exp) || exp < 0) errors.yearsOfExperience = 'Experience must be 0 or more years.';
     if (!resumeFile) errors.resumeFile = 'Please upload your resume as a PDF.';
@@ -100,7 +100,7 @@ const TeacherApplicationPage: React.FC = () => {
         <div className="tap-center-wrap">
           <div className="tap-status-card">
             <div className="tap-spinner" />
-            <p className="tap-status-title">Submitting your applicationвЂ¦</p>
+            <p className="tap-status-title">Submitting your applicationРІР‚В¦</p>
             <p className="tap-status-sub">Your resume is being uploaded and analysed by AI. This may take a few seconds.</p>
           </div>
         </div>
@@ -114,7 +114,7 @@ const TeacherApplicationPage: React.FC = () => {
         <Navbar />
         <div className="tap-center-wrap">
           <div className="tap-status-card">
-            <div className="tap-success-icon">вњ“</div>
+            <div className="tap-success-icon">✓</div>
             <p className="tap-status-title">Application Submitted!</p>
             <p className="tap-status-sub">
               Your resume has been received and is now under review. Our team and AI screening
@@ -137,7 +137,7 @@ const TeacherApplicationPage: React.FC = () => {
         <Navbar />
         <div className="tap-center-wrap">
           <div className="tap-status-card">
-            <div className="tap-error-icon">вњ•</div>
+            <div className="tap-error-icon">РІСљвЂў</div>
             <p className="tap-status-title">Submission Failed</p>
             <p className="tap-status-sub">{errorMsg}</p>
             <div className="tap-success-actions">
@@ -160,7 +160,7 @@ const TeacherApplicationPage: React.FC = () => {
 
       <div className="tap-container">
         {/* Back link */}
-        <Link to="/profile" className="back-btn">← Back to Profile</Link>
+        <Link to="/profile" className="back-btn">в†ђ Back to Profile</Link>
 
         <div className="tap-card">
           {/* Header */}
@@ -199,15 +199,15 @@ const TeacherApplicationPage: React.FC = () => {
             </div>
 
             <div className="tap-form-row">
-              <Field label="Specialization" error={fieldErrors.specialization}>
-                <input
+              <Field label="Direction" error={fieldErrors.specialization}>
+                <select
                   className={`tap-input ${fieldErrors.specialization ? 'tap-input-error' : ''}`}
-                  type="text"
-                  placeholder="e.g. React, Machine Learning"
                   value={specialization}
                   onChange={(e) => { setSpecialization(e.target.value); setFieldErrors(f => ({ ...f, specialization: '' })); }}
-                  maxLength={50}
-                />
+                >
+                  <option value="">Choose a direction…</option>
+                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
               </Field>
 
               <Field label="Years of Experience" error={fieldErrors.yearsOfExperience}>
@@ -223,7 +223,7 @@ const TeacherApplicationPage: React.FC = () => {
             </div>
 
             {/* Resume upload */}
-            <Field label="Resume / CV" error={fieldErrors.resumeFile} hint="PDF only вЂ” will be analysed by AI">
+            <Field label="Resume / CV" error={fieldErrors.resumeFile} hint="PDF only РІР‚вЂќ will be analysed by AI">
               <div
                 className={`tap-dropzone ${dragOver ? 'tap-dropzone-over' : ''} ${resumeFile ? 'tap-dropzone-filled' : ''} ${fieldErrors.resumeFile ? 'tap-dropzone-error' : ''}`}
                 onClick={() => fileInputRef.current?.click()}
@@ -248,7 +248,7 @@ const TeacherApplicationPage: React.FC = () => {
                       className="tap-file-remove"
                       onClick={(e) => { e.stopPropagation(); setResumeFile(null); }}
                     >
-                      вњ•
+                      РІСљвЂў
                     </button>
                   </div>
                 ) : (
@@ -256,7 +256,7 @@ const TeacherApplicationPage: React.FC = () => {
                     <p className="tap-dropzone-label">
                       <strong>Click to browse</strong> or drag & drop your PDF here
                     </p>
-                    <p className="tap-dropzone-sub">PDF only В· Max 10 MB</p>
+                    <p className="tap-dropzone-sub">PDF only Р’В· Max 10 MB</p>
                   </div>
                 )}
               </div>
@@ -266,7 +266,7 @@ const TeacherApplicationPage: React.FC = () => {
             <div className="tap-ai-note">
               <p className="tap-ai-text">
                 Your resume will be automatically scanned by our AI screening system, which
-                analyses your experience, strengths, and fit for the platform вЂ” before an
+                analyses your experience, strengths, and fit for the platform РІР‚вЂќ before an
                 admin makes the final call.
               </p>
             </div>

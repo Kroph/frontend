@@ -60,6 +60,7 @@ public class LessonController {
             @RequestParam(required = false) String lectureText,
             @Parameter(description = "If true, student must pass quiz before completing lesson")
             @RequestParam(required = false, defaultValue = "false") boolean quizRequired,
+            @RequestParam(required = false) Boolean published,
             @RequestParam(required = false) MultipartFile videoFile,
             @RequestParam(required = false) MultipartFile lecturePdfFile
     ) {
@@ -70,6 +71,7 @@ public class LessonController {
         request.setDuration(duration);
         request.setLectureText(lectureText);
         request.setQuizRequired(quizRequired);
+        request.setPublished(published);
         return lessonService.addLessonToCourse(authentication.getName(), courseId, request,
                 videoFile, lecturePdfFile);
     }

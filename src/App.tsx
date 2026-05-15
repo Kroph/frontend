@@ -11,6 +11,7 @@ import EditCoursePage from './pages/EditCoursePage';
 import ProfilePage from './pages/ProfilePage';
 import TeacherApplicationPage from './pages/TeacherApplicationPage';
 import TeacherQuizPage from './pages/TeacherQuizPage';
+import CourseLearningPage from './pages/CourseLearningPage';
 import LessonPage from './pages/LessonPage';
 import QuizPage from './pages/QuizPage';
 import MyEnrollmentsPage from './pages/MyEnrollmentsPage';
@@ -61,6 +62,14 @@ const App: React.FC = () => {
           element={
             <PrivateRoute>
               <CheckoutPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courses/:courseId/learn"
+          element={
+            <PrivateRoute>
+              <CourseLearningPage />
             </PrivateRoute>
           }
         />

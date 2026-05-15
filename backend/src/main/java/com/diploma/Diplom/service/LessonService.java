@@ -54,7 +54,7 @@ public class LessonService {
         lesson.setOrderIndex(request.getOrderIndex());
         lesson.setDuration(request.getDuration());
         lesson.setLectureText(request.getLectureText());
-        lesson.setPublished(false);
+        lesson.setPublished(Boolean.TRUE.equals(request.getPublished()));
         lesson.setCreatedAt(LocalDateTime.now());
         lesson.setUpdatedAt(LocalDateTime.now());
 

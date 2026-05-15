@@ -1,9 +1,11 @@
 package com.diploma.Diplom.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,6 +14,7 @@ import lombok.Data;
 @Schema(description = "A student's progress record for one course")
 @Data
 @Document(collection = "course_progress")
+@CompoundIndex(def = "{'userId': 1, 'courseId': 1}", unique = true)
 public class CourseProgress {
  
     @Schema(description = "MongoDB ObjectId")
@@ -23,10 +26,10 @@ public class CourseProgress {
     private String courseId;
 
     @Schema(description = "IDs of lessons the student has completed")
-    private Set<String> completedLessonIds;
- 
+    private Set<String> completedLessonIds = new HashSet<>();
+
     @Schema(description = "IDs of quizzes the student has passed")
-    private Set<String> passedQuizIds;
+    private Set<String> passedQuizIds = new HashSet<>();
  
     @Schema(description = "Overall completion percentage 0–100", example = "65")
     private int progressPercent;
@@ -37,4 +40,6 @@ public class CourseProgress {
     private LocalDateTime lastUpdatedAt;
     @Schema(description = "Timestamp when the course was completed", example = "2023-01-01T00:00:00")
     private LocalDateTime completedAt;
+    @Schema(description = "ID of the issued certificate, set once the certificate is generated")
+    private String certificateId;
 }

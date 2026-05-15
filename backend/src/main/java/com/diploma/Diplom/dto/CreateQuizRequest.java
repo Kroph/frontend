@@ -39,4 +39,7 @@ public class CreateQuizRequest {
     @NotEmpty(message = "Quiz must contain at least one question")
     @Valid
     private List<QuizQuestion> questions;
+
+    @Schema(description = "Whether the quiz is published and visible to students")
+    private Boolean published;
 }

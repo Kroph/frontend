@@ -62,7 +62,7 @@ public class QuizService {
         quiz.setQuestions(request.getQuestions());
         quiz.setPassingScore(request.getPassingScore() != null ? request.getPassingScore() : 60);
         quiz.setTimeLimitSeconds(request.getTimeLimitSeconds()); 
-        quiz.setPublished(false);
+        quiz.setPublished(Boolean.TRUE.equals(request.getPublished()));
         quiz.setCreatedAt(LocalDateTime.now());
         quiz.setUpdatedAt(LocalDateTime.now());
 

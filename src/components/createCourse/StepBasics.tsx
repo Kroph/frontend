@@ -2,7 +2,7 @@ import React from 'react';
 import { CourseDraft } from '../../types/createCourse';
 
 const CATEGORIES = [
-  'Web Development','Mobile Development','Design','Mathematics','Science','Other'
+  'Programming','Mathematics','Physics','Sciences'
 ];
 
 interface Props {

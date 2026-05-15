@@ -8,8 +8,10 @@ import com.diploma.Diplom.dto.CertificateResponse;
 import com.diploma.Diplom.exception.ResourceNotFoundException;
 import com.diploma.Diplom.model.Certificate;
 import com.diploma.Diplom.model.Course;
+import com.diploma.Diplom.model.CourseProgress;
 import com.diploma.Diplom.model.User;
 import com.diploma.Diplom.repository.CertificateRepository;
+import com.diploma.Diplom.repository.CourseProgressRepository;
 import com.diploma.Diplom.repository.CourseRepository;
 import com.diploma.Diplom.repository.UserRepository;
 import com.diploma.Diplom.util.CertificateUtils;
@@ -21,17 +23,20 @@ public class CertificateService {
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final PdfCertificateService pdfCertificateService;
+    private final CourseProgressRepository courseProgressRepository;
 
     public CertificateService(
             CertificateRepository certificateRepository,
             UserRepository userRepository,
             CourseRepository courseRepository,
-            PdfCertificateService pdfCertificateService
+            PdfCertificateService pdfCertificateService,
+            CourseProgressRepository courseProgressRepository
     ) {
         this.certificateRepository = certificateRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
         this.pdfCertificateService = pdfCertificateService;
+        this.courseProgressRepository = courseProgressRepository;
     }
 
     public CertificateResponse issueCertificate(String userId, String courseId) {
@@ -58,12 +63,19 @@ public class CertificateService {
         certificate.setTemplateVersion("v1");
         certificate.setActive(true);
 
-        certificate = certificateRepository.save(certificate);
+        Certificate saved = certificateRepository.save(certificate);
 
-        String pdfUrl = pdfCertificateService.generateCertificatePdf(certificate);
-        certificate.setPdfUrl(pdfUrl);
+        String pdfUrl = pdfCertificateService.generateCertificatePdf(saved);
+        saved.setPdfUrl(pdfUrl);
+        certificateRepository.save(saved);
 
-        certificateRepository.save(certificate);
+        courseProgressRepository.findFirstByUserIdAndCourseId(userId, courseId)
+                .ifPresent(progress -> {
+                    progress.setCertificateId(saved.getId());
+                    courseProgressRepository.save(progress);
+                });
+
+        certificate = saved;
 
         return new CertificateResponse(
                 certificate.getId(),
@@ -111,5 +123,9 @@ public class CertificateService {
     public Certificate getById(String id) {
         return certificateRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Certificate not found"));
+    }
+
+    public java.util.List<Certificate> getMyCertificates(String userId) {
+        return certificateRepository.findByUserId(userId);
     }
 }

@@ -96,6 +96,28 @@
   flex-direction: column;
   gap: 0.3rem;
 }
+
+.clp-sidebar-cert {
+  padding: 1rem 0 0.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 0.75rem;
+}
+
+.clp-sidebar-cert-btn {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--btn-dark);
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.clp-sidebar-cert-btn:hover { opacity: 0.85; }
 .lesson-sidebar-item {
   display: flex;
   align-items: center;
@@ -224,6 +246,13 @@
   transition: background 0.2s;
 }
 .lesson-quiz-btn:hover { background: var(--accent-hover); }
+
+.lesson-quiz-unpublished {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #f59e0b;
+  font-style: italic;
+}
 
 .lesson-complete-row {
   display: flex;

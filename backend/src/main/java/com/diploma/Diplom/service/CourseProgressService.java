@@ -1,13 +1,14 @@
 package com.diploma.Diplom.service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 import com.diploma.Diplom.exception.ForbiddenException;
 import com.diploma.Diplom.exception.ResourceNotFoundException;
@@ -22,6 +23,7 @@ import com.diploma.Diplom.repository.CourseProgressRepository;
 import com.diploma.Diplom.repository.LessonRepository;
 import com.diploma.Diplom.repository.QuizRepository;
 
+@Slf4j
 @Service
 public class CourseProgressService {
 
@@ -48,7 +50,6 @@ public class CourseProgressService {
         this.activityProducer = activityProducer;
     }
 
-    @CacheEvict(value = "progress", key = "#userId + ':' + #courseId")
     public CourseProgress markLessonCompleted(String userId, String courseId, String lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new ResourceNotFoundException("Lesson not found"));
@@ -72,18 +73,20 @@ public class CourseProgressService {
         recalculateProgress(progress);
         CourseProgress saved = courseProgressRepository.save(progress);
 
-        // Async activity via RabbitMQ — не блокирует HTTP-ответ
-        activityProducer.sendActivity(
-                userId,
-                ActivityType.LESSON_COMPLETED.name(),
-                lessonId,
-                "Completed lesson: " + lesson.getTitle()
-        );
+        try {
+            activityProducer.sendActivity(
+                    userId,
+                    ActivityType.LESSON_COMPLETED.name(),
+                    lessonId,
+                    "Completed lesson: " + lesson.getTitle()
+            );
+        } catch (Exception e) {
+            log.warn("Could not queue activity event: {}", e.getMessage());
+        }
 
         return saved;
     }
 
-    @CacheEvict(value = "progress", key = "#userId + ':' + #courseId")
     public CourseProgress markQuizPassed(String userId, String courseId, String quizId) {
         CourseProgress progress = getOrCreateProgress(userId, courseId);
         progress.getPassedQuizIds().add(quizId);
@@ -129,22 +132,44 @@ public class CourseProgressService {
         return getProgress(userId, lesson.getCourseId());
     }
 
-    @Cacheable(value = "progress", key = "#userId + ':' + #courseId")
     public CourseProgress getProgress(String userId, String courseId) {
         return getOrCreateProgress(userId, courseId);
     }
 
     private CourseProgress getOrCreateProgress(String userId, String courseId) {
-        return courseProgressRepository.findByUserIdAndCourseId(userId, courseId)
-                .orElseGet(() -> {
-                    CourseProgress progress = new CourseProgress();
-                    progress.setUserId(userId);
-                    progress.setCourseId(courseId);
-                    progress.setProgressPercent(0);
-                    progress.setCompleted(false);
-                    progress.setLastUpdatedAt(LocalDateTime.now());
-                    return courseProgressRepository.save(progress);
-                });
+        List<CourseProgress> all = courseProgressRepository.findAllByUserIdAndCourseId(userId, courseId);
+
+        if (all.size() > 1) {
+            // Deduplicate: keep the record with the most completed lessons, delete the rest
+            all.sort((a, b) -> {
+                int aSize = a.getCompletedLessonIds() == null ? 0 : a.getCompletedLessonIds().size();
+                int bSize = b.getCompletedLessonIds() == null ? 0 : b.getCompletedLessonIds().size();
+                return Integer.compare(bSize, aSize);
+            });
+            List<CourseProgress> duplicates = all.subList(1, all.size());
+            courseProgressRepository.deleteAll(duplicates);
+            log.warn("Deleted {} duplicate progress records for userId={} courseId={}", duplicates.size(), userId, courseId);
+        }
+
+        CourseProgress progress = all.isEmpty()
+                ? courseProgressRepository.save(newProgress(userId, courseId))
+                : all.get(0);
+
+        if (progress.getCompletedLessonIds() == null) progress.setCompletedLessonIds(new HashSet<>());
+        if (progress.getPassedQuizIds() == null) progress.setPassedQuizIds(new HashSet<>());
+        return progress;
+    }
+
+    private CourseProgress newProgress(String userId, String courseId) {
+        CourseProgress p = new CourseProgress();
+        p.setUserId(userId);
+        p.setCourseId(courseId);
+        p.setCompletedLessonIds(new HashSet<>());
+        p.setPassedQuizIds(new HashSet<>());
+        p.setProgressPercent(0);
+        p.setCompleted(false);
+        p.setLastUpdatedAt(LocalDateTime.now());
+        return p;
     }
 
     private void recalculateProgress(CourseProgress progress) {
@@ -189,7 +214,11 @@ public class CourseProgressService {
                     .isPresent();
 
             if (!certificateExists) {
-                certificateProducer.requestCertificate(progress.getUserId(), progress.getCourseId());
+                try {
+                    certificateProducer.requestCertificate(progress.getUserId(), progress.getCourseId());
+                } catch (Exception e) {
+                    log.warn("Could not queue certificate request: {}", e.getMessage());
+                }
             }
         }
     }

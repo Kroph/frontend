@@ -83,6 +83,7 @@ export interface CourseProgress {
   userId: string;
   courseId: string;
   completedLessonIds: string[];
+  passedQuizIds: string[];
   progressPercent: number;
   completed: boolean;
   certificateId?: string;
@@ -223,15 +224,18 @@ export const getMySubscriptions = () => api.get<Subscription[]>('/subscriptions/
 export interface Certificate {
   id: string;
   userId: string;
-  userName?: string;
+  studentName?: string;
   courseId: string;
   courseTitle?: string;
+  instructorName?: string;
   issuedAt: string;
   verificationCode: string;
   pdfUrl?: string;
 }
 export const getCertificate = (id: string) =>
   api.get<Certificate>(`/api/certificates/${id}`);
+export const getMyCertificates = () =>
+  api.get<Certificate[]>(`/api/certificates/my`);
 export const verifyCertificate = (verificationCode: string) =>
   api.get<Certificate>(`/api/certificates/verify/${verificationCode}`);
 export const issueCertificate = (userId: string, courseId: string) =>

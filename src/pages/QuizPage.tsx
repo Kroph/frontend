@@ -155,7 +155,7 @@ const QuizPage: React.FC = () => {
             <div className="quiz-best">
               <p>
                 Best so far: <b>{bestAttempt.score}%</b>{' '}
-                {bestAttempt.passed ? 'вњ“ passed' : 'вњ— not passed'}
+                {bestAttempt.passed ? 'passed' : 'not passed'}
               </p>
               <p className="quiz-attempt-count">{attempts.length} attempt{attempts.length === 1 ? '' : 's'}</p>
             </div>
@@ -175,7 +175,7 @@ const QuizPage: React.FC = () => {
         <Navbar />
         <div className="quiz-result">
           <div className={`quiz-result-icon ${result.passed ? 'pass' : 'fail'}`}>
-            {result.passed ? 'вњ“' : 'вњ—'}
+            {result.passed ? '✓' : '✕'}
           </div>
           <h1>{result.passed ? 'Passed!' : 'Not passed'}</h1>
           <p className="quiz-result-score">{result.score}%</p>

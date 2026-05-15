@@ -163,7 +163,7 @@ const CheckoutPage: React.FC = () => {
               <h2>You're enrolled!</h2>
               <p>You now have full access to <b>{course.title}</b>.</p>
               <div className="ck-success-actions">
-                <button className="ck-pay-btn" onClick={() => navigate(`/courses/${course.id}`)}>
+                <button className="ck-pay-btn" onClick={() => navigate(`/courses/${course.id}/learn`)}>
                   Start learning
                 </button>
                 <button className="ck-secondary-btn" onClick={() => navigate('/my-enrollments')}>

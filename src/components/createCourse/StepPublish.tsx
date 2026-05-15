@@ -30,6 +30,7 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
         thumbnailFile: draft.thumbnailFile ?? null,
       });
       const courseId = courseRes.data.id;
+      const isPublished = draft.visibility === 'published';
 
       for (const lesson of draft.lessons) {
         const form = new FormData();
@@ -45,6 +46,7 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
           form.append('lecturePdfFile', lesson.pdfFile);
         if (lesson.quiz.length > 0)
           form.append('quizRequired', 'true');
+        form.append('published', String(isPublished));
 
         const lessonRes = await createLesson(courseId, form);
         const lessonId = lessonRes.data.id;
@@ -54,6 +56,7 @@ const StepPublish: React.FC<Props> = ({ draft, updateDraft, toast, onBack, onDon
             title:       `${lesson.title} Quiz`,
             description: `Quiz for lesson: ${lesson.title}`,
             passingScore: 70,
+            published:   isPublished,
             questions:   lesson.quiz.map(q => ({
               question:           q.text,
               options:            [...q.answers],

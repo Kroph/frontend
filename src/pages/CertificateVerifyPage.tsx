@@ -83,7 +83,7 @@ const CertificateVerifyPage: React.FC = () => {
 
             <div className="cert-body">
               <p className="cert-label">This is to certify that</p>
-              <h2 className="cert-name">{cert.userName || 'Student'}</h2>
+              <h2 className="cert-name">{cert.studentName || 'Student'}</h2>
 
               <p className="cert-label">has successfully completed the course</p>
               <h3 className="cert-course">{cert.courseTitle || 'Course'}</h3>

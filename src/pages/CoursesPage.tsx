@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourses, Course } from '../api/courses';
 import './css/CoursesPage.css';
 
 const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
-const CATEGORIES = ['All', 'Web Development','Mobile Development','Design','Mathematics','Science'];
+const CATEGORIES = ['All', 'Programming', 'Mathematics', 'Physics', 'Sciences'];
 const RATING_OPTIONS = ['All', '4.5+', '4.0+', '3.5+'];
 const ACCESS_OPTIONS = ['All', 'Free', 'Subscription'];
 
@@ -13,7 +13,7 @@ const ACCESS_OPTIONS = ['All', 'Free', 'Subscription'];
 const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
   return (
     <span className="star-rating">
-      {'★'.repeat(Math.floor(rating))}{'☆'.repeat(5 - Math.floor(rating))}
+      {''.repeat(Math.floor(rating))}{'в†'.repeat(5 - Math.floor(rating))}
       <span className="rating-num"> {rating.toFixed(1)}</span>
     </span>
   );
@@ -111,7 +111,7 @@ const CoursesPage: React.FC = () => {
                   <div className="filter-chips">
                     {RATING_OPTIONS.map(r => (
                       <button key={r} className={`filter-chip ${ratingFilter === r ? 'active' : ''}`} onClick={() => setRatingFilter(r)}>
-                        {r === 'All' ? 'All' : <><span className="chip-star">★</span>{r}</>}
+                        {r === 'All' ? 'All' : <><span className="chip-star"></span>{r}</>}
                       </button>
                     ))}
                   </div>

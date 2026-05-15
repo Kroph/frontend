@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -12,6 +12,7 @@ import {
 import { getCourseById, Course } from '../api/courses';
 import { isAuthenticated } from '../api/auth';
 import './css/EditCoursePage.css';
+const CATEGORIES = ['Programming', 'Mathematics', 'Physics', 'Sciences'];
 
 const EditCoursePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -127,7 +128,7 @@ const EditCoursePage: React.FC = () => {
       <Navbar />
       <div className="ec-container">
         <button className="back-btn" onClick={() => navigate(`/courses/${course.id}`)}>
-          ← Back to course
+          в†ђ Back to course
         </button>
 
         <header className="ec-header">
@@ -163,12 +164,14 @@ const EditCoursePage: React.FC = () => {
           <div className="ec-field-row">
             <label className="ec-field">
               <span>Category</span>
-              <input
-                type="text"
+              <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="ec-input"
-              />
+              >
+                <option value="">Choose…</option>
+                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
             </label>
             <label className="ec-field">
               <span>Level</span>
@@ -248,7 +251,7 @@ const EditCoursePage: React.FC = () => {
                       </p>
                       <p className="ec-lesson-meta">
                         {l.duration ? `${l.duration} min` : 'No duration set'}
-                        {' В· '}
+                        {' Р’В· '}
                         {l.published ? 'Published' : 'Draft'}
                       </p>
                     </div>
