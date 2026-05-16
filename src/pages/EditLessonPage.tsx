@@ -289,7 +289,6 @@ const EditLessonPage: React.FC = () => {
 
         {error && <p className="el-error">{error}</p>}
 
-        {/* ── Lesson details ── */}
         <section className="el-card">
           <h2>Lesson details</h2>
 
@@ -369,7 +368,6 @@ const EditLessonPage: React.FC = () => {
           </div>
         </section>
 
-        {/* ── Media ── */}
         <section className="el-card">
           <h2>Media</h2>
 
@@ -433,7 +431,6 @@ const EditLessonPage: React.FC = () => {
           </div>
         </section>
 
-        {/* ── Quiz ── (edit mode only) */}
         {!isNew && (
           <section className="el-card el-quiz-card">
             <div className="el-quiz-header">

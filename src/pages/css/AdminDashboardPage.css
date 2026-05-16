@@ -206,7 +206,6 @@
   font-family: var(--font-mono);
   font-size: 1.4rem;
   font-weight: 700;
-  color: var(--accent);
 }
 .adm-app-score small {
   display: block;
@@ -216,6 +215,9 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.adm-app-score.score-high span { color: #2bcc7c; }
+.adm-app-score.score-mid  span { color: #f0c040; }
+.adm-app-score.score-low  span { color: #ff7060; }
 
 .adm-app-summary {
   font-family: var(--font-mono);
@@ -301,10 +303,15 @@
   color: var(--text-primary);
 }
 .adm-modal-score {
-  background: rgba(var(--accent-rgb), 0.1);
-  border: 1px solid var(--accent);
+  background: rgba(var(--accent-rgb), 0.07);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: 10px;
   padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.adm-modal-score-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -318,7 +325,67 @@
   font-family: var(--font-mono);
   font-size: 1.6rem;
   font-weight: 700;
+  color: var(--text-primary);
+}
+.adm-fallback-tag {
+  font-size: 0.7rem;
+  background: rgba(240,192,64,0.2);
+  color: #f0c040;
+  border-radius: 6px;
+  padding: 0.1rem 0.5rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.adm-score-bar-track {
+  position: relative;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: visible;
+}
+.adm-score-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.adm-score-bar-fill.score-high { background: #2bcc7c; }
+.adm-score-bar-fill.score-mid  { background: #f0c040; }
+.adm-score-bar-fill.score-low  { background: #ff7060; }
+.adm-score-bar-threshold {
+  position: absolute;
+  top: -3px;
+  left: 70%;
+  width: 2px;
+  height: 14px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 1px;
+}
+.adm-score-hint {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.adm-resume-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
   color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  border-radius: 10px;
+  padding: 0.55rem 1.1rem;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.adm-resume-link:hover {
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: var(--accent);
 }
 .adm-modal-comment {
   width: 100%;
