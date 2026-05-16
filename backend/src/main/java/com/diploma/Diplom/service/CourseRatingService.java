@@ -100,6 +100,13 @@ public class CourseRatingService {
         return ratings;
     }
 
+    public List<CourseRating> getReviewsForTeacher(String teacherId) {
+        List<Course> courses = courseRepository.findByTeacherId(teacherId);
+        return courses.stream()
+                .flatMap(c -> ratingRepository.findByCourseId(c.getId()).stream())
+                .collect(Collectors.toList());
+    }
+
     public void deleteRating(String userId, String courseId) {
         CourseRating rating = ratingRepository
                 .findByUserIdAndCourseId(userId, courseId)

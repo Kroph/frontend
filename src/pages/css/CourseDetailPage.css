@@ -243,7 +243,6 @@
   box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.4);
 }
 
-/* ── Ratings section ── */
 .detail-ratings {
   padding: 0 2.5rem 3rem;
   max-width: 1150px;

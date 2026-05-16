@@ -92,10 +92,18 @@
   font-size: 0.9rem;
   outline: none;
 }
-.ec-file {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+.ec-thumbnail-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ec-thumbnail-preview {
+  width: 120px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
 }
 .ec-field-row {
   display: grid;

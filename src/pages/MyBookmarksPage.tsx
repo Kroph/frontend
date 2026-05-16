@@ -26,7 +26,6 @@ const MyBookmarksPage: React.FC = () => {
     try {
       await toggleBookmark(courseId);
     } catch {
-      // ignore
     }
     setItems((prev) => prev.filter((c) => c.id !== courseId));
   };

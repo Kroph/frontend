@@ -64,7 +64,7 @@ class CourseProgressServiceTest {
     @Test
     void markLessonCompleted_noQuiz_success() {
         when(lessonRepository.findById("lesson-1")).thenReturn(Optional.of(lesson));
-        when(courseProgressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(courseProgressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existingProgress));
         when(lessonRepository.findByCourseIdOrderByOrderIndexAsc("course-1"))
                 .thenReturn(List.of(lesson));
@@ -97,7 +97,7 @@ class CourseProgressServiceTest {
 
         when(lessonRepository.findById("lesson-1")).thenReturn(Optional.of(lesson));
         when(quizRepository.findByLessonId("lesson-1")).thenReturn(Optional.of(quiz));
-        when(courseProgressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(courseProgressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existingProgress));
 
         assertThatThrownBy(() ->
@@ -108,12 +108,12 @@ class CourseProgressServiceTest {
     @Test
     void markLessonCompleted_allDone_issuesCertificate() {
         when(lessonRepository.findById("lesson-1")).thenReturn(Optional.of(lesson));
-        when(courseProgressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(courseProgressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existingProgress));
         when(lessonRepository.findByCourseIdOrderByOrderIndexAsc("course-1"))
                 .thenReturn(List.of(lesson));
         when(quizRepository.findByLessonIdIn(any())).thenReturn(List.of());
-        when(certificateRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(certificateRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.empty());
         when(courseProgressRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -125,12 +125,12 @@ class CourseProgressServiceTest {
     @Test
     void markLessonCompleted_certificateAlreadyExists_noReissue() {
         when(lessonRepository.findById("lesson-1")).thenReturn(Optional.of(lesson));
-        when(courseProgressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(courseProgressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existingProgress));
         when(lessonRepository.findByCourseIdOrderByOrderIndexAsc("course-1"))
                 .thenReturn(List.of(lesson));
         when(quizRepository.findByLessonIdIn(any())).thenReturn(List.of());
-        when(certificateRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(certificateRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(new com.diploma.Diplom.model.Certificate()));
         when(courseProgressRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
@@ -141,7 +141,7 @@ class CourseProgressServiceTest {
 
     @Test
     void markQuizPassed_success() {
-        when(courseProgressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(courseProgressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existingProgress));
         when(lessonRepository.findByCourseIdOrderByOrderIndexAsc("course-1"))
                 .thenReturn(List.of(lesson));
@@ -180,7 +180,7 @@ class CourseProgressServiceTest {
         when(lessonRepository.findById("lesson-1")).thenReturn(Optional.of(target));
         when(lessonRepository.findByCourseIdOrderByOrderIndexAsc("course-1"))
                 .thenReturn(List.of(prev, target));
-        when(courseProgressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(courseProgressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existingProgress));
 
         boolean result =
@@ -197,7 +197,7 @@ class CourseProgressServiceTest {
         existingProgress.getCompletedLessonIds().add("l1");
 
         when(lessonRepository.findById("l1")).thenReturn(Optional.of(l1));
-        when(courseProgressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(courseProgressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existingProgress));
         when(lessonRepository.findByCourseIdOrderByOrderIndexAsc("course-1"))
                 .thenReturn(List.of(l1, l2));

@@ -1,4 +1,5 @@
 import api from './index';
+import type { Course } from './courses';
 
 export interface UserProfile {
   id: string;
@@ -18,9 +19,9 @@ export interface UserProfile {
 
 export interface Review {
   id: string;
-  reviewerName?: string;
+  userName?: string;
   rating: number;
-  comment?: string;
+  review?: string;
   courseTitle?: string;
   createdAt: string;
 }
@@ -84,5 +85,19 @@ export const getMyApplication = () =>
   api.get<TeacherApplication>('/teacher-applications/me');
 
 export const getMyReviews = () => api.get<Review[]>('/courses/ratings/my');
+
+export interface PublicProfile {
+  id: string;
+  name: string;
+  role?: string;
+  profileImageUrl?: string;
+  bio?: string;
+  socialLinks?: { twitter?: string; linkedin?: string; github?: string; [key: string]: string | undefined };
+  courses: Course[];
+  reviews: Review[];
+}
+
+export const getPublicProfile = (userId: string) =>
+  api.get<PublicProfile>(`/profile/${userId}`);
 
 export default api;

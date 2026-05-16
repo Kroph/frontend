@@ -1,6 +1,7 @@
 package com.diploma.Diplom.model;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -47,4 +48,10 @@ public class User {
 
     @Schema(description = "Age of the user")
     private Integer age;
+
+    @Schema(description = "Short bio / introduction shown on the public profile")
+    private String bio;
+
+    @Schema(description = "Social media links, e.g. {twitter: '...', linkedin: '...', github: '...'}")
+    private Map<String, String> socialLinks;
 }

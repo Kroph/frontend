@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourses, Course } from '../api/courses';
 import './css/CoursesPage.css';
@@ -20,6 +20,7 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
 };
 
 const CoursesPage: React.FC = () => {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState<Course[]>([]);
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -153,7 +154,15 @@ const CoursesPage: React.FC = () => {
                 {course.category && (
                   <span className="course-category">{course.category}</span>
                 )}
-                <p className="course-educator">by {course.teacherName || 'Unknown'}</p>
+                <p className="course-educator">
+                  by{' '}
+                  <span
+                    className="author-link"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate(`/profile/${course.teacherId}`); }}
+                  >
+                    {course.teacherName || 'Unknown'}
+                  </span>
+                </p>
                 {course.lessonCount !== undefined && (
                   <p className="course-lessons">{course.lessonCount} {course.lessonCount === 1 ? 'lesson' : 'lessons'}</p>
                 )}

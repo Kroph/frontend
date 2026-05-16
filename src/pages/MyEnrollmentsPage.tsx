@@ -135,7 +135,13 @@ const MyEnrollmentsPage: React.FC = () => {
                   </div>
                   <div className="enr-info">
                     <p className="enr-card-title">{c?.title || 'Course'}</p>
-                    <p className="enr-card-teacher">{c?.teacherName || 'Educator'}</p>
+                    <Link
+                      to={`/profile/${c?.teacherId}`}
+                      className="enr-card-teacher author-link"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {c?.teacherName || 'Educator'}
+                    </Link>
                     <div className="enr-progress">
                       <div className="enr-progress-bar">
                         <div style={{ width: `${pct}%` }} />

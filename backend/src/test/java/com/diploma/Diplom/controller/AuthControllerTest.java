@@ -48,7 +48,7 @@ class AuthControllerTest {
         req.setName("Alice");
         req.setEmail("alice@test.com");
         req.setPassword("securePass1");
-        req.setRole(Role.STUDENT);
+
 
         AuthResponse response = new AuthResponse("Verification code sent to alice@test.com");
 
@@ -68,7 +68,7 @@ class AuthControllerTest {
         req.setName("Alice");
         req.setEmail("alice@test.com");
         req.setPassword("securePass1");
-        req.setRole(Role.STUDENT);
+
 
         when(authService.register(any())).thenThrow(new ConflictException("Email already in use"));
 

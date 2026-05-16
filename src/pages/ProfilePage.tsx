@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Course } from '../api/courses';
 import {
@@ -10,7 +10,7 @@ import {
   CourseProgress,
 } from '../api';
 import { getCourseById } from '../api/courses';
-import { getProfile, getMyReviews, updateProfile, UserProfile, Review } from '../api/profile';
+import { getProfile, getMyReviews, getPublicProfile, updateProfile, UserProfile, Review } from '../api/profile';
 import { isAuthenticated, getUserRole } from '../api/auth';
 import './css/ProfilePage.css';
 
@@ -31,7 +31,7 @@ const StarRating: React.FC<{ rating: number; size?: 'sm' | 'md' }> = ({
 );
 
 const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
-  const initials = (review.reviewerName ?? '')
+  const initials = (review.userName ?? '')
     .split(' ')
     .map((w) => w[0])
     .join('')
@@ -43,11 +43,11 @@ const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
       <div className="review-header">
         <div className="review-avatar">{initials}</div>
         <div className="review-meta">
-          <span className="review-reviewer-name">{review.reviewerName}</span>
+          <span className="review-reviewer-name">{review.userName}</span>
           <StarRating rating={review.rating} />
         </div>
       </div>
-      <p className="review-comment">{review.comment}</p>
+      <p className="review-comment">{review.review}</p>
     </div>
   );
 };
@@ -172,6 +172,9 @@ const EditProfileModal: React.FC<EditModalProps> = ({ profile, onClose, onSave }
 
 const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const { userId } = useParams<{ userId?: string }>();
+  const isViewMode = !!userId;
+
   const role = getUserRole() ?? '';
   const isStudent = role === 'STUDENT';
   const isTeacher = ['TEACHER', 'EDUCATOR', 'teacher', 'educator'].includes(role);
@@ -183,7 +186,6 @@ const ProfilePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  // --- Created courses toolbar (teachers + admins) ---
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -191,7 +193,6 @@ const ProfilePage: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [ratingFilter, setRatingFilter] = useState('All');
 
-  // --- Enrolled courses toolbar (students; also teachers in their second section) ---
   const [enrollSearch, setEnrollSearch] = useState('');
   const [showEnrollSearch, setShowEnrollSearch] = useState(false);
   const [showEnrollFilters, setShowEnrollFilters] = useState(false);
@@ -199,15 +200,32 @@ const ProfilePage: React.FC = () => {
   const [enrollCategoryFilter, setEnrollCategoryFilter] = useState('All');
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    if (!isViewMode && !isAuthenticated()) {
       navigate('/login', { replace: true });
     }
-  }, [navigate]);
+  }, [navigate, isViewMode]);
 
   useEffect(() => {
     const fetchAll = async () => {
       setLoading(true);
       try {
+        if (isViewMode && userId) {
+          const res = await getPublicProfile(userId);
+          const pub = res.data;
+          setProfile({
+            id: pub.id,
+            name: pub.name,
+            email: '',
+            role: pub.role,
+            avatarUrl: pub.profileImageUrl,
+            bio: pub.bio,
+            socialLinks: pub.socialLinks,
+          });
+          setCourses(pub.courses);
+          setReviews(pub.reviews ?? []);
+          return;
+        }
+
         if (isStudent) {
           const [profileRes, enrRes] = await Promise.allSettled([
             getProfile(),
@@ -265,7 +283,6 @@ const ProfilePage: React.FC = () => {
             setEnrolledRows(rows);
           }
         } else {
-          // ADMIN
           const [profileRes, coursesRes, reviewsRes] = await Promise.allSettled([
             getProfile(),
             getMyCourses(),
@@ -289,7 +306,7 @@ const ProfilePage: React.FC = () => {
     };
 
     fetchAll();
-  }, [isStudent, isTeacher]);
+  }, [isStudent, isTeacher, isViewMode, userId]);
 
   const handleSaveProfile = async (updated: Partial<UserProfile>) => {
     try {
@@ -300,24 +317,22 @@ const ProfilePage: React.FC = () => {
     }
   };
 
-  // Created courses — with optional rating filter
   const filteredCourses = courses.filter((c) => {
     if (!c.title.toLowerCase().includes(search.toLowerCase())) return false;
-    if (levelFilter !== 'All' && c.level !== levelFilter) return false;
-    if (categoryFilter !== 'All' && c.category !== categoryFilter) return false;
+    if (levelFilter !== 'All' && c.level?.toLowerCase() !== levelFilter.toLowerCase()) return false;
+    if (categoryFilter !== 'All' && c.category?.toLowerCase() !== categoryFilter.toLowerCase()) return false;
     if (ratingFilter !== 'All') {
       const min = parseInt(ratingFilter, 10);
-      if (!c.rating || c.rating < min) return false;
+      if (!c.avgRating || c.avgRating < min) return false;
     }
     return true;
   });
 
-  // Enrolled courses — for students (uses primary toolbar state)
   const filteredEnrolled = enrolledRows.filter((r) => {
     const title = r.course?.title ?? '';
     if (!title.toLowerCase().includes(enrollSearch.toLowerCase())) return false;
-    if (enrollLevelFilter !== 'All' && r.course?.level !== enrollLevelFilter) return false;
-    if (enrollCategoryFilter !== 'All' && r.course?.category !== enrollCategoryFilter) return false;
+    if (enrollLevelFilter !== 'All' && r.course?.level?.toLowerCase() !== enrollLevelFilter.toLowerCase()) return false;
+    if (enrollCategoryFilter !== 'All' && r.course?.category?.toLowerCase() !== enrollCategoryFilter.toLowerCase()) return false;
     return true;
   });
 
@@ -329,6 +344,10 @@ const ProfilePage: React.FC = () => {
         .toUpperCase()
         .slice(0, 2)
     : '?';
+
+  const showTeacherInfo = isViewMode
+    ? ['TEACHER', 'EDUCATOR', 'teacher', 'educator'].includes(profile?.role ?? '')
+    : !isStudent;
 
   const socialEntries = Object.entries(profile?.socialLinks || {}).filter(([, url]) => !!url);
 
@@ -350,7 +369,6 @@ const ProfilePage: React.FC = () => {
     );
   }
 
-  // Reusable enrolled-course card grid
   const EnrolledGrid: React.FC<{ rows: EnrollmentRow[] }> = ({ rows }) =>
     rows.length === 0 ? (
       <p className="profile-empty">No enrolled courses found.</p>
@@ -379,7 +397,18 @@ const ProfilePage: React.FC = () => {
                   <span className="pcc-thumb-placeholder">Introduction Picture or Video</span>
                 )}
               </div>
-              <p className="pcc-educator">{c?.teacherName || 'Educator'}</p>
+              <div className="pcc-tags">
+                {c?.level && <span className="pcc-tag">{c.level}</span>}
+                {c?.category && <span className="pcc-tag">{c.category}</span>}
+              </div>
+              {c?.teacherName && (
+                <span
+                  className="pcc-author author-link"
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate(`/profile/${c.teacherId}`); }}
+                >
+                  {c.teacherName}
+                </span>
+              )}
               <div className="pcc-footer">
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <div style={{ flex: 1, height: '4px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
@@ -415,14 +444,14 @@ const ProfilePage: React.FC = () => {
 
           <p className="profile-name">{profile?.name || 'Name'}</p>
 
-          {(['teacher', 'educator', 'TEACHER', 'EDUCATOR'].includes(role)) && (
+          {showTeacherInfo && (
             <div className="teacher-badge">
               <span className="teacher-badge-check">✓</span>
               <span className="teacher-badge-label">Qualified Teacher</span>
             </div>
           )}
 
-          {!isStudent && (
+          {showTeacherInfo && (
             <>
               {socialEntries.length > 0 && (
                 <div className="profile-social-links">
@@ -440,30 +469,34 @@ const ProfilePage: React.FC = () => {
                 </div>
               )}
 
-              {!socialEntries.length && (
+              {!socialEntries.length && !isViewMode && (
                 <p className="profile-bio" style={{ opacity: 0.5 }}>Social media links</p>
               )}
 
-              <p className="profile-bio">{profile?.bio || 'Short Introduction'}</p>
+              <p className="profile-bio">{profile?.bio || (!isViewMode ? 'Short Introduction' : '')}</p>
             </>
           )}
 
           <div className="profile-stat-row">
-            {!isStudent && (
+            {showTeacherInfo && (
               <p className="profile-stat">
                 <span>{profile?.courseCount ?? courses.length}</span> courses created
               </p>
             )}
-            <p className="profile-stat">
-              <span>{(isStudent || isTeacher) ? enrolledRows.length : (profile?.enrolledCount ?? 0)}</span> enrolled courses
-            </p>
+            {!isViewMode && (
+              <p className="profile-stat">
+                <span>{(isStudent || isTeacher) ? enrolledRows.length : (profile?.enrolledCount ?? 0)}</span> enrolled courses
+              </p>
+            )}
           </div>
 
-          <button className="profile-edit-btn" onClick={() => setShowEditModal(true)}>
-            Edit Profile
-          </button>
+          {!isViewMode && (
+            <button className="profile-edit-btn" onClick={() => setShowEditModal(true)}>
+              Edit Profile
+            </button>
+          )}
 
-          {(['TEACHER', 'ADMIN'].includes(role)) && (
+          {!isViewMode && (['TEACHER', 'ADMIN'].includes(role)) && (
             <button className="profile-create-course-btn" onClick={() => navigate('/courses/create')}>
               + Create Course
             </button>
@@ -472,14 +505,33 @@ const ProfilePage: React.FC = () => {
 
         <main className="profile-main">
 
-          {/* ── TEACHER: Created Courses (first) ─────────────────────── */}
-          {(isTeacher || (!isStudent && !isTeacher)) && (
+          {(isViewMode || isTeacher || (!isStudent && !isTeacher)) && (
             <div className="profile-section">
               <div className="profile-section-header">
                 <span className="profile-section-title">
                   {isTeacher ? 'My Created Courses' : 'Courses'}
                 </span>
                 <div className="courses-toolbar-row">
+                  {showSearch && (
+                    <input
+                      className="courses-search-input"
+                      type="text"
+                      placeholder="Search courses..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      autoFocus
+                    />
+                  )}
+                  <button
+                    className="toolbar-filter-btn"
+                    onClick={() => {
+                      setShowSearch((s) => !s);
+                      if (showSearch) setSearch('');
+                    }}
+                  >
+                    Search
+                  </button>
+
                   <div className="filter-btn-wrap">
                     <button
                       className={`toolbar-filter-btn${showFilters ? ' active' : ''}`}
@@ -534,26 +586,6 @@ const ProfilePage: React.FC = () => {
                       </div>
                     )}
                   </div>
-
-                  <button
-                    className="toolbar-filter-btn"
-                    onClick={() => {
-                      setShowSearch((s) => !s);
-                      if (showSearch) setSearch('');
-                    }}
-                  >
-                    Search
-                  </button>
-                  {showSearch && (
-                    <input
-                      className="courses-search-input"
-                      type="text"
-                      placeholder="Search courses..."
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                      autoFocus
-                    />
-                  )}
                 </div>
               </div>
 
@@ -563,7 +595,7 @@ const ProfilePage: React.FC = () => {
                 <div className="profile-courses-grid">
                   {filteredCourses.map((course) => (
                     <Link
-                      to={`/courses/${course.id}/edit`}
+                      to={isViewMode ? `/courses/${course.id}` : `/courses/${course.id}/edit`}
                       key={course.id}
                       className="profile-course-card"
                     >
@@ -580,11 +612,14 @@ const ProfilePage: React.FC = () => {
                           <span className="pcc-thumb-placeholder">Introduction Picture or Video</span>
                         )}
                       </div>
-                      <p className="pcc-educator">{course.teacherName || 'Educator'}</p>
+                      <div className="pcc-tags">
+                        {course.level && <span className="pcc-tag">{course.level}</span>}
+                        {course.category && <span className="pcc-tag">{course.category}</span>}
+                      </div>
                       <div className="pcc-footer">
                         <span className="pcc-rate">
-                          {course.rating ? (
-                            <><StarRating rating={course.rating} /> {course.rating.toFixed(1)}</>
+                          {course.avgRating ? (
+                            <><StarRating rating={course.avgRating} /> {course.avgRating.toFixed(1)}</>
                           ) : (
                             'No rating'
                           )}
@@ -600,8 +635,79 @@ const ProfilePage: React.FC = () => {
             </div>
           )}
 
-          {/* ── TEACHER: Enrolled Courses (second, teacher-only) ──────── */}
-          {isTeacher && (
+          {!isViewMode && isTeacher && (
+            <div className="profile-section">
+              <div className="profile-section-header">
+                <span className="profile-section-title">My Enrolled Courses</span>
+                <div className="courses-toolbar-row">
+                  {showEnrollSearch && (
+                    <input
+                      className="courses-search-input"
+                      type="text"
+                      placeholder="Search enrolled courses..."
+                      value={enrollSearch}
+                      onChange={(e) => setEnrollSearch(e.target.value)}
+                      autoFocus
+                    />
+                  )}
+                  <button
+                    className="toolbar-filter-btn"
+                    onClick={() => {
+                      setShowEnrollSearch((s) => !s);
+                      if (showEnrollSearch) setEnrollSearch('');
+                    }}
+                  >
+                    Search
+                  </button>
+
+                  <div className="filter-btn-wrap">
+                    <button
+                      className={`toolbar-filter-btn${showEnrollFilters ? ' active' : ''}`}
+                      onClick={() => setShowEnrollFilters((s) => !s)}
+                    >
+                      Filters
+                    </button>
+                    {showEnrollFilters && (
+                      <div className="filter-panel">
+                        <div className="filter-group">
+                          <span className="filter-group-label">Level</span>
+                          <div className="filter-chips">
+                            {['All', 'Beginner', 'Intermediate', 'Advanced'].map((opt) => (
+                              <button
+                                key={opt}
+                                className={`filter-chip ${enrollLevelFilter === opt ? 'active' : ''}`}
+                                onClick={() => setEnrollLevelFilter(opt)}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="filter-group">
+                          <span className="filter-group-label">Category</span>
+                          <div className="filter-chips">
+                            {['All', 'Programming', 'Mathematics', 'Physics', 'Sciences'].map((opt) => (
+                              <button
+                                key={opt}
+                                className={`filter-chip ${enrollCategoryFilter === opt ? 'active' : ''}`}
+                                onClick={() => setEnrollCategoryFilter(opt)}
+                              >
+                                {opt}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <EnrolledGrid rows={filteredEnrolled} />
+            </div>
+          )}
+
+          {!isViewMode && isStudent && (
             <div className="profile-section">
               <div className="profile-section-header">
                 <span className="profile-section-title">My Enrolled Courses</span>
@@ -647,15 +753,6 @@ const ProfilePage: React.FC = () => {
                     )}
                   </div>
 
-                  <button
-                    className="toolbar-filter-btn"
-                    onClick={() => {
-                      setShowEnrollSearch((s) => !s);
-                      if (showEnrollSearch) setEnrollSearch('');
-                    }}
-                  >
-                    Search
-                  </button>
                   {showEnrollSearch && (
                     <input
                       className="courses-search-input"
@@ -666,60 +763,6 @@ const ProfilePage: React.FC = () => {
                       autoFocus
                     />
                   )}
-                </div>
-              </div>
-
-              <EnrolledGrid rows={filteredEnrolled} />
-            </div>
-          )}
-
-          {/* ── STUDENT: Enrolled Courses ─────────────────────────────── */}
-          {isStudent && (
-            <div className="profile-section">
-              <div className="profile-section-header">
-                <span className="profile-section-title">My Enrolled Courses</span>
-                <div className="courses-toolbar-row">
-                  <div className="filter-btn-wrap">
-                    <button
-                      className={`toolbar-filter-btn${showEnrollFilters ? ' active' : ''}`}
-                      onClick={() => setShowEnrollFilters((s) => !s)}
-                    >
-                      Filters
-                    </button>
-                    {showEnrollFilters && (
-                      <div className="filter-panel">
-                        <div className="filter-group">
-                          <span className="filter-group-label">Level</span>
-                          <div className="filter-chips">
-                            {['All', 'Beginner', 'Intermediate', 'Advanced'].map((opt) => (
-                              <button
-                                key={opt}
-                                className={`filter-chip ${enrollLevelFilter === opt ? 'active' : ''}`}
-                                onClick={() => setEnrollLevelFilter(opt)}
-                              >
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="filter-group">
-                          <span className="filter-group-label">Category</span>
-                          <div className="filter-chips">
-                            {['All', 'Programming', 'Mathematics', 'Physics', 'Sciences'].map((opt) => (
-                              <button
-                                key={opt}
-                                className={`filter-chip ${enrollCategoryFilter === opt ? 'active' : ''}`}
-                                onClick={() => setEnrollCategoryFilter(opt)}
-                              >
-                                {opt}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
                   <button
                     className="toolbar-filter-btn"
                     onClick={() => {
@@ -729,16 +772,6 @@ const ProfilePage: React.FC = () => {
                   >
                     Search
                   </button>
-                  {showEnrollSearch && (
-                    <input
-                      className="courses-search-input"
-                      type="text"
-                      placeholder="Search enrolled courses..."
-                      value={enrollSearch}
-                      onChange={(e) => setEnrollSearch(e.target.value)}
-                      autoFocus
-                    />
-                  )}
                 </div>
               </div>
 
@@ -746,8 +779,7 @@ const ProfilePage: React.FC = () => {
             </div>
           )}
 
-          {/* ── Reviews — teachers & admins only ──────────────────────── */}
-          {!isStudent && (
+          {(!isStudent || isViewMode) && (
             <div className="profile-section">
               <p className="reviews-title">Reviews from all courses</p>
               {reviews.length === 0 ? (

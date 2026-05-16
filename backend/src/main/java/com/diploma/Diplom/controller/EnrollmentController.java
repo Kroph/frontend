@@ -70,7 +70,7 @@ public class EnrollmentController {
         responses = @ApiResponse(responseCode = "200",
             content = @Content(array = @ArraySchema(schema = @Schema(implementation = Enrollment.class))))
     )
-    @PreAuthorize("hasRole('STUDENT')")
+    @PreAuthorize("hasAnyRole('STUDENT', 'TEACHER')")
     @GetMapping("/my")
     public List<Enrollment> getMyEnrollments() {
         return enrollmentService.getMyEnrollments();

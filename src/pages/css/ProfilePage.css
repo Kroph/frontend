@@ -424,11 +424,27 @@
   padding: 0.4rem;
 }
 
-.pcc-educator {
+.pcc-tags {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+.pcc-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+  color: var(--text-muted);
+}
+
+.pcc-author {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-style: italic;
   color: var(--text-secondary);
+  display: block;
 }
 
 .pcc-footer {

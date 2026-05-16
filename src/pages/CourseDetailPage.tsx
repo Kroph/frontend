@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { getCourseById, getLessonsByCourse, Course, Lesson } from '../api/courses';
 import { getCourseRatings, CourseRating } from '../api';
@@ -84,7 +84,9 @@ const CourseDetailPage: React.FC = () => {
           </div>
 
           <div className="detail-meta-row">
-            <span className="detail-educator">{course.teacherName || 'Educator Name'}</span>
+            <Link to={`/profile/${course.teacherId}`} className="detail-educator author-link">
+              {course.teacherName || 'Educator Name'}
+            </Link>
             <span className="detail-rate">
               {displayRating ? <StarRating rating={displayRating} /> : 'No rating'}
             </span>

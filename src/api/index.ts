@@ -48,6 +48,14 @@ export const getLessonsByCourse = (courseId: string) =>
   api.get<Lesson[]>(`/lessons/course/${courseId}`);
 export const deleteLesson = (lessonId: string) =>
   api.delete<string>(`/lessons/${lessonId}`);
+export const createLesson = (courseId: string, data: FormData) =>
+  api.post<Lesson>(`/lessons/course/${courseId}`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+export const updateLesson = (lessonId: string, data: FormData) =>
+  api.put<Lesson>(`/lessons/${lessonId}`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
 
 export interface LessonComment {
   id: string;
@@ -104,6 +112,7 @@ export const isLessonUnlocked = (courseId: string, lessonId: string) =>
 export interface QuizQuestion {
   question: string;
   options: string[];
+  correctAnswerIndex?: number;
 }
 export interface Quiz {
   id: string;
@@ -115,6 +124,22 @@ export interface Quiz {
   questions: QuizQuestion[];
   published: boolean;
 }
+
+export interface CreateQuizPayload {
+  title: string;
+  description: string;
+  passingScore: number;
+  timeLimitSeconds?: number | null;
+  published: boolean;
+  questions: { question: string; options: string[]; correctAnswerIndex: number }[];
+}
+
+export const createQuiz = (lessonId: string, payload: CreateQuizPayload) =>
+  api.post<Quiz>(`/quizzes/lesson/${lessonId}`, payload);
+export const updateQuiz = (quizId: string, payload: CreateQuizPayload) =>
+  api.put<Quiz>(`/quizzes/${quizId}`, payload);
+export const deleteQuiz = (quizId: string) =>
+  api.delete<string>(`/quizzes/${quizId}`);
 
 export interface QuizAttempt {
   id: string;

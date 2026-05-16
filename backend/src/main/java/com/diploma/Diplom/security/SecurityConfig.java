@@ -45,6 +45,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll();
                 auth.requestMatchers("/courses/public").permitAll();
                 auth.requestMatchers("/courses/{courseId}").permitAll();
+                auth.requestMatchers("/profile/{userId}").permitAll();
                 auth.requestMatchers("/lessons/course/**").permitAll();
                 auth.requestMatchers(
                         "/swagger-ui/**",

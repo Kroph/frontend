@@ -4,6 +4,8 @@ import com.diploma.Diplom.dto.CreateCourseRequest;
 import com.diploma.Diplom.dto.UpdateCourseRequest;
 import com.diploma.Diplom.exception.BadRequestException;
 import com.diploma.Diplom.model.Course;
+import com.diploma.Diplom.model.CourseRating;
+import com.diploma.Diplom.service.CourseRatingService;
 import com.diploma.Diplom.service.CourseService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,9 +39,11 @@ import java.util.List;
 public class CourseController {
 
     private final CourseService courseService;
+    private final CourseRatingService courseRatingService;
 
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseService courseService, CourseRatingService courseRatingService) {
         this.courseService = courseService;
+        this.courseRatingService = courseRatingService;
     }
 
     private Authentication resolveAuthentication(Authentication authentication) {
@@ -136,6 +140,18 @@ public class CourseController {
         request.setPublished(published);
 
         return courseService.createCourse(getUserId(null), request, thumbnailFile);
+    }
+
+    @Operation(
+        summary = "Get all ratings on my courses (TEACHER)",
+        description = "Returns every rating submitted for courses owned by the authenticated teacher.",
+        responses = @ApiResponse(responseCode = "200",
+            content = @Content(array = @ArraySchema(schema = @Schema(implementation = com.diploma.Diplom.model.CourseRating.class))))
+    )
+    @GetMapping("/ratings/my")
+    @PreAuthorize("hasRole('TEACHER')")
+    public List<CourseRating> getMyRatings(Authentication authentication) {
+        return courseRatingService.getReviewsForTeacher(getUserId(authentication));
     }
 
     @Operation(

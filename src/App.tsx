@@ -8,6 +8,7 @@ import CoursesPage from './pages/CoursesPage';
 import CourseDetailPage from './pages/CourseDetailPage';
 import CreateCoursePage from './pages/CreateCoursePage';
 import EditCoursePage from './pages/EditCoursePage';
+import EditLessonPage from './pages/EditLessonPage';
 import ProfilePage from './pages/ProfilePage';
 import TeacherApplicationPage from './pages/TeacherApplicationPage';
 import TeacherQuizPage from './pages/TeacherQuizPage';
@@ -37,6 +38,7 @@ const App: React.FC = () => {
         <Route path="/verify" element={<VerificationPage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:id" element={<CourseDetailPage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/certificates/verify" element={<CertificateVerifyPage />} />
         <Route path="/certificates/verify/:code" element={<CertificateVerifyPage />} />
 
@@ -54,6 +56,22 @@ const App: React.FC = () => {
           element={
             <PrivateRoute allowedRoles={['TEACHER', 'ADMIN']}>
               <EditCoursePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courses/:courseId/lessons/:lessonId/edit"
+          element={
+            <PrivateRoute allowedRoles={['TEACHER', 'ADMIN']}>
+              <EditLessonPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/courses/:courseId/lessons/new"
+          element={
+            <PrivateRoute allowedRoles={['TEACHER', 'ADMIN']}>
+              <EditLessonPage />
             </PrivateRoute>
           }
         />

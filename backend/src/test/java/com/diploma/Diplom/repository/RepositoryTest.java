@@ -85,7 +85,7 @@ class RepositoryTest {
     // ══════════════════════════════════════════════════════════════════════
 
     @Test
-    @DisplayName("EnrollmentRepository.findByUserIdAndCourseIdAndStatus: находит активную запись")
+    @DisplayName("EnrollmentRepository.findFirstByUserIdAndCourseIdAndStatus: находит активную запись")
     void enrollmentRepo_findByUserCourseStatus_found() {
         Enrollment e = new Enrollment();
         e.setUserId("user-1");
@@ -94,14 +94,14 @@ class RepositoryTest {
         enrollmentRepository.save(e);
 
         Optional<Enrollment> result = enrollmentRepository
-                .findByUserIdAndCourseIdAndStatus("user-1", "course-1", EnrollmentStatus.ACTIVE);
+                .findFirstByUserIdAndCourseIdAndStatus("user-1", "course-1", EnrollmentStatus.ACTIVE);
 
         assertThat(result).isPresent();
         assertThat(result.get().getUserId()).isEqualTo("user-1");
     }
 
     @Test
-    @DisplayName("EnrollmentRepository.findByUserIdAndCourseIdAndStatus: не находит с другим статусом")
+    @DisplayName("EnrollmentRepository.findFirstByUserIdAndCourseIdAndStatus: не находит с другим статусом")
     void enrollmentRepo_findByUserCourseStatus_differentStatus() {
         Enrollment e = new Enrollment();
         e.setUserId("user-1");
@@ -110,7 +110,7 @@ class RepositoryTest {
         enrollmentRepository.save(e);
 
         Optional<Enrollment> result = enrollmentRepository
-                .findByUserIdAndCourseIdAndStatus("user-1", "course-1", EnrollmentStatus.REVOKED);
+                .findFirstByUserIdAndCourseIdAndStatus("user-1", "course-1", EnrollmentStatus.REVOKED);
 
         assertThat(result).isEmpty();
     }
@@ -338,7 +338,7 @@ class RepositoryTest {
     // ══════════════════════════════════════════════════════════════════════
 
     @Test
-    @DisplayName("CourseRatingRepository.findByUserIdAndCourseId: находит рейтинг пользователя")
+    @DisplayName("CourseRatingRepository.findFirstByUserIdAndCourseId: находит рейтинг пользователя")
     void ratingRepo_findByUserAndCourse() {
         CourseRating rating = new CourseRating();
         rating.setUserId("user-1");
@@ -347,7 +347,7 @@ class RepositoryTest {
         courseRatingRepository.save(rating);
 
         Optional<CourseRating> result = courseRatingRepository
-                .findByUserIdAndCourseId("user-1", "course-1");
+                .findFirstByUserIdAndCourseId("user-1", "course-1");
 
         assertThat(result).isPresent();
         assertThat(result.get().getRating()).isEqualTo(4);
@@ -386,7 +386,7 @@ class RepositoryTest {
     // ══════════════════════════════════════════════════════════════════════
 
     @Test
-    @DisplayName("CourseProgressRepository.findByUserIdAndCourseId: находит прогресс")
+    @DisplayName("CourseProgressRepository.findFirstByUserIdAndCourseId: находит прогресс")
     void progressRepo_findByUserAndCourse() {
         CourseProgress progress = new CourseProgress();
         progress.setUserId("user-1");
@@ -397,14 +397,14 @@ class RepositoryTest {
         courseProgressRepository.save(progress);
 
         Optional<CourseProgress> result = courseProgressRepository
-                .findByUserIdAndCourseId("user-1", "course-1");
+                .findFirstByUserIdAndCourseId("user-1", "course-1");
 
         assertThat(result).isPresent();
         assertThat(result.get().getProgressPercent()).isEqualTo(50);
     }
 
     @Test
-    @DisplayName("CourseProgressRepository.findByUserIdAndCourseId: пусто для другого пользователя")
+    @DisplayName("CourseProgressRepository.findFirstByUserIdAndCourseId: пусто для другого пользователя")
     void progressRepo_findByUserAndCourse_otherUser_empty() {
         CourseProgress progress = new CourseProgress();
         progress.setUserId("user-1");
@@ -414,7 +414,7 @@ class RepositoryTest {
         courseProgressRepository.save(progress);
 
         Optional<CourseProgress> result = courseProgressRepository
-                .findByUserIdAndCourseId("user-2", "course-1");
+                .findFirstByUserIdAndCourseId("user-2", "course-1");
 
         assertThat(result).isEmpty();
     }

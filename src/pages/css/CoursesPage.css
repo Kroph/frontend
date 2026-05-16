@@ -78,7 +78,7 @@
 .filter-panel {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
+  right: 0;
   z-index: 200;
   width: 380px;
   background: var(--bg-card-dark);

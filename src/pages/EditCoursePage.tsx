@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
@@ -24,7 +24,6 @@ const EditCoursePage: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  // Form fields
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -32,6 +31,8 @@ const EditCoursePage: React.FC = () => {
   const [free, setFree] = useState(true);
   const [published, setPublished] = useState(false);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const thumbnailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isAuthenticated()) navigate('/login', { replace: true });
@@ -127,7 +128,7 @@ const EditCoursePage: React.FC = () => {
     <div className="edit-course-page">
       <Navbar />
       <div className="ec-container">
-        <button className="back-btn" onClick={() => navigate(`/courses/${course.id}`)}>
+        <button className="back-btn" onClick={() => navigate(`/profile`)}>
           ← Back
         </button>
 
@@ -198,15 +199,36 @@ const EditCoursePage: React.FC = () => {
             </label>
           </div>
 
-          <label className="ec-field">
-            <span>Replace thumbnail</span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setThumbnail(e.target.files?.[0] || null)}
-              className="ec-file"
-            />
-          </label>
+          <div className="ec-field">
+            <span>Thumbnail</span>
+            <div className="ec-thumbnail-wrap">
+              {(thumbnailPreview || course.thumbnail) && (
+                <img
+                  src={thumbnailPreview ?? course.thumbnail}
+                  alt="Course thumbnail"
+                  className="ec-thumbnail-preview"
+                />
+              )}
+              <button
+                type="button"
+                className="ec-secondary-btn"
+                onClick={() => thumbnailInputRef.current?.click()}
+              >
+                Replace thumbnail
+              </button>
+              <input
+                ref={thumbnailInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setThumbnail(file);
+                  setThumbnailPreview(file ? URL.createObjectURL(file) : null);
+                }}
+              />
+            </div>
+          </div>
 
           <label className="ec-toggle">
             <input
@@ -214,7 +236,7 @@ const EditCoursePage: React.FC = () => {
               checked={published}
               onChange={(e) => setPublished(e.target.checked)}
             />
-            <span>Published (visible to students)</span>
+            <span>Published</span>
           </label>
 
           <div className="ec-actions">
@@ -246,7 +268,7 @@ const EditCoursePage: React.FC = () => {
                   <li key={l.id} className="ec-lesson-row">
                     <div>
                       <p className="ec-lesson-title">
-                        <span className="ec-lesson-num">{l.orderIndex + 1}.</span>
+                        <span className="ec-lesson-num">{l.orderIndex}.</span>
                         {l.title}
                       </p>
                       <p className="ec-lesson-meta">

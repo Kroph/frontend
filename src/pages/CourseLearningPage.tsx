@@ -213,7 +213,12 @@ const CourseLearningPage: React.FC = () => {
             )}
             <div className="clp-course-info">
               <h1 className="clp-course-title">{course.title}</h1>
-              <p className="clp-course-teacher">by {course.teacherName || 'Educator'}</p>
+              <p className="clp-course-teacher">
+                by{' '}
+                <Link to={`/profile/${course.teacherId}`} className="author-link">
+                  {course.teacherName || 'Educator'}
+                </Link>
+              </p>
               {course.description && (
                 <p className="clp-course-desc">{course.description}</p>
               )}

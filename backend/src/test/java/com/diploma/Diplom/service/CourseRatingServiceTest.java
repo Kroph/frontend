@@ -66,9 +66,9 @@ class CourseRatingServiceTest {
         req.setRating(4);
         req.setReview("Great course!");
 
-        when(progressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(progressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(progressWithLesson));
-        when(ratingRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(ratingRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.empty());
         when(ratingRepository.save(any(CourseRating.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -112,7 +112,7 @@ class CourseRatingServiceTest {
         RatingRequest req = new RatingRequest();
         req.setRating(3);
 
-        when(progressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(progressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> courseRatingService.rateOrUpdate("user-1", "course-1", req))
@@ -129,7 +129,7 @@ class CourseRatingServiceTest {
         CourseProgress emptyProgress = new CourseProgress();
         emptyProgress.setCompletedLessonIds(new HashSet<>());
 
-        when(progressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(progressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(emptyProgress));
 
         assertThatThrownBy(() -> courseRatingService.rateOrUpdate("user-1", "course-1", req))
@@ -149,9 +149,9 @@ class CourseRatingServiceTest {
         existing.setCourseId("course-1");
         existing.setRating(3);
 
-        when(progressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(progressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(progressWithLesson));
-        when(ratingRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(ratingRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existing));
         when(ratingRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(ratingRepository.findByCourseId("course-1")).thenReturn(List.of(existing));
@@ -186,7 +186,7 @@ class CourseRatingServiceTest {
         existing.setUserId("user-1");
         existing.setCourseId("course-1");
 
-        when(ratingRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(ratingRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(existing));
         when(ratingRepository.findByCourseId("course-1")).thenReturn(List.of());
         when(courseRepository.findById("course-1")).thenReturn(Optional.of(course));
@@ -201,7 +201,7 @@ class CourseRatingServiceTest {
     @Test
     @DisplayName("deleteRating: рейтинг не найден — ResourceNotFoundException")
     void deleteRating_notFound_throws() {
-        when(ratingRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(ratingRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> courseRatingService.deleteRating("user-1", "course-1"))
@@ -219,9 +219,9 @@ class CourseRatingServiceTest {
         CourseRating r2 = new CourseRating(); r2.setRating(3);
         CourseRating r3 = new CourseRating(); r3.setRating(5);
 
-        when(progressRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(progressRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.of(progressWithLesson));
-        when(ratingRepository.findByUserIdAndCourseId("user-1", "course-1"))
+        when(ratingRepository.findFirstByUserIdAndCourseId("user-1", "course-1"))
                 .thenReturn(Optional.empty());
         when(ratingRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(ratingRepository.findByCourseId("course-1")).thenReturn(List.of(r1, r2, r3));

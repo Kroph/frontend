@@ -1,6 +1,7 @@
 package com.diploma.Diplom.controller;
 
 import com.diploma.Diplom.dto.ProfileResponse;
+import com.diploma.Diplom.dto.PublicProfileResponse;
 import com.diploma.Diplom.dto.UpdateProfileRequest;
 import com.diploma.Diplom.service.CloudinaryService;
 import com.diploma.Diplom.service.ProfileService;
@@ -31,6 +32,12 @@ public class ProfileController {
         this.profileService = profileService;
         this.securityUtils = securityUtils;
         this.cloudinaryService = cloudinaryService;
+    }
+
+    @Operation(summary = "Get public profile of a user (no auth required)")
+    @GetMapping("/{userId}")
+    public PublicProfileResponse getPublicProfile(@PathVariable String userId) {
+        return profileService.getPublicProfile(userId);
     }
 
     @Operation(summary = "Get my profile")

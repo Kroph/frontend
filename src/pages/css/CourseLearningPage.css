@@ -403,7 +403,6 @@
   .clp-cta-stats { gap: 1.5rem; }
 }
 
-/* ── Rating section ── */
 .clp-rating-section {
   background: var(--bg-card);
   border-radius: 12px;
